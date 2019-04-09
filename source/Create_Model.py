@@ -49,7 +49,7 @@ class CNNModel(object):
                     self.kernel_size))
         model.add(Activation('relu'))
         model.add(MaxPooling2D(pool_size = self.pool_size))
-        model.add(Dropout(0.25))
+        model.add(Dropout(0.1))
 
         model.add(
                 Conv2D(
@@ -57,11 +57,11 @@ class CNNModel(object):
                     self.kernel_size))
         model.add(Activation('relu'))
         model.add(MaxPooling2D(pool_size = self.pool_size))
-        model.add(Dropout(0.25))
+        model.add(Dropout(0.1))
         
         model.add(
                 Conv2D(
-                    192,
+                    1024,
                     self.kernel_size))
         model.add(Activation('relu'))
         model.add(MaxPooling2D(pool_size = self.pool_size))
@@ -71,7 +71,7 @@ class CNNModel(object):
 
         model.add(Dense(512))
         model.add(Activation('relu'))
-        model.add(Dropout(0.5))
+        model.add(Dropout(0.8))
 
         model.add(Dense(nb_classes))
         model.add(Activation("softmax"))
