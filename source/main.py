@@ -8,6 +8,7 @@ from keras import optimizers
 from keras import losses
 from keras.utils import np_utils
 from keras.callbacks import TensorBoard, EarlyStopping, ModelCheckpoint
+from keras.models import model_from_json
 from os.path import isfile
 
 from Extract_Audio_Features import ExtractAudioFeatures
@@ -49,6 +50,11 @@ elif args.trainmodel:
                   metrics = ['accuracy'])
     model.summary()
     
+    # Guardamos el Modelo
+    model_json = model.to_json()
+    with open(config['CALLBACKS']['TENSORBOARD_LOGDIR'] + "model.json", "w") as json_file:
+        json_file.write(model_json)
+
     # Comprobamos si hay un fichero checkpoint
     if int(config['CALLBACKS']['LOAD_CHECKPOINT']):
         print("Buscando fichero Checkpoint...")
