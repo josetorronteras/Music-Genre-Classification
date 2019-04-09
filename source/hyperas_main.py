@@ -63,33 +63,33 @@ def model(X_train, X_test, X_val, y_train, y_test, y_val, config):
 
     model.add(
             Conv2D(
-                {{choice([64, 128, 256])}},
+                128,
                 kernel_size))
     model.add(Activation('relu'))
     model.add(MaxPooling2D(pool_size = pool_size))
-    model.add(Dropout({{uniform(0, 1)}}))
+    model.add(Dropout(0.25)
 
     model.add(
             Conv2D(
-                {{choice([128, 256, 512])}},
+                128,
                 kernel_size))
     model.add(Activation('relu'))
     model.add(MaxPooling2D(pool_size = pool_size))
-    model.add(Dropout({{uniform(0, 1)}}))
+    model.add(Dropout(0.25)
 
     model.add(
             Conv2D(
-                {{choice([256, 512, 1024])}},
+                192,
                 kernel_size))
     model.add(Activation('relu'))
     model.add(MaxPooling2D(pool_size = pool_size))
-    model.add(Dropout({{uniform(0, 1)}}))
+    model.add(Dropout(0.25)
             
     model.add(Flatten())
 
     model.add(Dense({{choice([512, 1024])}}))
     model.add(Activation('relu'))
-    model.add(Dropout({{uniform(0, 1)}}))
+    model.add(Dropout(0.5)
 
     model.add(Dense(10))
     model.add(Activation("softmax"))
@@ -122,7 +122,7 @@ def model(X_train, X_test, X_val, y_train, y_test, y_val, config):
     model.fit(
             X_train,
             y_train,
-            batch_size = {{choice([32, 64])}},
+            batch_size = int(config['CNN_CONFIGURATION']['BATCH_SIZE']),
             epochs = int(config['CNN_CONFIGURATION']['NUMBERS_EPOCH']),
             verbose = 1,
             validation_data = (X_val, y_val),
