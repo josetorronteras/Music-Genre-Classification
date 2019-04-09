@@ -67,6 +67,7 @@ elif args.trainmodel:
                                 save_best_only = True,
                             ),
                 TensorBoard(log_dir = config['CALLBACKS']['TENSORBOARD_LOGDIR'],
+                            write_images = = config['CALLBACKS']['TENSORBOARD_WRITEIMAGES'],
                             write_graph = config['CALLBACKS']['TENSORBOARD_WRITEGRAPH'],
                             update_freq = config['CALLBACKS']['TENSORBOARD_UPDATEFREQ']
                             ),
