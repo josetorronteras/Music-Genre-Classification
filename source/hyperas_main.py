@@ -25,6 +25,9 @@ config.read('config/config-gpu.ini')
 from Get_Train_Test_Data import GetTrainTestData
 
 def data(config):
+    
+    config = configparser.ConfigParser()
+    config.read('config/config-gpu.ini')
     X_train, X_test, X_val, y_train, y_test, y_val = GetTrainTestData(config).read_dataset()
  
     X_train = X_train.reshape(X_train.shape[0], X_train.shape[1], X_train.shape[2], 1).astype('float32')
