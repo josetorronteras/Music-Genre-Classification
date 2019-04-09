@@ -72,7 +72,7 @@ elif args.trainmodel:
                             ),
                 EarlyStopping(monitor = config['CALLBACKS']['EARLYSTOPPING_MONITOR'],
                             mode = config['CALLBACKS']['EARLYSTOPPING_MODE'], 
-                            patience = config['CALLBACKS']['EARLYSTOPPING_PATIENCE'],
+                            patience = int(config['CALLBACKS']['EARLYSTOPPING_PATIENCE']),
                             verbose = 1)
     ]
 
