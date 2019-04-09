@@ -107,7 +107,7 @@ class GetTrainTestData(object):
                                 np.full(len(arr_rock), 9)))
 
         # Transforms features by scaling each feature to a given range.
-        features = MinMaxScaler().fit_transform(full_data.reshape(-1, full_data.shape[2])).reshape(full_data.shape[0], full_data.shape[1], full_data.shape[2])
+        #features = MinMaxScaler().fit_transform(full_data.reshape(-1, full_data.shape[2])).reshape(full_data.shape[0], full_data.shape[1], full_data.shape[2])
 
         # With train_test_split() it is more easier obtain the necessary elements for the later learning.
         print("test-size = " + str(self.SPLIT_SIZE) + " Change value in config.py") # We can change the size in the config file.
@@ -115,7 +115,7 @@ class GetTrainTestData(object):
 
         # Dividimos los datos, en función a SPLIT_SIZE (config)
         X_train, X_test, y_train, y_test = train_test_split(
-                                                            features,
+                                                            full_data,
                                                             labels,
                                                             test_size = self.SPLIT_SIZE,
                                                             random_state = 0,
