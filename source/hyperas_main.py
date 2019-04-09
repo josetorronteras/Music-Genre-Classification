@@ -24,7 +24,7 @@ config.read('config/config-gpu.ini')
 
 from Get_Train_Test_Data import GetTrainTestData
 
-def data():
+def data(config):
     X_train, X_test, X_val, y_train, y_test, y_val = GetTrainTestData(config).read_dataset()
  
     X_train = X_train.reshape(X_train.shape[0], X_train.shape[1], X_train.shape[2], 1).astype('float32')
@@ -38,7 +38,7 @@ def data():
     return X_train, X_test, X_val, y_train, y_test, y_val
 
 
-def model(X_train, Y_train, X_test, Y_test):
+def model(X_train, X_test, X_val, y_train, y_test, y_val, config):
 
     # Filtros a usar
     filters = 32
@@ -46,7 +46,7 @@ def model(X_train, Y_train, X_test, Y_test):
     pool_size = (2, 4) 
     # Tamaño Kernel para la Convolución
     kernel_size = (3, 3)
-    input_shape = (X.shape[1], X.shape[2], X.shape[3])
+    input_shape = (X_train.shape[1], X_train.shape[2], X_train.shape[3])
 
     model = Sequential()
     model.add(
@@ -125,9 +125,8 @@ def model(X_train, Y_train, X_test, Y_test):
             validation_data = (X_val, y_val),
             callbacks = callbacks)
 
-    score = model.evaluate(X_test, y_test, verbose=0)
-    print('Test score:', score[0])
-    print('Test accuracy:', score[1])
+    score, acc = model.evaluate(X_test, y_test, verbose=0)
+    print('Test accuracy:', acc)
 
     return {'loss': -acc, 'status': STATUS_OK, 'model': model}
 
@@ -135,11 +134,11 @@ if __name__ == '__main__':
 
     X_train, X_test, X_val, y_train, y_test, y_val = data()
 
-    best_run, best_model = optim.minimize(model=model,
-                                          data=data,
-                                          algo=tpe.suggest,
-                                          max_evals=5,
-                                          trials=Trials())
+    best_run, best_model = optim.minimize(model = model,
+                                          data = data,
+                                          algo = tpe.suggest,
+                                          max_evals = 10,
+                                          trials = Trials())
 
     print("Evalutation of best performing model:")
     print(best_model.evaluate(X_val, y_val))
