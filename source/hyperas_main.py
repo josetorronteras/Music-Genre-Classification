@@ -20,7 +20,7 @@ from hyperas.distributions import choice, uniform
 
 import configparser
 config = configparser.ConfigParser()
-config.read('source/config-gpu.ini')
+config.read('source/config/config-gpu.ini')
 
 from Get_Train_Test_Data import GetTrainTestData
 
