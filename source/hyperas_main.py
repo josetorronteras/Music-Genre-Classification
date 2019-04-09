@@ -98,7 +98,7 @@ def model(X_train, X_test, X_val, y_train, y_test, y_val, config):
     
     model.summary()
 
-    # Creamos los Callbacks
+    # Creamos los Callbacks
     callbacks = [
                 ModelCheckpoint(filepath = config['CALLBACKS']['CHECKPOINT_FILE'],
                                 verbose = 1,
@@ -132,7 +132,7 @@ def model(X_train, X_test, X_val, y_train, y_test, y_val, config):
 
 if __name__ == '__main__':
 
-    X_train, X_test, X_val, y_train, y_test, y_val = data()
+    X_train, X_test, X_val, y_train, y_test, y_val = data(config)
 
     best_run, best_model = optim.minimize(model = model,
                                           data = data,
