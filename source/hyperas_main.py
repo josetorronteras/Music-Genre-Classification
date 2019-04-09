@@ -119,7 +119,7 @@ def model(X_train, Y_train, X_test, Y_test):
     model.fit(
             X_train,
             y_train,
-            batch_size ={ {choice([32, 64])}},,
+            batch_size = {{choice([32, 64])}},
             epochs = int(config['CNN_CONFIGURATION']['NUMBERS_EPOCH']),
             verbose = 1,
             validation_data = (X_val, y_val),
