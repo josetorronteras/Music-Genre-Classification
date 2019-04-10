@@ -54,7 +54,7 @@ class CNNModel(object):
 
         model.add(
                 Conv2D(
-                    int(model['layer3']['filter')],
+                    int(model['layer3']['filter']),
                     tuple(model['layer3']['kernel_size']),
                     padding = model['layer3']['padding']))
         model.add(Activation('relu'))
