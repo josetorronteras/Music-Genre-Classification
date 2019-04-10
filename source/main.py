@@ -91,7 +91,7 @@ elif args.trainmodel:
                         TensorBoard(log_dir = config['CALLBACKS']['TENSORBOARD_LOGDIR'] + str(modelos[list(modelos.keys())[i]]['id']),
                                     write_images = config['CALLBACKS']['TENSORBOARD_WRITEIMAGES'],
                                     write_graph = config['CALLBACKS']['TENSORBOARD_WRITEGRAPH'],
-                                    update_sfreq = config['CALLBACKS']['TENSORBOARD_UPDATEFREQ']
+                                    update_freq = config['CALLBACKS']['TENSORBOARD_UPDATEFREQ']
                                     ),
                         EarlyStopping(monitor = config['CALLBACKS']['EARLYSTOPPING_MONITOR'],
                                     mode = config['CALLBACKS']['EARLYSTOPPING_MODE'], 
