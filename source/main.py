@@ -49,7 +49,7 @@ elif args.trainmodel:
     for i in range(len(modelos)):
 
         try:
-            os.mkdir('logs/'+ modelos[list(modelos.keys())[i]['id']])
+            os.mkdir(config['CALLBACKS']['TENSORBOARD_LOGDIR']+ i)
         except:
             print("No se ha podido crear la carpeta")
             pass
