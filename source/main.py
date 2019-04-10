@@ -82,15 +82,16 @@ elif args.trainmodel:
                 print('No Checkpoint')
             
             # Creamos los Callbacks
-            callbacks = [
-                        ModelCheckpoint(filepath = config['CALLBACKS']['CHECKPOINT_FILE'],
+            """
+                                    ModelCheckpoint(filepath = config['CALLBACKS']['CHECKPOINT_FILE'],
                                         verbose = 1,
                                         save_best_only = True,
-                                    ),
+                                    ),"""
+            callbacks = [
                         TensorBoard(log_dir = config['CALLBACKS']['TENSORBOARD_LOGDIR'] + str(modelos[list(modelos.keys())[i]]['id']),
                                     write_images = config['CALLBACKS']['TENSORBOARD_WRITEIMAGES'],
                                     write_graph = config['CALLBACKS']['TENSORBOARD_WRITEGRAPH'],
-                                    update_freq = config['CALLBACKS']['TENSORBOARD_UPDATEFREQ']
+                                    update_sfreq = config['CALLBACKS']['TENSORBOARD_UPDATEFREQ']
                                     ),
                         EarlyStopping(monitor = config['CALLBACKS']['EARLYSTOPPING_MONITOR'],
                                     mode = config['CALLBACKS']['EARLYSTOPPING_MODE'], 
