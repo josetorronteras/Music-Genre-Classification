@@ -50,7 +50,7 @@ elif args.trainmodel:
 
         try:
             os.mkdir(config['CALLBACKS']['TENSORBOARD_LOGDIR'] + str(modelos[list(modelos.keys())[i]['id']]))
-            os.remove(config['CALLBACKS']['CHECKPOINT_FILE'])
+            os.remove('/home/jjtorronteras/Music-Genre-Classification/checkpoint.hdf5')
         except:
             print("No se ha podido crear la carpeta")
             pass
