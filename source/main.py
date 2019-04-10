@@ -49,7 +49,8 @@ elif args.trainmodel:
     for i in range(len(modelos)):
 
         try:
-            os.mkdir(config['CALLBACKS']['TENSORBOARD_LOGDIR']+ i)
+            os.mkdir(config['CALLBACKS']['TENSORBOARD_LOGDIR'] + str(modelos[list(modelos.keys())[i]['id']]))
+            os.remove(config['CALLBACKS']['CHECKPOINT_FILE'])
         except:
             print("No se ha podido crear la carpeta")
             pass
