@@ -54,7 +54,7 @@ elif args.trainmodel:
             pass
 
         # Creamos el modelo
-        model = CNNModel(config, model = modelos[list(modelos.keys())[i]], X_train).build_model(nb_classes = y_test.shape[1])
+        model = CNNModel(config, modelos[list(modelos.keys())[i]], X_train).build_model(nb_classes = y_test.shape[1])
 
         model.compile(loss = losses.categorical_crossentropy,
                     #optimizer = optimizers.Adam(lr = 0.001),
