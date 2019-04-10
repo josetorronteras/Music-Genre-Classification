@@ -36,7 +36,7 @@ class CNNModel(object):
         model = Sequential()
         model.add(
                 Conv2D(
-                    model['layer1']['filter'],
+                    int(model['layer1']['filter']),
                     tuple(model['layer1']['kernel_size']),
                     padding = model['layer1']['padding'],
                     input_shape = self.input_shape))
@@ -45,30 +45,30 @@ class CNNModel(object):
         
         model.add(
                 Conv2D(
-                    model['layer2']['filter'],
+                    int(model['layer2']['filter']),
                     tuple(model['layer2']['kernel_size']),
                     padding = model['layer2']['padding']))
         model.add(Activation('relu'))
         model.add(MaxPooling2D(pool_size = tuple(model['layer2']['pool_size'])))
-        model.add(Dropout(model['layer2']['dropout']))
+        model.add(Dropout(float(model['layer2']['dropout'])))
 
         model.add(
                 Conv2D(
-                    model['layer3']['filter'],
+                    int(model['layer3']['filter')],
                     tuple(model['layer3']['kernel_size']),
                     padding = model['layer3']['padding']))
         model.add(Activation('relu'))
         model.add(MaxPooling2D(pool_size = tuple(model['layer3']['pool_size'])))
-        model.add(Dropout(model['layer3']['dropout']))
+        model.add(Dropout(float(model['layer3']['dropout'])))
         
         model.add(
                 Conv2D(
-                    model['layer4']['filter'],
+                    int(model['layer4']['filter']),
                     tuple(model['layer4']['kernel_size']),
                     padding = model['layer4']['padding']))
         model.add(Activation('relu'))
         model.add(MaxPooling2D(pool_size = tuple(model['layer4']['pool_size'])))
-        model.add(Dropout(model['layer4']['dropout']))
+        model.add(Dropout(float(model['layer4']['dropout'])))
              
         model.add(Flatten())
 
