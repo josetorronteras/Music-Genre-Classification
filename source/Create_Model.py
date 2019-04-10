@@ -36,7 +36,7 @@ class CNNModel(object):
         model = Sequential()
         model.add(
                 Conv2D(
-                    int(model['layer1']['filter']),
+                    int(model['layer1']['filters']),
                     tuple(model['layer1']['kernel_size']),
                     padding = model['layer1']['padding'],
                     input_shape = self.input_shape))
@@ -45,7 +45,7 @@ class CNNModel(object):
         
         model.add(
                 Conv2D(
-                    int(model['layer2']['filter']),
+                    int(model['layer2']['filters']),
                     tuple(model['layer2']['kernel_size']),
                     padding = model['layer2']['padding']))
         model.add(Activation('relu'))
@@ -54,7 +54,7 @@ class CNNModel(object):
 
         model.add(
                 Conv2D(
-                    int(model['layer3']['filter']),
+                    int(model['layer3']['filters']),
                     tuple(model['layer3']['kernel_size']),
                     padding = model['layer3']['padding']))
         model.add(Activation('relu'))
@@ -63,7 +63,7 @@ class CNNModel(object):
         
         model.add(
                 Conv2D(
-                    int(model['layer4']['filter']),
+                    int(model['layer4']['filters']),
                     tuple(model['layer4']['kernel_size']),
                     padding = model['layer4']['padding']))
         model.add(Activation('relu'))
