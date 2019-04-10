@@ -132,7 +132,7 @@ elif args.trainmodel:
             plt.savefig(config['CALLBACKS']['TENSORBOARD_LOGDIR'] + str(modelos[list(modelos.keys())[i]]['id']) + '/loss.png')
 
             model.save_weights(config['PATH_CONFIGURATION']['OUTPUT'] + config['OUTPUT']['WEIGHTS_FILE'])
-        except ValueError::
+        except ValueError:
             print("No se ha podido crear o entrenar")
             print(modelos[list(modelos.keys())[i]]['id'])
             pass
