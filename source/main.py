@@ -49,8 +49,9 @@ elif args.trainmodel:
     for i in range(len(modelos)):
 
         try:
-            os.mkdir('logs/'+ modelos[list(modelos.keys())[i]['id']])
+            os.mkdir('logs/'+ str(modelos[list(modelos.keys())[i]['id']]))
         except:
+            print("No se ha podido crear la carpeta")
             pass
 
         # Creamos el modelo
@@ -64,7 +65,7 @@ elif args.trainmodel:
         
         # Guardamos el Modelo
         model_json = model.to_json()
-        with open(config['CALLBACKS']['TENSORBOARD_LOGDIR'] + modelos[list(modelos.keys())[i]]['id'] + "model.json", "w") as json_file:
+        with open(config['CALLBACKS']['TENSORBOARD_LOGDIR'] + str(modelos[list(modelos.keys())[i]]['id']) + "model.json", "w") as json_file:
             json_file.write(model_json)
 
         # Comprobamos si hay un fichero checkpoint
@@ -84,7 +85,7 @@ elif args.trainmodel:
                                     verbose = 1,
                                     save_best_only = True,
                                 ),
-                    TensorBoard(log_dir = config['CALLBACKS']['TENSORBOARD_LOGDIR'] + modelos[list(modelos.keys())[i]]['id'],
+                    TensorBoard(log_dir = config['CALLBACKS']['TENSORBOARD_LOGDIR'] + str(modelos[list(modelos.keys())[i]]['id']),
                                 write_images = config['CALLBACKS']['TENSORBOARD_WRITEIMAGES'],
                                 write_graph = config['CALLBACKS']['TENSORBOARD_WRITEGRAPH'],
                                 update_freq = config['CALLBACKS']['TENSORBOARD_UPDATEFREQ']
@@ -118,7 +119,7 @@ elif args.trainmodel:
         plt.ylabel('accuracy')
         plt.xlabel('epoch')
         plt.legend(['train', 'test'], loc='upper left')
-        plt.savefig(config['CALLBACKS']['TENSORBOARD_LOGDIR'] + modelos[list(modelos.keys())[i]]['id'] +  '/acc.png')
+        plt.savefig(config['CALLBACKS']['TENSORBOARD_LOGDIR'] + str(modelos[list(modelos.keys())[i]]['id']) +  '/acc.png')
 
         # summarize history for loss
         plt.plot(history.history['loss'])
@@ -127,6 +128,6 @@ elif args.trainmodel:
         plt.ylabel('loss')
         plt.xlabel('epoch')
         plt.legend(['train', 'test'], loc='upper left')
-        plt.savefig(config['CALLBACKS']['TENSORBOARD_LOGDIR'] + modelos[list(modelos.keys())[i]]['id'] + '/loss.png')
+        plt.savefig(config['CALLBACKS']['TENSORBOARD_LOGDIR'] + str(modelos[list(modelos.keys())[i]]['id']) + '/loss.png')
 
         model.save_weights(config['PATH_CONFIGURATION']['OUTPUT'] + config['OUTPUT']['WEIGHTS_FILE'])
