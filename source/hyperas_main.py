@@ -82,12 +82,12 @@ def model(X_train, X_test, X_val, y_train, y_test, y_val, config):
                 192,
                 kernel_size))
     model.add(Activation('relu'))
-    model.add(MaxPooling2D(pool_size = pool_size))
+    model.add(MaxPooling2D(pool_size = {{choice([(2, 4), (3, 5), (4, 4)])}}))
     model.add(Dropout(0.25))
             
     model.add(Flatten())
 
-    model.add(Dense({{choice([512, 1024])}}))
+    model.add(Dense(512))
     model.add(Activation('relu'))
     model.add(Dropout(0.5))
 
