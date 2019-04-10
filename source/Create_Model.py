@@ -27,7 +27,7 @@ class CNNModel(object):
         self.input_shape = (X.shape[1], X.shape[2], X.shape[3])
         
         
-    def build_model(self, nb_classes):
+    def build_model(self, model, nb_classes):
         """
             Crea el modelo en función de los parámetros establecidos.
             # Return:
@@ -36,36 +36,39 @@ class CNNModel(object):
         model = Sequential()
         model.add(
                 Conv2D(
-                    self.filters,
-                    self.kernel_size,
-                    padding='same',
+                    model['layer1']['filter'],
+                    tuple(model['layer1']['kernel_size']),
+                    padding = model['layer1']['padding'],
                     input_shape = self.input_shape))
-        model.add(MaxPooling2D(pool_size = self.pool_size))
         model.add(Activation('relu'))
+        model.add(MaxPooling2D(pool_size = tuple(model['layer1']['pool_size'])))
         
         model.add(
                 Conv2D(
-                    128,
-                    self.kernel_size))
+                    model['layer2']['filter'],
+                    tuple(model['layer2']['kernel_size']),
+                    padding = model['layer2']['padding']))
         model.add(Activation('relu'))
-        model.add(MaxPooling2D(pool_size = self.pool_size))
-        model.add(Dropout(0.1))
+        model.add(MaxPooling2D(pool_size = tuple(model['layer2']['pool_size'])))
+        model.add(Dropout(model['layer2']['dropout']))
 
         model.add(
                 Conv2D(
-                    128,
-                    self.kernel_size))
+                    model['layer3']['filter'],
+                    tuple(model['layer3']['kernel_size']),
+                    padding = model['layer3']['padding']))
         model.add(Activation('relu'))
-        model.add(MaxPooling2D(pool_size = self.pool_size))
-        model.add(Dropout(0.1))
+        model.add(MaxPooling2D(pool_size = tuple(model['layer3']['pool_size'])))
+        model.add(Dropout(model['layer3']['dropout']))
         
         model.add(
                 Conv2D(
-                    1024,
-                    self.kernel_size))
+                    model['layer4']['filter'],
+                    tuple(model['layer4']['kernel_size']),
+                    padding = model['layer4']['padding']))
         model.add(Activation('relu'))
-        model.add(MaxPooling2D(pool_size = self.pool_size))
-        model.add(Dropout(0.25))
+        model.add(MaxPooling2D(pool_size = tuple(model['layer4']['pool_size'])))
+        model.add(Dropout(model['layer4']['dropout']))
              
         model.add(Flatten())
 

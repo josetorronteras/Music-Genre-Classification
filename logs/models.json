@@ -1,0 +1,722 @@
+{
+  "model_1": {
+    "num_layers": 4,
+    "layer1": {
+      "filters": 16,
+      "kernel_size": [
+        3,
+        3
+      ],
+      "strides": 1,
+      "padding": "Same",
+      "pool_size": [
+        2,
+        2
+      ],
+      "dropout": 0.25
+    },
+    "layer2": {
+      "filters": 32,
+      "kernel_size": [
+        3,
+        3
+      ],
+      "strides": 1,
+      "padding": "Valid",
+      "pool_size": [
+        2,
+        2
+      ],
+      "dropout": 0.25
+    },
+    "layer3": {
+      "filters": 64,
+      "kernel_size": [
+        3,
+        3
+      ],
+      "strides": 1,
+      "padding": "Valid",
+      "pool_size": [
+        2,
+        2
+      ],
+      "dropout": 0.5
+    },
+    "layer4": {
+      "filters": 128,
+      "kernel_size": [
+        3,
+        3
+      ],
+      "strides": 1,
+      "padding": "Valid",
+      "pool_size": [
+        2,
+        2
+      ],
+      "dropout": 0.5
+    },
+    "id": 1
+  },
+  "model_2": {
+    "id": 2,
+    "num_layers": 4,
+    "layer1": {
+      "filters": 16,
+      "kernel_size": [
+        3,
+        3
+      ],
+      "strides": 1,
+      "padding": "Same",
+      "pool_size": [
+        2,
+        2
+      ],
+      "dropout": 0.25
+    },
+    "layer2": {
+      "filters": 32,
+      "kernel_size": [
+        3,
+        3
+      ],
+      "strides": 1,
+      "padding": "Valid",
+      "pool_size": [
+        2,
+        4
+      ],
+      "dropout": 0.25
+    },
+    "layer3": {
+      "filters": 64,
+      "kernel_size": [
+        3,
+        3
+      ],
+      "strides": 1,
+      "padding": "Valid",
+      "pool_size": [
+        2,
+        4
+      ],
+      "dropout": 0.25
+    },
+    "layer4": {
+      "filters": 128,
+      "kernel_size": [
+        3,
+        3
+      ],
+      "strides": 1,
+      "padding": "Valid",
+      "pool_size": [
+        4,
+        4
+      ],
+      "dropout": 0.5
+    }
+  },
+  "model_3": {
+    "id": 3,
+    "num_layers": 4,
+    "layer1": {
+      "filters": 16,
+      "kernel_size": [
+        3,
+        3
+      ],
+      "strides": 1,
+      "padding": "Same",
+      "pool_size": [
+        2,
+        2
+      ],
+      "dropout": 0.25
+    },
+    "layer2": {
+      "filters": 32,
+      "kernel_size": [
+        3,
+        3
+      ],
+      "strides": 1,
+      "padding": "Valid",
+      "pool_size": [
+        2,
+        4
+      ],
+      "dropout": 0.25
+    },
+    "layer3": {
+      "filters": 64,
+      "kernel_size": [
+        3,
+        3
+      ],
+      "strides": 1,
+      "padding": "Valid",
+      "pool_size": [
+        2,
+        4
+      ],
+      "dropout": 0.25
+    },
+    "layer4": {
+      "filters": 128,
+      "kernel_size": [
+        3,
+        3
+      ],
+      "strides": 1,
+      "padding": "Valid",
+      "pool_size": [
+        4,
+        4
+      ],
+      "dropout": 0.5
+    }
+  },
+  "model_4": {
+    "id": 4,
+    "num_layers": 4,
+    "layer1": {
+      "filters": 32,
+      "kernel_size": [
+        3,
+        3
+      ],
+      "strides": 1,
+      "padding": "Same",
+      "pool_size": [
+        2,
+        2
+      ],
+      "dropout": 0.25
+    },
+    "layer2": {
+      "filters": 128,
+      "kernel_size": [
+        3,
+        3
+      ],
+      "strides": 1,
+      "padding": "Valid",
+      "pool_size": [
+        2,
+        2
+      ],
+      "dropout": 0.25
+    },
+    "layer3": {
+      "filters": 128,
+      "kernel_size": [
+        3,
+        3
+      ],
+      "strides": 1,
+      "padding": "Valid",
+      "pool_size": [
+        2,
+        2
+      ],
+      "dropout": 0.25
+    },
+    "layer4": {
+      "filters": 128,
+      "kernel_size": [
+        3,
+        3
+      ],
+      "strides": 1,
+      "padding": "Valid",
+      "pool_size": [
+        2,
+        2
+      ],
+      "dropout": 0.5
+    }
+  },
+  "model_5": {
+    "id": 5,
+    "num_layers": 4,
+    "layer1": {
+      "filters": 32,
+      "kernel_size": [
+        3,
+        3
+      ],
+      "strides": 1,
+      "padding": "Same",
+      "pool_size": [
+        2,
+        2
+      ],
+      "dropout": 0.25
+    },
+    "layer2": {
+      "filters": 128,
+      "kernel_size": [
+        3,
+        3
+      ],
+      "strides": 1,
+      "padding": "Valid",
+      "pool_size": [
+        2,
+        4
+      ],
+      "dropout": 0.25
+    },
+    "layer3": {
+      "filters": 128,
+      "kernel_size": [
+        3,
+        3
+      ],
+      "strides": 1,
+      "padding": "Valid",
+      "pool_size": [
+        2,
+        4
+      ],
+      "dropout": 0.25
+    },
+    "layer4": {
+      "filters": 128,
+      "kernel_size": [
+        3,
+        3
+      ],
+      "strides": 1,
+      "padding": "Valid",
+      "pool_size": [
+        4,
+        4
+      ],
+      "dropout": 0.5
+    }
+  },
+  "model_6": {
+    "id": 6,
+    "num_layers": 4,
+    "layer1": {
+      "filters": 32,
+      "kernel_size": [
+        6,
+        6
+      ],
+      "strides": 1,
+      "padding": "Same",
+      "pool_size": [
+        2,
+        2
+      ],
+      "dropout": 0.25
+    },
+    "layer2": {
+      "filters": 128,
+      "kernel_size": [
+        6,
+        6
+      ],
+      "strides": 1,
+      "padding": "Valid",
+      "pool_size": [
+        2,
+        4
+      ],
+      "dropout": 0.25
+    },
+    "layer3": {
+      "filters": 128,
+      "kernel_size": [
+        6,
+        6
+      ],
+      "strides": 1,
+      "padding": "Valid",
+      "pool_size": [
+        2,
+        4
+      ],
+      "dropout": 0.25
+    },
+    "layer4": {
+      "filters": 128,
+      "kernel_size": [
+        6,
+        6
+      ],
+      "strides": 1,
+      "padding": "Valid",
+      "pool_size": [
+        4,
+        4
+      ],
+      "dropout": 0.5
+    }
+  },
+  "model_7": {
+    "id": 7,
+    "num_layers": 4,
+    "layer1": {
+      "filters": 64,
+      "kernel_size": [
+        3,
+        3
+      ],
+      "strides": 1,
+      "padding": "Same",
+      "pool_size": [
+        2,
+        2
+      ],
+      "dropout": 0.25
+    },
+    "layer2": {
+      "filters": 128,
+      "kernel_size": [
+        3,
+        3
+      ],
+      "strides": 1,
+      "padding": "Valid",
+      "pool_size": [
+        2,
+        2
+      ],
+      "dropout": 0.25
+    },
+    "layer3": {
+      "filters": 256,
+      "kernel_size": [
+        3,
+        3
+      ],
+      "strides": 1,
+      "padding": "Valid",
+      "pool_size": [
+        2,
+        2
+      ],
+      "dropout": 0.25
+    },
+    "layer4": {
+      "filters": 512,
+      "kernel_size": [
+        3,
+        3
+      ],
+      "strides": 1,
+      "padding": "Valid",
+      "pool_size": [
+        2,
+        2
+      ],
+      "dropout": 0.5
+    }
+  },
+  "model_8": {
+    "id": 8,
+    "num_layers": 4,
+    "layer1": {
+      "filters": 64,
+      "kernel_size": [
+        3,
+        3
+      ],
+      "strides": 1,
+      "padding": "Same",
+      "pool_size": [
+        2,
+        2
+      ],
+      "dropout": 0.25
+    },
+    "layer2": {
+      "filters": 128,
+      "kernel_size": [
+        3,
+        3
+      ],
+      "strides": 1,
+      "padding": "Valid",
+      "pool_size": [
+        2,
+        4
+      ],
+      "dropout": 0.25
+    },
+    "layer3": {
+      "filters": 256,
+      "kernel_size": [
+        3,
+        3
+      ],
+      "strides": 1,
+      "padding": "Valid",
+      "pool_size": [
+        2,
+        4
+      ],
+      "dropout": 0.25
+    },
+    "layer4": {
+      "filters": 512,
+      "kernel_size": [
+        3,
+        3
+      ],
+      "strides": 1,
+      "padding": "Valid",
+      "pool_size": [
+        4,
+        4
+      ],
+      "dropout": 0.5
+    }
+  },
+  "model_9": {
+    "id": 9,
+    "num_layers": 4,
+    "layer1": {
+      "filters": 64,
+      "kernel_size": [
+        6,
+        6
+      ],
+      "strides": 1,
+      "padding": "Same",
+      "pool_size": [
+        2,
+        2
+      ],
+      "dropout": 0.25
+    },
+    "layer2": {
+      "filters": 128,
+      "kernel_size": [
+        6,
+        6
+      ],
+      "strides": 1,
+      "padding": "Valid",
+      "pool_size": [
+        2,
+        4
+      ],
+      "dropout": 0.25
+    },
+    "layer3": {
+      "filters": 256,
+      "kernel_size": [
+        6,
+        6
+      ],
+      "strides": 1,
+      "padding": "Valid",
+      "pool_size": [
+        2,
+        4
+      ],
+      "dropout": 0.25
+    },
+    "layer4": {
+      "filters": 512,
+      "kernel_size": [
+        6,
+        6
+      ],
+      "strides": 1,
+      "padding": "Valid",
+      "pool_size": [
+        4,
+        4
+      ],
+      "dropout": 0.5
+    }
+  },
+  "model_10": {
+    "id": 10,
+    "num_layers": 4,
+    "layer1": {
+      "filters": 32,
+      "kernel_size": [
+        3,
+        3
+      ],
+      "strides": 1,
+      "padding": "Same",
+      "pool_size": [
+        2,
+        4
+      ],
+      "dropout": 0.25
+    },
+    "layer2": {
+      "filters": 128,
+      "kernel_size": [
+        3,
+        3
+      ],
+      "strides": 1,
+      "padding": "Valid",
+      "pool_size": [
+        2,
+        4
+      ],
+      "dropout": 0.25
+    },
+    "layer3": {
+      "filters": 128,
+      "kernel_size": [
+        3,
+        3
+      ],
+      "strides": 1,
+      "padding": "Valid",
+      "pool_size": [
+        2,
+        4
+      ],
+      "dropout": 0.25
+    },
+    "layer4": {
+      "filters": 192,
+      "kernel_size": [
+        3,
+        3
+      ],
+      "strides": 1,
+      "padding": "Valid",
+      "pool_size": [
+        2,
+        4
+      ],
+      "dropout": 0.5
+    }
+  },
+  "model_11": {
+    "id": 11,
+    "num_layers": 4,
+    "layer1": {
+      "filters": 32,
+      "kernel_size": [
+        3,
+        3
+      ],
+      "strides": 1,
+      "padding": "Same",
+      "pool_size": [
+        2,
+        4
+      ],
+      "dropout": 0.25
+    },
+    "layer2": {
+      "filters": 128,
+      "kernel_size": [
+        3,
+        3
+      ],
+      "strides": 1,
+      "padding": "Valid",
+      "pool_size": [
+        2,
+        4
+      ],
+      "dropout": 0.25
+    },
+    "layer3": {
+      "filters": 128,
+      "kernel_size": [
+        3,
+        3
+      ],
+      "strides": 1,
+      "padding": "Valid",
+      "pool_size": [
+        3,
+        5
+      ],
+      "dropout": 0.25
+    },
+    "layer4": {
+      "filters": 192,
+      "kernel_size": [
+        3,
+        3
+      ],
+      "strides": 1,
+      "padding": "Valid",
+      "pool_size": [
+        3,
+        5
+      ],
+      "dropout": 0.5
+    }
+  },
+  "model_12": {
+    "id": 12,
+    "num_layers": 4,
+    "layer1": {
+      "filters": 32,
+      "kernel_size": [
+        6,
+        6
+      ],
+      "strides": 1,
+      "padding": "Same",
+      "pool_size": [
+        2,
+        2
+      ],
+      "dropout": 0.25
+    },
+    "layer2": {
+      "filters": 128,
+      "kernel_size": [
+        6,
+        6
+      ],
+      "strides": 1,
+      "padding": "Valid",
+      "pool_size": [
+        2,
+        4
+      ],
+      "dropout": 0.25
+    },
+    "layer3": {
+      "filters": 128,
+      "kernel_size": [
+        6,
+        6
+      ],
+      "strides": 1,
+      "padding": "Valid",
+      "pool_size": [
+        2,
+        4
+      ],
+      "dropout": 0.25
+    },
+    "layer4": {
+      "filters": 192,
+      "kernel_size": [
+        6,
+        6
+      ],
+      "strides": 1,
+      "padding": "Valid",
+      "pool_size": [
+        4,
+        4
+      ],
+      "dropout": 0.5
+    }
+  }
+}
