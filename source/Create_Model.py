@@ -17,34 +17,46 @@ class CNNModel(object):
 
 
     def __init__(self, config, model, X):
+        """
+            Establecemos los parámetros a usar dentro de la red.
+            # Arguments:
+                config: configparser
+                    Archivo con las configuraciones
+                model: json file
+                    Fichero con los parámetros de la red
+                X: Array
+                    Input de la red
+            # Detalles:
+                filters: Tamaño del filtro
+                kernel_size: Tamaño del Kernel para la convolución
+                padding: 
+                pool_size: Tamaño para el area del Max Pooling
+        """
 
-        # Filtros a usar
-        self.filters1 = int(model['layer1']['filters'])
-        # Tamaños para el area del Max Pooling
-        self.pool_size1 = tuple(model['layer1']['pool_size'])
-        # Tamaño Kernel para la Convolución
-        self.kernel_size1 = tuple(model['layer1']['kernel_size'])
-        self.padding1 = model['layer1']['padding']
+        self.filters1       = int(model['layer1']['filters'])
+        self.kernel_size1   = tuple(model['layer1']['kernel_size'])
+        self.padding1       = model['layer1']['padding']
+        self.pool_size1     = tuple(model['layer1']['pool_size'])
 
-        self.filters2 = int(model['layer2']['filters'])
-        self.pool_size2 = tuple(model['layer2']['pool_size'])
-        self.kernel_size2 = tuple(model['layer2']['kernel_size'])
-        self.padding2 = model['layer2']['padding']
-        self.dropout2 = float(model['layer2']['dropout'])
+        self.filters2       = int(model['layer2']['filters'])
+        self.kernel_size2   = tuple(model['layer2']['kernel_size'])
+        self.padding2       = model['layer2']['padding']
+        self.pool_size2     = tuple(model['layer2']['pool_size'])
+        self.dropout2       = float(model['layer2']['dropout'])
 
-        self.filters3 = int(model['layer3']['filters'])
-        self.pool_size3 = tuple(model['layer3']['pool_size'])
-        self.kernel_size3 = tuple(model['layer3']['kernel_size'])
-        self.padding3 = model['layer3']['padding']
-        self.dropout3 = float(model['layer3']['dropout'])
+        self.filters3       = int(model['layer3']['filters'])
+        self.kernel_size3   = tuple(model['layer3']['kernel_size'])
+        self.padding3       = model['layer3']['padding']
+        self.pool_size3     = tuple(model['layer3']['pool_size'])
+        self.dropout3       = float(model['layer3']['dropout'])
         
-        self.filters4 = int(model['layer4']['filters'])
-        self.pool_size4 = tuple(model['layer4']['pool_size'])
-        self.kernel_size4 = tuple(model['layer4']['kernel_size'])
-        self.padding4 = model['layer4']['padding']
-        self.dropout4 = float(model['layer4']['dropout'])
+        self.filters4       = int(model['layer4']['filters'])
+        self.kernel_size4   = tuple(model['layer4']['kernel_size'])
+        self.padding4       = model['layer4']['padding']
+        self.pool_size4     = tuple(model['layer4']['pool_size'])
+        self.dropout4       = float(model['layer4']['dropout'])
 
-        self.input_shape = (X.shape[1], X.shape[2], X.shape[3])
+        self.input_shape    = (X.shape[1], X.shape[2], X.shape[3])
         
         
     def build_model(self, nb_classes):
