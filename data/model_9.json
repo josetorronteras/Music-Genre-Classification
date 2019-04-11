@@ -1,5 +1,4 @@
 {
-  "model_9": {
     "id": "model_9",
     "num_layers": 4,
     "layer1": {
@@ -58,5 +57,4 @@
       ],
       "dropout": 0.5
     }
-  }
 }

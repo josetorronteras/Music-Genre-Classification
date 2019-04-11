@@ -1,5 +1,4 @@
 {
-  "model_1": {
     "num_layers": 4,
     "layer1": {
       "filters": 16,
@@ -57,7 +56,5 @@
       ],
       "dropout": 0.5
     },
-    "id": "model_1"
-  }
-  
+    "id": "model_1"  
 }
