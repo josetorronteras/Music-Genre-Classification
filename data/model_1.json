@@ -1,0 +1,63 @@
+{
+  "model_1": {
+    "num_layers": 4,
+    "layer1": {
+      "filters": 16,
+      "kernel_size": [
+        3,
+        3
+      ],
+      "strides": 1,
+      "padding": "Same",
+      "pool_size": [
+        2,
+        2
+      ],
+      "dropout": 0.25
+    },
+    "layer2": {
+      "filters": 32,
+      "kernel_size": [
+        3,
+        3
+      ],
+      "strides": 1,
+      "padding": "Valid",
+      "pool_size": [
+        2,
+        2
+      ],
+      "dropout": 0.25
+    },
+    "layer3": {
+      "filters": 64,
+      "kernel_size": [
+        3,
+        3
+      ],
+      "strides": 1,
+      "padding": "Valid",
+      "pool_size": [
+        2,
+        2
+      ],
+      "dropout": 0.5
+    },
+    "layer4": {
+      "filters": 128,
+      "kernel_size": [
+        3,
+        3
+      ],
+      "strides": 1,
+      "padding": "Valid",
+      "pool_size": [
+        2,
+        2
+      ],
+      "dropout": 0.5
+    },
+    "id": "model_1"
+  }
+  
+}
