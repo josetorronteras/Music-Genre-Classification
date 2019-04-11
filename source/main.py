@@ -14,7 +14,7 @@ parser.add_argument("--device", "-v", help = "Cuda Visible Device")
 args = parser.parse_args()
 
 # Seleccionamos la gpu disponible
-os.environ["CUDA_VISIBLE_DEVICES"] = int(args.device);
+os.environ["CUDA_VISIBLE_DEVICES"] = str(args.device);
 
 from keras import optimizers
 from keras import losses
