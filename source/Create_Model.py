@@ -73,9 +73,7 @@ class CNNModel(object):
                     self.filters1,
                     self.kernel_size1,
                     padding = self.padding1,
-                    kernel_regularizer = regularizers.l2(0.01),
                     input_shape = self.input_shape))
-        model.add(BatchNormalization())
         model.add(Activation('relu'))
         model.add(MaxPooling2D(pool_size = self.pool_size1))
         
@@ -83,7 +81,6 @@ class CNNModel(object):
                 Conv2D(
                     self.filters2,
                     self.kernel_size2,
-                    kernel_regularizer = regularizers.l2(0.01),
                     padding = self.padding2))
         model.add(Activation('relu'))
         model.add(MaxPooling2D(pool_size = self.pool_size2))
@@ -93,9 +90,7 @@ class CNNModel(object):
                 Conv2D(
                     self.filters3,
                     self.kernel_size3,
-                    kernel_regularizer = regularizers.l2(0.01),
                     padding = self.padding3))
-        model.add(BatchNormalization())
         model.add(Activation('relu'))
         model.add(MaxPooling2D(pool_size = self.pool_size3))
         model.add(Dropout(self.dropout3))
@@ -104,7 +99,6 @@ class CNNModel(object):
                 Conv2D(
                     self.filters4,
                     self.kernel_size4,
-                    kernel_regularizer = regularizers.l2(0.01),
                     padding = self.padding4))
         model.add(Activation('relu'))
         model.add(MaxPooling2D(pool_size = self.pool_size4))
