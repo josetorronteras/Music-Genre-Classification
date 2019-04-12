@@ -22,7 +22,7 @@
         3
       ],
       "strides": 1,
-      "padding": "Valid",
+      "padding": "Same",
       "pool_size": [
         2,
         2
@@ -36,7 +36,7 @@
         3
       ],
       "strides": 1,
-      "padding": "Valid",
+      "padding": "Same",
       "pool_size": [
         2,
         2
@@ -50,7 +50,7 @@
         3
       ],
       "strides": 1,
-      "padding": "Valid",
+      "padding": "Same",
       "pool_size": [
         2,
         2
