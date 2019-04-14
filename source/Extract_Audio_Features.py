@@ -3,6 +3,7 @@ import numpy as np
 import h5py
 import os
 import sys
+from tqdm import tqdm
 
 class ExtractAudioFeatures(object):
     """
@@ -63,8 +64,6 @@ class ExtractAudioFeatures(object):
                     python main.py --preprocess --config=CONFIGFILE.ini
                 ```
         """
-        progress = 1.0
-        
         # Obtenemos una lista de los directorios
         directorios = [nombre_directorio for nombre_directorio in os.listdir(self.PATH) if os.path.isdir(os.path.join(self.PATH, nombre_directorio))]
         directorios.sort()
@@ -93,13 +92,8 @@ class ExtractAudioFeatures(object):
                             group_hdf.create_dataset(filename, data = S, compression = 'gzip') # Incluimos el fichero numpy en el dataset.
                         except Exception as e:
                             print("Error accured" + str(e))
-
-                        porcentaje = progress / 10
-                        sys.stdout.write("\n%f%%  " % porcentaje)
-                        sys.stdout.flush()
-                        progress += 1
                 directorios.pop(0) # Next directorio
             # Limpiamos memoria
-            del directorios, porcentaje, progress, file_Path
+            del directorios, file_Path
             del files, root, subdirs
             del S

@@ -42,7 +42,7 @@ class GetTrainTestData(object):
         # Establece un límite de lectura
         limit = 0
         
-        print("Getting.." + self.DATASET_PATH + genre)
+        print("Getting.." + self.DATASET_PATH + genre) # ???????????????????????
         
         # Leemos los datos
         for items in dataset_file[genre]:
