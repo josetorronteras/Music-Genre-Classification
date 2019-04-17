@@ -1,7 +1,7 @@
 <br>
 <h2 align="center">Music Genre Classification </h2>
 
-https://projector.tensorflow.org/?config=https://raw.githubusercontent.com/xexuew/Music-Genre-Classification/ba9f9c91de48b632bfc1256e2e8e0afaaf155409/results/embedding-projector/project_config.json
+https://projector.tensorflow.org/?config=https://raw.githubusercontent.com/xexuew/Music-Genre-Classification/master/results/embedding-projector/project_config.json
 
 
 ```bash
