@@ -43,7 +43,7 @@ class GetTrainTestData(object):
         # Establece un límite de lectura
         limit = 0
         
-        print("Getting.." + self.DATASET_PATH + genre) # ???????????????????????
+        print("Obteniendo.." + self.DATASET_PATH + genre)
         
         # Leemos los datos
         for items in tqdm(dataset_file[genre]):
