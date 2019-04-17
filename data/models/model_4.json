@@ -1,0 +1,60 @@
+{
+    "id": "model_4",
+    "num_layers": 4,
+    "layer1": {
+      "filters": 32,
+      "kernel_size": [
+        3,
+        3
+      ],
+      "strides": 1,
+      "padding": "Same",
+      "pool_size": [
+        2,
+        2
+      ],
+      "dropout": 0.25
+    },
+    "layer2": {
+      "filters": 128,
+      "kernel_size": [
+        3,
+        3
+      ],
+      "strides": 1,
+      "padding": "Same",
+      "pool_size": [
+        2,
+        2
+      ],
+      "dropout": 0.25
+    },
+    "layer3": {
+      "filters": 128,
+      "kernel_size": [
+        3,
+        3
+      ],
+      "strides": 1,
+      "padding": "Same",
+      "pool_size": [
+        2,
+        2
+      ],
+      "dropout": 0.25
+    },
+    "layer4": {
+      "filters": 128,
+      "kernel_size": [
+        3,
+        3
+      ],
+      "strides": 1,
+      "padding": "Same",
+      "pool_size": [
+        2,
+        2
+      ],
+      "dropout": 0.5
+    }
+}

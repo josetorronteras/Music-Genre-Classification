@@ -1,4 +1,5 @@
 import numpy as np
+from tqdm import tqdm
 import h5py
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import MinMaxScaler
@@ -42,10 +43,10 @@ class GetTrainTestData(object):
         # Establece un límite de lectura
         limit = 0
         
-        print("Getting.." + self.DATASET_PATH + genre)
+        print("Obteniendo.." + self.DATASET_PATH + genre)
         
         # Leemos los datos
-        for items in dataset_file[genre]:
+        for items in tqdm(dataset_file[genre]):
             # Comprobamos el límite de lectura
             if limit == self.SIZE:
                 break
@@ -107,7 +108,7 @@ class GetTrainTestData(object):
                                 np.full(len(arr_rock), 9)))
 
         # Transforms features by scaling each feature to a given range.
-        #features = MinMaxScaler().fit_transform(full_data.reshape(-1, full_data.shape[2])).reshape(full_data.shape[0], full_data.shape[1], full_data.shape[2])
+        # features = MinMaxScaler().fit_transform(full_data.reshape(-1, full_data.shape[2])).reshape(full_data.shape[0], full_data.shape[1], full_data.shape[2])
 
         # With train_test_split() it is more easier obtain the necessary elements for the later learning.
         print("test-size = " + str(self.SPLIT_SIZE) + " Change value in config.py") # We can change the size in the config file.

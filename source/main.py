@@ -1,8 +1,20 @@
 import configparser
 import argparse
-
+import matplotlib.pyplot as plt
 import os
-os.environ["CUDA_VISIBLE_DEVICES"]="0";
+import json
+
+parser = argparse.ArgumentParser()
+parser.add_argument("--preprocess", "-p", help = "Preparar los datos de las canciones", action = "store_true")
+parser.add_argument("--dataset", "-d", help = "Preparar los datos para el entrenamiento", action = "store_true")
+parser.add_argument("--trainmodel", "-t", help = "Entrenar el modelo", action = "store_true")
+parser.add_argument("--model", "-m ", help = "Archivo con los parámetros del modelo")
+parser.add_argument("--config", "-c", help = "Archivo de Configuracion")
+parser.add_argument("--device", "-v", type = int, default = 1, help = "Cuda Visible Device")
+args = parser.parse_args()
+
+# Seleccionamos la gpu disponible
+os.environ["CUDA_VISIBLE_DEVICES"] = str(args.device);
 
 from keras import optimizers
 from keras import losses
@@ -14,13 +26,6 @@ from os.path import isfile
 from Extract_Audio_Features import ExtractAudioFeatures
 from Get_Train_Test_Data import GetTrainTestData
 from Create_Model import CNNModel
-
-parser = argparse.ArgumentParser()
-parser.add_argument("--preprocess", "-p", help = "Preparar los datos de las canciones", action = "store_true")
-parser.add_argument("--dataset", "-d", help = "Preparar los datos para el entrenamiento", action = "store_true")
-parser.add_argument("--trainmodel", "-t", help = "Entrenar el modelo", action = "store_true")
-parser.add_argument("--config", "-c", help = "Archivo de Configuracion")
-args = parser.parse_args()
 
 config = configparser.ConfigParser()
 config.read(args.config)
@@ -41,21 +46,30 @@ elif args.trainmodel:
     y_test = np_utils.to_categorical(y_test)
     y_val = np_utils.to_categorical(y_val)
 
+    with open(args.model) as json_data:
+        modelo = json.load(json_data)
+
+    try:
+        os.mkdir(config['CALLBACKS']['TENSORBOARD_LOGDIR'] + str(modelo['id']))
+    except:
+        print("No se ha podido crear la carpeta")
+        pass
+
     # Creamos el modelo
-    model = CNNModel(config, X_train).build_model(nb_classes = y_test.shape[1])
+    model = CNNModel(config, modelo, X_train).build_model(nb_classes = y_test.shape[1])
 
     model.compile(loss = losses.categorical_crossentropy,
-                  #optimizer = optimizers.Adam(lr = 0.001),
-                  optimizer = optimizers.SGD(lr = 0.001, momentum = 0, decay = 1e-5, nesterov = True),
-                  metrics = ['accuracy'])
+                #optimizer = optimizers.Adam(lr = 0.001),
+                optimizer = optimizers.SGD(lr = 0.001, momentum = 0, decay = 1e-5, nesterov = True),
+                metrics = ['accuracy'])
     model.summary()
-    
-    # Guardamos el Modelo
+            
+    # Guardamos el Modelo
     model_json = model.to_json()
-    with open(config['CALLBACKS']['TENSORBOARD_LOGDIR'] + "model.json", "w") as json_file:
+    with open(config['CALLBACKS']['TENSORBOARD_LOGDIR'] + str(modelo['id']) + "/model.json", "w") as json_file:
         json_file.write(model_json)
 
-    # Comprobamos si hay un fichero checkpoint
+    # Comprobamos si hay un fichero checkpoint
     if int(config['CALLBACKS']['LOAD_CHECKPOINT']):
         print("Buscando fichero Checkpoint...")
         if isfile(config['CALLBACKS']['CHECKPOINT_FILE']):
@@ -65,14 +79,16 @@ elif args.trainmodel:
             print('No se ha detectado el fichero Checkpoint.  Empezando de cero')
     else:
         print('No Checkpoint')
-    
-    # Creamos los Callbacks
+            
+    # Creamos los Callbacks
+    """
+    ModelCheckpoint(filepath = config['CALLBACKS']['CHECKPOINT_FILE'],
+        verbose = 1,
+        save_best_only = True,
+    ),
+    """
     callbacks = [
-                ModelCheckpoint(filepath = config['CALLBACKS']['CHECKPOINT_FILE'],
-                                verbose = 1,
-                                save_best_only = True,
-                            ),
-                TensorBoard(log_dir = config['CALLBACKS']['TENSORBOARD_LOGDIR'],
+                TensorBoard(log_dir = config['CALLBACKS']['TENSORBOARD_LOGDIR'] + str(modelo['id']),
                             write_images = config['CALLBACKS']['TENSORBOARD_WRITEIMAGES'],
                             write_graph = config['CALLBACKS']['TENSORBOARD_WRITEGRAPH'],
                             update_freq = config['CALLBACKS']['TENSORBOARD_UPDATEFREQ']
@@ -84,17 +100,38 @@ elif args.trainmodel:
     ]
 
     # Entrenamos el modelo
-    model.fit(
-            X_train,
-            y_train,
-            batch_size = int(config['CNN_CONFIGURATION']['BATCH_SIZE']),
-            epochs = int(config['CNN_CONFIGURATION']['NUMBERS_EPOCH']),
-            verbose = 1,
-            validation_data = (X_val, y_val),
-            callbacks = callbacks)
+    history = model.fit(
+                        X_train,
+                        y_train,
+                        batch_size = int(config['CNN_CONFIGURATION']['BATCH_SIZE']),
+                        epochs = int(config['CNN_CONFIGURATION']['NUMBERS_EPOCH']),
+                        verbose = 1,
+                        validation_data = (X_val, y_val),
+                        callbacks = callbacks)
 
     score = model.evaluate(X_test, y_test, verbose=0)
     print('Test score:', score[0])
     print('Test accuracy:', score[1])
+
+    print(history.history.keys())
+
+    # Grafica Accuracy
+    plt.plot(history.history['acc'])
+    plt.plot(history.history['val_acc'])
+    plt.title('model accuracy')
+    plt.ylabel('accuracy')
+    plt.xlabel('epoch')
+    plt.legend(['train', 'test'], loc='upper left')
+    plt.savefig(config['CALLBACKS']['TENSORBOARD_LOGDIR'] + str(modelo['id']) +  '/acc.png')
+    plt.close()
+
+    # Grafica Loss 
+    plt.plot(history.history['loss'])
+    plt.plot(history.history['val_loss'])
+    plt.title('model loss')
+    plt.ylabel('loss')
+    plt.xlabel('epoch')
+    plt.legend(['train', 'test'], loc='upper left')
+    plt.savefig(config['CALLBACKS']['TENSORBOARD_LOGDIR'] + str(modelo['id']) + '/loss.png')
 
     model.save_weights(config['PATH_CONFIGURATION']['OUTPUT'] + config['OUTPUT']['WEIGHTS_FILE'])
