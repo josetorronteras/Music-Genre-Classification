@@ -82,7 +82,7 @@ class ExtractAudioFeatures(object):
                 except Exception as e:
                     print("Error accured" + str(e))
 
-                for filename in files:
+                for filename in tqdm(files):
                     if filename.endswith('.au'): # Descartamos otros ficheros .DS_store
                         file_Path = os.path.join(root, filename) # Ruta de la cancion
                         print('Fichero %s (full path: %s)' % (filename, file_Path))

@@ -115,7 +115,7 @@ elif args.trainmodel:
 
     print(history.history.keys())
 
-    # summarize history for accuracy
+    # Grafica Accuracy
     plt.plot(history.history['acc'])
     plt.plot(history.history['val_acc'])
     plt.title('model accuracy')
@@ -125,7 +125,7 @@ elif args.trainmodel:
     plt.savefig(config['CALLBACKS']['TENSORBOARD_LOGDIR'] + str(modelo['id']) +  '/acc.png')
     plt.close()
 
-    # summarize history for loss
+    # Grafica Loss 
     plt.plot(history.history['loss'])
     plt.plot(history.history['val_loss'])
     plt.title('model loss')
