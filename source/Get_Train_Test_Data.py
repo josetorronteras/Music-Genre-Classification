@@ -1,6 +1,8 @@
 import numpy as np
-from tqdm import tqdm
 import h5py
+import sys
+from tqdm import tqdm
+from pathlib import Path
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import MinMaxScaler
 
@@ -68,7 +70,12 @@ class GetTrainTestData(object):
                     python main.py --dataset --config=CONFIGFILE.ini
                 ```
         """
-        dataset_file = h5py.File(self.DATASET_PATH + self.DATASET_NAME, 'r')
+        dataset_file_path = Path(self.DATASET_PATH + self.DATASET_NAME)
+        if not dataset_file_path.exists():
+            print("No se ha encontrado el fichero")
+            sys.exit(0)
+
+        dataset_file = h5py.File(dataset_file_path, 'r')
         
         # Obtenemos los arrays de cada género
         arr_blues       = self.getDataFromDataset('blues', dataset_file)
@@ -111,8 +118,8 @@ class GetTrainTestData(object):
         # features = MinMaxScaler().fit_transform(full_data.reshape(-1, full_data.shape[2])).reshape(full_data.shape[0], full_data.shape[1], full_data.shape[2])
 
         # With train_test_split() it is more easier obtain the necessary elements for the later learning.
-        print("test-size = " + str(self.SPLIT_SIZE) + " Change value in config.py") # We can change the size in the config file.
-        print("data-size = " + str(self.SIZE) + " Change value in config.py") # We can change the size in the config file.
+        print("test-size = " + str(self.SPLIT_SIZE) + " Cambiar valor en config.py") # We can change the size in the config file.
+        print("data-size = " + str(self.SIZE) + " Cambiar valor en config.py") # We can change the size in the config file.
 
         # Dividimos los datos, en función a SPLIT_SIZE (config)
         X_train, X_test, y_train, y_test = train_test_split(
@@ -130,7 +137,8 @@ class GetTrainTestData(object):
                                                         stratify = y_test)
 
         # Guardamos los datos generados
-        with h5py.File(self.DATASET_PATH + 'traintest.hdf5', 'w') as hdf:
+        dataset_output_path = Path(self.DATASET_PATH + 'traintest.hdf5')
+        with h5py.File(dataset_output_path, 'w') as hdf:
             hdf.create_dataset('X_train', data = X_train, compression = 'gzip')
             hdf.create_dataset('y_train', data = y_train, compression = 'gzip')
             hdf.create_dataset('X_test', data = X_test, compression = 'gzip')
@@ -148,5 +156,10 @@ class GetTrainTestData(object):
                 dataset: np array
                     X_train y_train X_test y_test X_val y_val
         """
-        dataset = h5py.File(self.DATASET_PATH + 'traintest.hdf5', 'r')
+        dataset_file_path = Path(self.DATASET_PATH + 'traintest.hdf5')
+        if not dataset_file_path.exists():
+            print("No se ha encontrado el fichero")
+            sys.exit(0)
+
+        dataset = h5py.File(dataset_file_path, 'r')
         return dataset['X_train'][()], dataset['X_test'][()], dataset['X_val'][()], dataset['y_train'][()], dataset['y_test'][()], dataset['y_val'][()]

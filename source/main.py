@@ -2,6 +2,7 @@ import configparser
 import argparse
 import matplotlib.pyplot as plt
 import os
+import sys
 import json
 
 parser = argparse.ArgumentParser()
@@ -10,25 +11,29 @@ parser.add_argument("--dataset", "-d", help = "Preparar los datos para el entren
 parser.add_argument("--trainmodel", "-t", help = "Entrenar el modelo", action = "store_true")
 parser.add_argument("--model", "-m ", help = "Archivo con los parámetros del modelo")
 parser.add_argument("--config", "-c", help = "Archivo de Configuracion")
-parser.add_argument("--device", "-v", type = int, default = 1, help = "Cuda Visible Device")
+parser.add_argument("--device", "-v", type = int, default = 0, help = "Cuda Visible Device")
 args = parser.parse_args()
 
-# Seleccionamos la gpu disponible
+# Seleccionamos la gpu disponible. Por defecto la 0.
 os.environ["CUDA_VISIBLE_DEVICES"] = str(args.device);
 
 from keras import optimizers
 from keras import losses
 from keras.utils import np_utils
 from keras.callbacks import TensorBoard, EarlyStopping, ModelCheckpoint
-from keras.models import model_from_json
 from os.path import isfile
+from pathlib import Path
 
 from Extract_Audio_Features import ExtractAudioFeatures
 from Get_Train_Test_Data import GetTrainTestData
 from Create_Model import CNNModel
 
+config_path = Path(args.config)
+if not config_path.exists():
+    print("No se ha encontrado el fichero config")
+    sys.exit(0)
 config = configparser.ConfigParser()
-config.read(args.config)
+config.read(config_path)
 
 if args.preprocess:
     ExtractAudioFeatures(config).prepossessingAudio()
@@ -46,7 +51,11 @@ elif args.trainmodel:
     y_test = np_utils.to_categorical(y_test)
     y_val = np_utils.to_categorical(y_val)
 
-    with open(args.model) as json_data:
+    model_path = Path(args.model)
+    if not model_path.exists():
+        print("No se ha encontrado el fichero model")
+        sys.exit(0)
+    with open(model_path) as json_data:
         modelo = json.load(json_data)
 
     try:
@@ -66,7 +75,8 @@ elif args.trainmodel:
             
     # Guardamos el Modelo
     model_json = model.to_json()
-    with open(config['CALLBACKS']['TENSORBOARD_LOGDIR'] + str(modelo['id']) + "/model.json", "w") as json_file:
+    model_json_path = Path(config['CALLBACKS']['TENSORBOARD_LOGDIR'] + str(modelo['id']) + "/model.json")
+    with open(model_json_path, "w") as json_file:
         json_file.write(model_json)
 
     # Comprobamos si hay un fichero checkpoint

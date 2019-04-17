@@ -2,8 +2,8 @@ import librosa
 import numpy as np
 import h5py
 import os
-import sys
 from tqdm import tqdm
+from pathlib import Path
 
 class ExtractAudioFeatures(object):
     """
@@ -15,11 +15,11 @@ class ExtractAudioFeatures(object):
 
 
     def __init__(self, config):
-        # Rutas de los ficheros
+        # Rutas de los ficheros
         self.DEST           = config['PATH_CONFIGURATION']['AUDIO_PATH']
         self.PATH           = config['PATH_CONFIGURATION']['DATASET_PATH']
 
-        # Nombre del dataset generado
+        # Nombre del dataset generado
         self.DATASET_NAME   = config['DATA_CONFIGURATION']['DATASET_NAME']
 
         # Parámetros Librosa
@@ -69,8 +69,9 @@ class ExtractAudioFeatures(object):
         directorios.sort()
         directorios.insert(0, directorios[0])
         
+        dataset_preprocesado_path = Path(self.DEST + self.DATASET_NAME)
         # Escribimos el Dataset Preprocesado en formato h5py
-        with h5py.File(self.DEST + self.DATASET_NAME, 'w') as hdf:
+        with h5py.File(dataset_preprocesado_path, 'w') as hdf:
 
             for root, subdirs, files in os.walk(self.PATH):
                 # Ordenamos las carpetas por orden alfabético
@@ -80,11 +81,11 @@ class ExtractAudioFeatures(object):
                     # Creamos un nuevo grupo con el nombre del directorio en el que estamos.
                     group_hdf = hdf.create_group(directorios[0]) 
                 except Exception as e:
-                    print("Error accured" + str(e))
+                    print("Error accured " + str(e))
 
                 for filename in tqdm(files):
                     if filename.endswith('.au'): # Descartamos otros ficheros .DS_store
-                        file_Path = os.path.join(root, filename) # Ruta de la cancion
+                        file_Path = Path(root, filename) # Ruta de la cancion
                         print('Fichero %s (full path: %s)' % (filename, file_Path))
                             
                         try:
