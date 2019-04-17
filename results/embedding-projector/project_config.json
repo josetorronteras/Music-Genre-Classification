@@ -6,9 +6,9 @@
           1000,
           50
         ],
-        "tensorPath": "https://github.com/xexuew/Music-Genre-Classification/blob/config-cnn/results/embedding-projector/records.tsv",
-        "metadataPath": "https://github.com/xexuew/Music-Genre-Classification/blob/config-cnn/results/embedding-projector/metadata.tsv",
-        "bookmarksPath": "https://github.com/xexuew/Music-Genre-Classification/blob/config-cnn/results/embedding-projector/bookmarks.txt"
+        "tensorPath": "https://raw.githubusercontent.com/xexuew/Music-Genre-Classification/config-cnn/results/embedding-projector/records.tsv",
+        "metadataPath": "https://raw.githubusercontent.com/xexuew/Music-Genre-Classification/config-cnn/results/embedding-projector/metadata.tsv",
+        "bookmarksPath": "https://raw.githubusercontent.com/xexuew/Music-Genre-Classification/config-cnn/results/embedding-projector/bookmarks.txt"
       },
       {
         "tensorName": "GTZAN Antes de entrenar",
@@ -16,8 +16,8 @@
           1000,
           50
         ],
-        "tensorPath": "https://github.com/xexuew/Music-Genre-Classification/blob/config-cnn/results/embedding-projector/records_before.tsv",
-        "metadataPath": "https://github.com/xexuew/Music-Genre-Classification/blob/config-cnn/results/embedding-projector/metadata_before.tsv"
+        "tensorPath": "https://raw.githubusercontent.com/xexuew/Music-Genre-Classification/config-cnn/results/embedding-projector/records_before.tsv",
+        "metadataPath": "https://raw.githubusercontent.com/xexuew/Music-Genre-Classification/config-cnn/results/embedding-projector/metadata_before.tsv"
       }
     ]
-  }
+}
