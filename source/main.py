@@ -10,7 +10,7 @@ parser.add_argument("--dataset", "-d", help = "Preparar los datos para el entren
 parser.add_argument("--trainmodel", "-t", help = "Entrenar el modelo", action = "store_true")
 parser.add_argument("--model", "-m ", help = "Archivo con los parámetros del modelo")
 parser.add_argument("--config", "-c", help = "Archivo de Configuracion")
-parser.add_argument("--device", "-v", help = "Cuda Visible Device")
+parser.add_argument("--device", "-v", type = int, default = 1, help = "Cuda Visible Device")
 args = parser.parse_args()
 
 # Seleccionamos la gpu disponible
