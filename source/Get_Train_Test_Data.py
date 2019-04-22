@@ -53,13 +53,13 @@ class GetTrainTestData(object):
             if limit == self.SIZE:
                 break
             # Introducimos los datos
+            # Escalamos los datos entre 0 y 1
             else:
-                read_data.append(dataset_file[genre][items][()])
+                read_data.append((dataset_file[genre][items][()]/80))
                 limit +=1
 
         # features_arr = np.vstack(aux_list)
-        # Escalamos los datos entre 0 y 1
-        return (read_data/80)
+        return (read_data)
 
 
     def splitDataset(self):
