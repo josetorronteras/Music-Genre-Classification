@@ -17,6 +17,7 @@ args = parser.parse_args()
 # Seleccionamos la gpu disponible. Por defecto la 0.
 os.environ["CUDA_VISIBLE_DEVICES"] = str(args.device);
 
+from keras.applications.vgg16 import VGG16
 from keras import optimizers
 from keras import losses
 from keras.utils import np_utils
@@ -64,9 +65,12 @@ elif args.trainmodel:
         print("No se ha podido crear la carpeta")
         pass
 
+    """
     # Creamos el modelo
     model = CNNModel(config, modelo, X_train).build_model(nb_classes = y_test.shape[1])
+    """
 
+    model = VGG16(input_shape=(X_train.shape[1], X_train.shape[2], X_train.shape[3]), classes = 10)
     model.compile(loss = losses.categorical_crossentropy,
                 #optimizer = optimizers.Adam(lr = 0.001),
                 optimizer = optimizers.SGD(lr = 0.001, momentum = 0, decay = 1e-5, nesterov = True),

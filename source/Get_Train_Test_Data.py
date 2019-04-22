@@ -58,7 +58,8 @@ class GetTrainTestData(object):
                 limit +=1
 
         # features_arr = np.vstack(aux_list)
-        return read_data 
+        # Escalamos los datos entre 0 y 1
+        return (read_data/80)
 
 
     def splitDataset(self):
@@ -126,14 +127,12 @@ class GetTrainTestData(object):
                                                             full_data,
                                                             labels,
                                                             test_size = self.SPLIT_SIZE,
-                                                            random_state = 0,
                                                             stratify = labels)
         
         X_test, X_val, y_test, y_val = train_test_split(
                                                         X_test,
                                                         y_test,
                                                         test_size = 0.5,
-                                                        random_state = 0,
                                                         stratify = y_test)
 
         # Guardamos los datos generados
