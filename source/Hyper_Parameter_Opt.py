@@ -88,7 +88,7 @@ def createModel(learning_rate, dense, filters1, filters2, filters3, filters4, ke
     model.add(Activation('relu'))
     model.add(Dropout(0.5))
 
-    model.add(Dense(nb_classes))
+    model.add(Dense(10))
     model.add(Activation("softmax"))
     
     model.compile(loss = losses.categorical_crossentropy,
