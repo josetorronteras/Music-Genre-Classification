@@ -23,14 +23,7 @@ from keras.utils import np_utils
 from keras.callbacks import TensorBoard, EarlyStopping, ModelCheckpoint
 from os.path import isfile
 from pathlib import Path
-from tensorflow.python.keras import backend as K
-from keras.models import Sequential
-from keras.layers import Dense
-from keras.layers import Dropout
-from keras.layers import Activation
-from keras.layers import Flatten
-from keras.layers.convolutional import Conv2D
-from keras.layers.convolutional import MaxPooling2D
+
 
 from Extract_Audio_Features import ExtractAudioFeatures
 from Get_Train_Test_Data import GetTrainTestData
