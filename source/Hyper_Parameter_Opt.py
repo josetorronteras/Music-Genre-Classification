@@ -120,7 +120,7 @@ dim_num_kernel = Categorical( categories = [(3, 3), (4, 4), (6, 6)], name = "ker
 dim_num_maxpool = Categorical( categories = [(2, 2), (2, 4), (4, 4)], name = "maxpool")
 
 dimensions = [dim_learning_rate, dim_num_dense, dim_num_filters_layer1, dim_num_filters_layer2, dim_num_filters_layer3, dim_num_filters_layer4, dim_num_kernel, dim_num_maxpool]
-default_parameters = [1e-3, 32, 128, 128, 256, (3, 3), (2, 4)]
+default_parameters = [1e-3, 512, 32, 128, 128, 256, (3, 3), (2, 4)]
 
 best_accuracy = 0.0
 
