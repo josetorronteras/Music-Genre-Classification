@@ -138,7 +138,7 @@ def fitness(learning_rate, dense, filters1, filters2, filters3, filters4, kernel
     print()
     
     # Create the neural network with these hyper-parameters.
-    model = create_model(learning_rate, dense, filters1, filters2, filters3, filters4, kernel, maxpool)
+    model = createModel(learning_rate, dense, filters1, filters2, filters3, filters4, kernel, maxpool)
 
     # Dir-name for the TensorBoard log-files.
     log_dir = log_dir_name(learning_rate, dense, filters1, filters2, filters3, filters4, kernel, maxpool)
