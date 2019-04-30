@@ -149,31 +149,27 @@ def fitness(learning_rate, dense, filters1, filters2, filters3, filters4, kernel
     # Note that there are complications when histogram_freq=1.
     # It might give strange errors and it also does not properly
     # support Keras data-generators for the validation-set.
-
-    callbacks = [
-            TensorBoard(
-                        log_dir=log_dir,
-                        histogram_freq=0,
-                        batch_size=32,
-                        write_graph=True,
-                        write_grads=False,
-                        write_images=False
-                        ),
-            EarlyStopping(monitor = config['CALLBACKS']['EARLYSTOPPING_MONITOR'],
-                        mode = config['CALLBACKS']['EARLYSTOPPING_MODE'], 
-                        patience = int(config['CALLBACKS']['EARLYSTOPPING_PATIENCE']),
-                        verbose = 1)
-    ]
    
-    # Use Keras to train the model.
-    history = model.fit(X_train,
+    callbacks = [
+                TensorBoard(log_dir = log_dir,
+                            write_images = config['CALLBACKS']['TENSORBOARD_WRITEIMAGES'],
+                            write_graph = config['CALLBACKS']['TENSORBOARD_WRITEGRAPH'],
+                            update_freq = config['CALLBACKS']['TENSORBOARD_UPDATEFREQ']
+                            ),
+                EarlyStopping(monitor = config['CALLBACKS']['EARLYSTOPPING_MONITOR'],
+                            mode = config['CALLBACKS']['EARLYSTOPPING_MODE'], 
+                            patience = int(config['CALLBACKS']['EARLYSTOPPING_PATIENCE']),
+                            verbose = 1)
+    ]
+
+    history = model.fit(
+                        X_train,
                         y_train,
                         batch_size = int(config['CNN_CONFIGURATION']['BATCH_SIZE']),
                         epochs = int(config['CNN_CONFIGURATION']['NUMBERS_EPOCH']),
                         verbose = 1,
                         validation_data = (X_val, y_val),
-                        callback = callbacks)
-
+                        callbacks = callbacks)
     # Get the classification accuracy on the validation-set
     # after the last training-epoch.
     accuracy = history.history['val_acc'][-1]
