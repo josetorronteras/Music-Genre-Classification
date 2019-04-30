@@ -217,8 +217,8 @@ def fitness(learning_rate, dense, filters1, filters2, filters3, filters4, kernel
         # Delete the Keras model with these hyper-parameters from memory.
         del model
     except:
-        continue
-        
+        pass
+
     # Clear the Keras session, otherwise it will keep adding new
     # models to the same TensorFlow graph each time we create
     # a model with a different set of hyper-parameters.
