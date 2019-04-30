@@ -1,12 +1,13 @@
 import os
 import configparser
 import argparse
-from pathlib import Path
+import matplotlib.pyplot as plt
 import skopt
 from skopt import gp_minimize, forest_minimize
 from skopt.space import Real, Categorical, Integer
 from skopt.plots import plot_convergence
 from skopt.utils import use_named_args
+from pathlib import Path
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--config", "-c", help = "Archivo de Configuracion")
@@ -123,6 +124,7 @@ dimensions = [dim_learning_rate, dim_num_dense, dim_num_filters_layer1, dim_num_
 default_parameters = [1e-3, 512, 32, 128, 128, 256, (3, 3), (2, 4)]
 
 best_accuracy = 0.0
+path_best_model = 'best_model.keras'
 
 @use_named_args(dimensions=dimensions)
 def fitness(learning_rate, dense, filters1, filters2, filters3, filters4, kernel, maxpool):
@@ -184,6 +186,26 @@ def fitness(learning_rate, dense, filters1, filters2, filters3, filters4, kernel
     # of this function.
     global best_accuracy
 
+    # Grafica Accuracy
+    plt.plot(history.history['acc'])
+    plt.plot(history.history['val_acc'])
+    plt.title('model accuracy')
+    plt.ylabel('accuracy')
+    plt.xlabel('epoch')
+    plt.legend(['train', 'test'], loc='upper left')
+    plt.savefig(log_dir +  '/acc.png')
+    plt.close()
+
+    # Grafica Loss 
+    plt.plot(history.history['loss'])
+    plt.plot(history.history['val_loss'])
+    plt.title('model loss')
+    plt.ylabel('loss')
+    plt.xlabel('epoch')
+    plt.legend(['train', 'test'], loc='upper left')
+    plt.savefig(log_dir + '/loss.png')
+    plt.close()
+
     # If the classification accuracy of the saved model is improved ...
     if accuracy > best_accuracy:
         # Save the new model to harddisk.
@@ -210,7 +232,7 @@ def fitness(learning_rate, dense, filters1, filters2, filters3, filters4, kernel
 search_result = gp_minimize(func=fitness,
                             dimensions=dimensions,
                             acq_func='EI', # Expected Improvement.
-                            n_calls=40,
+                            n_calls = 80,
                             x0=default_parameters)
 
 plot_convergence(search_result)
@@ -220,4 +242,3 @@ plt.close()
 space = search_result.space
 space.point_to_dict(search_result.x)
 print(sorted(zip(search_result.func_vals, search_result.x_iters)))
-

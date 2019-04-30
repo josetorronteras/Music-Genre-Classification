@@ -59,7 +59,7 @@ class CNNModel(object):
         self.input_shape    = (X.shape[1], X.shape[2], X.shape[3])
         
         
-    def build_model(self, nb_classes):
+    def buildModel(self, nb_classes):
         """
             Crea el modelo en función de los parámetros establecidos.
             # Return:
