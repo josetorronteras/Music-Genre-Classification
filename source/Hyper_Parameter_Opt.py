@@ -227,13 +227,13 @@ def fitness(learning_rate, dense, filters1, filters2, filters3, filters4, kernel
         # find a set of hyper-parameters with the LOWEST fitness-value.
         # Because we are interested in the HIGHEST classification
         # accuracy, we need to negate this number so it can be minimized.
-    except:
-        pass
+    except Exception as e: 
+        print(e)
     return -accuracy
 
-search_result = gp_minimize(func=fitness,
-                            dimensions=dimensions,
-                            acq_func='EI', # Expected Improvement.
+search_result = gp_minimize(func = fitness,
+                            dimensions = dimensions,
+                            acq_func = 'EI', # Expected Improvement.
                             n_calls = 40)
 
 plot_convergence(search_result)
