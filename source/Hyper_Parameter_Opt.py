@@ -209,8 +209,7 @@ def fitness(learning_rate, dense, filters1, filters2, filters3, filters4, kernel
     # If the classification accuracy of the saved model is improved ...
     if accuracy > best_accuracy:
         # Save the new model to harddisk.
-        model.save(path_best_model)
-        
+        #model.save(path_best_model)
         # Update the classification accuracy.
         best_accuracy = accuracy
 
