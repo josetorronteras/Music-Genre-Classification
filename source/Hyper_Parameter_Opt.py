@@ -232,8 +232,7 @@ def fitness(learning_rate, dense, filters1, filters2, filters3, filters4, kernel
 search_result = gp_minimize(func=fitness,
                             dimensions=dimensions,
                             acq_func='EI', # Expected Improvement.
-                            n_calls = 80,
-                            x0=default_parameters)
+                            n_calls = 40)
 
 plot_convergence(search_result)
 plt.savefig(config['CALLBACKS']['TENSORBOARD_LOGDIR'] + '/opt.png')
