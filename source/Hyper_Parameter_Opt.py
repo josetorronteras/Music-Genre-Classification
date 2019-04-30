@@ -10,7 +10,7 @@ from skopt.utils import use_named_args
 from pathlib import Path
 
 parser = argparse.ArgumentParser()
-parser.add_argument("--config", "-c", help = "Archivo de Configuracion")
+parser.add_argument("--config", "-c", help = "Archivo de Configuracion", required = True)
 parser.add_argument("--device", "-v", type = int, default = 0, help = "Cuda Visible Device")
 args = parser.parse_args()
 
@@ -140,95 +140,92 @@ def fitness(learning_rate, dense, filters1, filters2, filters3, filters4, kernel
     print()
     
     accuracy = 0
-    try:
-        # Create the neural network with these hyper-parameters.
-        model = createModel(learning_rate, dense, filters1, filters2, filters3, filters4, kernel, maxpool)
+    # Create the neural network with these hyper-parameters.
+    model = createModel(learning_rate, dense, filters1, filters2, filters3, filters4, kernel, maxpool)
 
-        # Dir-name for the TensorBoard log-files.
-        log_dir = log_dir_name(learning_rate, dense, filters1, filters2, filters3, filters4, kernel, maxpool)
-        
-        # Create a callback-function for Keras which will be
-        # run after each epoch has ended during training.
-        # This saves the log-files for TensorBoard.
-        # Note that there are complications when histogram_freq=1.
-        # It might give strange errors and it also does not properly
-        # support Keras data-generators for the validation-set.
+    # Dir-name for the TensorBoard log-files.
+    log_dir = log_dir_name(learning_rate, dense, filters1, filters2, filters3, filters4, kernel, maxpool)
     
-        callbacks = [
-                    TensorBoard(log_dir = log_dir,
-                                write_images = config['CALLBACKS']['TENSORBOARD_WRITEIMAGES'],
-                                write_graph = config['CALLBACKS']['TENSORBOARD_WRITEGRAPH'],
-                                update_freq = config['CALLBACKS']['TENSORBOARD_UPDATEFREQ']
-                                ),
-                    EarlyStopping(monitor = config['CALLBACKS']['EARLYSTOPPING_MONITOR'],
-                                mode = config['CALLBACKS']['EARLYSTOPPING_MODE'], 
-                                patience = int(config['CALLBACKS']['EARLYSTOPPING_PATIENCE']),
-                                verbose = 1)
-        ]
+    # Create a callback-function for Keras which will be
+    # run after each epoch has ended during training.
+    # This saves the log-files for TensorBoard.
+    # Note that there are complications when histogram_freq=1.
+    # It might give strange errors and it also does not properly
+    # support Keras data-generators for the validation-set.
 
-        history = model.fit(
-                            X_train,
-                            y_train,
-                            batch_size = int(config['CNN_CONFIGURATION']['BATCH_SIZE']),
-                            epochs = int(config['CNN_CONFIGURATION']['NUMBERS_EPOCH']),
-                            verbose = 1,
-                            validation_data = (X_val, y_val),
-                            callbacks = callbacks)
-        # Get the classification accuracy on the validation-set
-        # after the last training-epoch.
-        accuracy = history.history['val_acc'][-1]
+    callbacks = [
+                TensorBoard(log_dir = log_dir,
+                            write_images = config['CALLBACKS']['TENSORBOARD_WRITEIMAGES'],
+                            write_graph = config['CALLBACKS']['TENSORBOARD_WRITEGRAPH'],
+                            update_freq = config['CALLBACKS']['TENSORBOARD_UPDATEFREQ']
+                            ),
+                EarlyStopping(monitor = config['CALLBACKS']['EARLYSTOPPING_MONITOR'],
+                            mode = config['CALLBACKS']['EARLYSTOPPING_MODE'], 
+                            patience = int(config['CALLBACKS']['EARLYSTOPPING_PATIENCE']),
+                            verbose = 1)
+    ]
 
-        # Print the classification accuracy.
-        print()
-        print("Accuracy: {0:.2%}".format(accuracy))
-        print()
+    history = model.fit(
+                        X_train,
+                        y_train,
+                        batch_size = int(config['CNN_CONFIGURATION']['BATCH_SIZE']),
+                        epochs = int(config['CNN_CONFIGURATION']['NUMBERS_EPOCH']),
+                        verbose = 1,
+                        validation_data = (X_val, y_val),
+                        callbacks = callbacks)
+    # Get the classification accuracy on the validation-set
+    # after the last training-epoch.
+    accuracy = history.history['val_acc'][-1]
 
-        # Save the model if it improves on the best-found performance.
-        # We use the global keyword so we update the variable outside
-        # of this function.
-        global best_accuracy
+    # Print the classification accuracy.
+    print()
+    print("Accuracy: {0:.2%}".format(accuracy))
+    print()
 
-        # Grafica Accuracy
-        plt.plot(history.history['acc'])
-        plt.plot(history.history['val_acc'])
-        plt.title('model accuracy')
-        plt.ylabel('accuracy')
-        plt.xlabel('epoch')
-        plt.legend(['train', 'test'], loc='upper left')
-        plt.savefig(log_dir +  '/acc.png')
-        plt.close()
+    # Save the model if it improves on the best-found performance.
+    # We use the global keyword so we update the variable outside
+    # of this function.
+    global best_accuracy
 
-        # Grafica Loss 
-        plt.plot(history.history['loss'])
-        plt.plot(history.history['val_loss'])
-        plt.title('model loss')
-        plt.ylabel('loss')
-        plt.xlabel('epoch')
-        plt.legend(['train', 'test'], loc='upper left')
-        plt.savefig(log_dir + '/loss.png')
-        plt.close()
+    # Grafica Accuracy
+    plt.plot(history.history['acc'])
+    plt.plot(history.history['val_acc'])
+    plt.title('model accuracy')
+    plt.ylabel('accuracy')
+    plt.xlabel('epoch')
+    plt.legend(['train', 'test'], loc='upper left')
+    plt.savefig(log_dir +  '/acc.png')
+    plt.close()
 
-        # If the classification accuracy of the saved model is improved ...
-        if accuracy > best_accuracy:
-            # Save the new model to harddisk.
-            #model.save(path_best_model)
-            # Update the classification accuracy.
-            best_accuracy = accuracy
+    # Grafica Loss 
+    plt.plot(history.history['loss'])
+    plt.plot(history.history['val_loss'])
+    plt.title('model loss')
+    plt.ylabel('loss')
+    plt.xlabel('epoch')
+    plt.legend(['train', 'test'], loc='upper left')
+    plt.savefig(log_dir + '/loss.png')
+    plt.close()
 
-        # Delete the Keras model with these hyper-parameters from memory.
-        del model
-        
-        # Clear the Keras session, otherwise it will keep adding new
-        # models to the same TensorFlow graph each time we create
-        # a model with a different set of hyper-parameters.
-        K.clear_session()
-        
-        # NOTE: Scikit-optimize does minimization so it tries to
-        # find a set of hyper-parameters with the LOWEST fitness-value.
-        # Because we are interested in the HIGHEST classification
-        # accuracy, we need to negate this number so it can be minimized.
-    except Exception as e: 
-        print(e)
+    # If the classification accuracy of the saved model is improved ...
+    if accuracy > best_accuracy:
+        # Save the new model to harddisk.
+        #model.save(path_best_model)
+        # Update the classification accuracy.
+        best_accuracy = accuracy
+
+    # Delete the Keras model with these hyper-parameters from memory.
+    del model
+    
+    # Clear the Keras session, otherwise it will keep adding new
+    # models to the same TensorFlow graph each time we create
+    # a model with a different set of hyper-parameters.
+    K.clear_session()
+    
+    # NOTE: Scikit-optimize does minimization so it tries to
+    # find a set of hyper-parameters with the LOWEST fitness-value.
+    # Because we are interested in the HIGHEST classification
+    # accuracy, we need to negate this number so it can be minimized.
     return -accuracy
 
 search_result = gp_minimize(func = fitness,
