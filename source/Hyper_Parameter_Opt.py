@@ -140,8 +140,11 @@ def fitness(learning_rate, dense, filters1, filters2, filters3, filters4, kernel
     print()
     
     accuracy = 0
-    # Create the neural network with these hyper-parameters.
-    model = createModel(learning_rate, dense, filters1, filters2, filters3, filters4, kernel, maxpool)
+    try:
+        # Create the neural network with these hyper-parameters.
+        model = createModel(learning_rate, dense, filters1, filters2, filters3, filters4, kernel, maxpool)
+    except:
+        break
 
     # Dir-name for the TensorBoard log-files.
     log_dir = log_dir_name(learning_rate, dense, filters1, filters2, filters3, filters4, kernel, maxpool)
