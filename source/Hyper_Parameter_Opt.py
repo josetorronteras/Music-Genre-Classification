@@ -112,8 +112,8 @@ y_val = np_utils.to_categorical(y_val)
 
 
 dim_learning_rate = Real(low = 1e-4, high = 1e-2, prior = 'log-uniform', name = 'learning_rate')
-dim_num_dense = Integer(low = 32, high = 1024, name = 'dense')
-dim_num_filters_layer1 = Categorical( categories =[32, 64, 128], name = 'filters1')
+dim_num_dense = Integer(low = 512, high = 1024, name = 'dense')
+dim_num_filters_layer1 = Categorical( categories =[32, 64], name = 'filters1')
 dim_num_filters_layer2 = Categorical( categories = [64, 128, 256], name = 'filters2')
 dim_num_filters_layer3 = Categorical( categories = [256, 512, 1024], name = 'filters3')
 dim_num_filters_layer4 = Categorical( categories = [256, 512, 1024], name = 'filters4')
