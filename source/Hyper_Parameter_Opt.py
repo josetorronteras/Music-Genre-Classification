@@ -113,10 +113,10 @@ y_val = np_utils.to_categorical(y_val)
 
 dim_learning_rate = Real(low = 1e-4, high = 1e-2, prior = 'log-uniform', name = 'learning_rate')
 dim_num_dense = Integer(low = 32, high = 1024, name = 'dense')
-dim_num_filters_layer1 = Categorical( categories=[32, 64, 128, 256], name = 'filters1')
-dim_num_filters_layer2 = Categorical( categories=[32, 64, 128, 256], name = 'filters2')
-dim_num_filters_layer3 = Categorical( categories=[128, 256, 512, 1024], name = 'filters3')
-dim_num_filters_layer4 = Categorical( categories=[128, 256, 512, 1024], name = 'filters4')
+dim_num_filters_layer1 = Categorical( categories =[32, 64, 128], name = 'filters1')
+dim_num_filters_layer2 = Categorical( categories = [64, 128, 256], name = 'filters2')
+dim_num_filters_layer3 = Categorical( categories = [256, 512, 1024], name = 'filters3')
+dim_num_filters_layer4 = Categorical( categories = [256, 512, 1024], name = 'filters4')
 dim_num_kernel = Categorical( categories = [(3, 3), (4, 4), (6, 6)], name = "kernel")
 dim_num_maxpool = Categorical( categories = [(2, 2), (2, 4), (4, 4)], name = "maxpool")
 
@@ -216,14 +216,15 @@ def fitness(learning_rate, dense, filters1, filters2, filters3, filters4, kernel
 
         # Delete the Keras model with these hyper-parameters from memory.
         del model
+        
+        # Clear the Keras session, otherwise it will keep adding new
+        # models to the same TensorFlow graph each time we create
+        # a model with a different set of hyper-parameters.
+        K.clear_session()
+        
     except:
         pass
 
-    # Clear the Keras session, otherwise it will keep adding new
-    # models to the same TensorFlow graph each time we create
-    # a model with a different set of hyper-parameters.
-    K.clear_session()
-    
     # NOTE: Scikit-optimize does minimization so it tries to
     # find a set of hyper-parameters with the LOWEST fitness-value.
     # Because we are interested in the HIGHEST classification
