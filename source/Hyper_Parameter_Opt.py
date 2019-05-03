@@ -128,7 +128,7 @@ best_accuracy = 0.0
 path_best_model = 'best_model.keras'
 
 @use_named_args(dimensions=dimensions)
-def fitness(learning_rate, dense, filters1, filters2, filters3, filters4, kernel, maxpool1, maxpool2):
+def fitness(learning_rate, dense):
     # Print the hyper-parameters.
     print('learning rate: {0:.1e}'.format(learning_rate))
     print('dense:', dense)
