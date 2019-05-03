@@ -20,7 +20,7 @@ from keras import optimizers
 from keras import losses
 from keras.utils import np_utils
 from keras.callbacks import TensorBoard, EarlyStopping, ModelCheckpoint
-from tensorflow.python.keras import backend as K
+from keras import backend as K 
 from keras.models import Sequential
 from keras.layers import Dense
 from keras.layers import Dropout
