@@ -24,7 +24,6 @@ from keras.callbacks import TensorBoard, EarlyStopping, ModelCheckpoint
 from os.path import isfile
 from pathlib import Path
 
-
 from Extract_Audio_Features import ExtractAudioFeatures
 from Get_Train_Test_Data import GetTrainTestData
 from Create_Model import CNNModel

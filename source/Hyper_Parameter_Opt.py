@@ -38,14 +38,14 @@ if not config_path.exists():
 config = configparser.ConfigParser()
 config.read(config_path)
 
-def log_dir_name(learning_rate, dense, filters1, filters2, filters3, filters4, kernel, maxpool):
+def log_dir_name(learning_rate, dense, filters1, filters2, filters3, filters4, kernel, maxpool1, maxpool2):
     # The dir-name for the TensorBoard log-dir.
-    s = "./logs/lr_{0:.0e}_layers_{1}_nodes_{2}_{3}_{4}_{5}_{6}_{7}/"
+    s = "./logs/lr_{0:.0e}_layers_{1}_nodes_{2}_{3}_{4}_{5}_{6}_{7}_{8}/"
     # Insert all the hyper-parameters in the dir-name.
-    log_dir = s.format(learning_rate, dense, filters1, filters2, filters3, filters4, kernel, maxpool)
+    log_dir = s.format(learning_rate, dense, filters1, filters2, filters3, filters4, kernel, maxpool1, maxpool2)
     return log_dir
 
-def createModel(learning_rate, dense, filters1, filters2, filters3, filters4, kernel, maxpool):
+def createModel(learning_rate, dense, filters1, filters2, filters3, filters4, kernel, maxpool1 ,maxpool2):
     model = Sequential()
     model.add(
             Conv2D(
@@ -71,7 +71,7 @@ def createModel(learning_rate, dense, filters1, filters2, filters3, filters4, ke
                 kernel,
                 padding = "Same"))
     model.add(Activation('relu'))
-    model.add(MaxPooling2D(pool_size = maxpool))
+    model.add(MaxPooling2D(pool_size = maxpool2))
     model.add(Dropout(0.25))
     
     model.add(
@@ -80,7 +80,7 @@ def createModel(learning_rate, dense, filters1, filters2, filters3, filters4, ke
                 kernel,
                 padding = "Same"))
     model.add(Activation('relu'))
-    model.add(MaxPooling2D(pool_size = maxpool))
+    model.add(MaxPooling2D(pool_size = maxpool2))
     model.add(Dropout(0.25))
             
     model.add(Flatten())
@@ -111,23 +111,24 @@ y_test = np_utils.to_categorical(y_test)
 y_val = np_utils.to_categorical(y_val)
 
 
-dim_learning_rate = Real(low = 1e-4, high = 1e-2, prior = 'log-uniform', name = 'learning_rate')
+dim_learning_rate = Real(low = 1e-3, high = 1e-2, prior = 'log-uniform', name = 'learning_rate')
 dim_num_dense = Integer(low = 512, high = 1024, name = 'dense')
-dim_num_filters_layer1 = Categorical( categories =[32, 64], name = 'filters1')
-dim_num_filters_layer2 = Categorical( categories = [128, 256], name = 'filters2')
-dim_num_filters_layer3 = Categorical( categories = [128, 256], name = 'filters3')
-dim_num_filters_layer4 = Categorical( categories = [256, 512], name = 'filters4')
-dim_num_kernel = Categorical( categories = [(3, 3), (4, 4), (6, 6)], name = "kernel")
-dim_num_maxpool = Categorical( categories = [(2, 2), (2, 4), (4, 4)], name = "maxpool")
+filters1 = 32
+filters2 = 128
+filters3 = 128
+filters4 = 192
+kernel = (11, 11)
+maxpool1 = (2, 4)
+maxpool2 = (3, 5)
 
-dimensions = [dim_learning_rate, dim_num_dense, dim_num_filters_layer1, dim_num_filters_layer2, dim_num_filters_layer3, dim_num_filters_layer4, dim_num_kernel, dim_num_maxpool]
+dimensions = [dim_learning_rate, dim_num_dense]
 default_parameters = [1e-3, 512, 32, 128, 128, 256, (3, 3), (2, 4)]
 
 best_accuracy = 0.0
 path_best_model = 'best_model.keras'
 
 @use_named_args(dimensions=dimensions)
-def fitness(learning_rate, dense, filters1, filters2, filters3, filters4, kernel, maxpool):
+def fitness(learning_rate, dense, filters1, filters2, filters3, filters4, kernel, maxpool1, maxpool2):
     # Print the hyper-parameters.
     print('learning rate: {0:.1e}'.format(learning_rate))
     print('dense:', dense)
@@ -140,9 +141,9 @@ def fitness(learning_rate, dense, filters1, filters2, filters3, filters4, kernel
     print()
     
     # Create the neural network with these hyper-parameters.
-    model = createModel(learning_rate, dense, filters1, filters2, filters3, filters4, kernel, maxpool)
+    model = createModel(learning_rate, dense, filters1, filters2, filters3, filters4, kernel, maxpool1, maxpool2)
     # Dir-name for the TensorBoard log-files.
-    log_dir = log_dir_name(learning_rate, dense, filters1, filters2, filters3, filters4, kernel, maxpool)
+    log_dir = log_dir_name(learning_rate, dense, filters1, filters2, filters3, filters4, kernel, maxpool1, maxpool2)
     
     # Create a callback-function for Keras which will be
     # run after each epoch has ended during training.
