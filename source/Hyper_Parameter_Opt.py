@@ -137,7 +137,8 @@ def fitness(learning_rate, dense):
     print('filters3:', filters3)
     print('filters4:', filters4)
     print('kernel:', kernel)
-    print('maxpool:', maxpool)
+    print('maxpool1:', maxpool1)
+    print('maxpool2:', maxpool2)
     print()
     
     # Create the neural network with these hyper-parameters.
