@@ -54,7 +54,7 @@ def createModel(learning_rate, dense, filters1, filters2, filters3, filters4, ke
                 padding = "Same",
                 input_shape = (X_train.shape[1], X_train.shape[2], X_train.shape[3])))
     model.add(Activation('relu'))
-    model.add(MaxPooling2D(pool_size = maxpool))
+    model.add(MaxPooling2D(pool_size = maxpool1))
     
     model.add(
             Conv2D(
@@ -62,7 +62,7 @@ def createModel(learning_rate, dense, filters1, filters2, filters3, filters4, ke
                 kernel,
                 padding = "Same"))
     model.add(Activation('relu'))
-    model.add(MaxPooling2D(pool_size = maxpool))
+    model.add(MaxPooling2D(pool_size = maxpool1))
     model.add(Dropout(0.25))
 
     model.add(
