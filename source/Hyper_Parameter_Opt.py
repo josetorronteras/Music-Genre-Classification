@@ -110,7 +110,8 @@ y_train = np_utils.to_categorical(y_train)
 y_test = np_utils.to_categorical(y_test)
 y_val = np_utils.to_categorical(y_val)
 
-
+learning_rate = 0.001
+dense = 512
 #dim_learning_rate = Real(low = 1e-3, high = 1e-2, prior = 'log-uniform', name = 'learning_rate')
 #dim_num_dense = Integer(low = 512, high = 1024, name = 'dense')
 dim_dropout1 = Real(low = 0.25, high = 1, prior = 'log-uniform', name = 'dropout1')
