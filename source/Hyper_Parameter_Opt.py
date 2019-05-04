@@ -38,14 +38,14 @@ if not config_path.exists():
 config = configparser.ConfigParser()
 config.read(config_path)
 
-def log_dir_name(learning_rate, dense, filters1, filters2, filters3, filters4, kernel, maxpool1, maxpool2):
+def log_dir_name(learning_rate, dense, filters1, filters2, filters3, filters4, kernel, maxpool1, maxpool2, dropout1, dropout2, dropout3):
     # The dir-name for the TensorBoard log-dir.
-    s = "./logs/lr_{0:.0e}_layers_{1}_nodes_{2}_{3}_{4}_{5}_{6}_{7}_{8}/"
+    s = "./logs/lr_{0:.0e}_layers_{1}_nodes_{2}_{3}_{4}_{5}_{6}_{7}_{8}_{9}_{10}_{11}/"
     # Insert all the hyper-parameters in the dir-name.
-    log_dir = s.format(learning_rate, dense, filters1, filters2, filters3, filters4, kernel, maxpool1, maxpool2)
+    log_dir = s.format(learning_rate, dense, filters1, filters2, filters3, filters4, kernel, maxpool1, maxpool2, dropout1, dropout2, dropout3)
     return log_dir
 
-def createModel(learning_rate, dense, filters1, filters2, filters3, filters4, kernel, maxpool1 ,maxpool2):
+def createModel(learning_rate, dense, filters1, filters2, filters3, filters4, kernel, maxpool1 ,maxpool2, dropout1, dropout2, dropout3):
     model = Sequential()
     model.add(
             Conv2D(
@@ -63,7 +63,7 @@ def createModel(learning_rate, dense, filters1, filters2, filters3, filters4, ke
                 padding = "Same"))
     model.add(Activation('relu'))
     model.add(MaxPooling2D(pool_size = maxpool1))
-    model.add(Dropout(0.25))
+    model.add(Dropout(dropout1))
 
     model.add(
             Conv2D(
@@ -72,7 +72,7 @@ def createModel(learning_rate, dense, filters1, filters2, filters3, filters4, ke
                 padding = "Same"))
     model.add(Activation('relu'))
     model.add(MaxPooling2D(pool_size = maxpool2))
-    model.add(Dropout(0.25))
+    model.add(Dropout(dropout2))
     
     model.add(
             Conv2D(
@@ -81,11 +81,11 @@ def createModel(learning_rate, dense, filters1, filters2, filters3, filters4, ke
                 padding = "Same"))
     model.add(Activation('relu'))
     model.add(MaxPooling2D(pool_size = maxpool2))
-    model.add(Dropout(0.25))
+    model.add(Dropout(dropout3))
             
     model.add(Flatten())
 
-    model.add(Dense(dense))
+    model.add(Dense(512))
     model.add(Activation('relu'))
     model.add(Dropout(0.5))
 
@@ -94,7 +94,7 @@ def createModel(learning_rate, dense, filters1, filters2, filters3, filters4, ke
     
     model.compile(loss = losses.categorical_crossentropy,
             #optimizer = optimizers.Adam(lr = 0.001),
-            optimizer = optimizers.SGD(lr = learning_rate),
+            optimizer = optimizers.SGD(lr = 0.001),
             metrics = ['accuracy'])
     model.summary()
 
@@ -111,8 +111,12 @@ y_test = np_utils.to_categorical(y_test)
 y_val = np_utils.to_categorical(y_val)
 
 
-dim_learning_rate = Real(low = 1e-3, high = 1e-2, prior = 'log-uniform', name = 'learning_rate')
-dim_num_dense = Integer(low = 512, high = 1024, name = 'dense')
+#dim_learning_rate = Real(low = 1e-3, high = 1e-2, prior = 'log-uniform', name = 'learning_rate')
+#dim_num_dense = Integer(low = 512, high = 1024, name = 'dense')
+dim_dropout1 = Real(low = 0.25, high = 1, prior = 'log-uniform', name = 'dropout1')
+dim_dropout2 = Real(low = 0.25, high = 1, prior = 'log-uniform', name = 'dropout2')
+dim_dropout3 = Real(low = 0.25, high = 1, prior = 'log-uniform', name = 'dropout3')
+
 filters1 = 32
 filters2 = 128
 filters3 = 128
@@ -121,14 +125,14 @@ kernel = (11, 11)
 maxpool1 = (2, 4)
 maxpool2 = (3, 5)
 
-dimensions = [dim_learning_rate, dim_num_dense]
+dimensions = [dim_dropout1, dim_dropout2, dim_dropout3]
 default_parameters = [1e-3, 512, 32, 128, 128, 256, (3, 3), (2, 4)]
 
 best_accuracy = 0.0
 path_best_model = 'best_model.keras'
 
 @use_named_args(dimensions=dimensions)
-def fitness(learning_rate, dense):
+def fitness(dropout1, dropout2, dropout3):
     # Print the hyper-parameters.
     print('learning rate: {0:.1e}'.format(learning_rate))
     print('dense:', dense)
@@ -142,9 +146,9 @@ def fitness(learning_rate, dense):
     print()
     
     # Create the neural network with these hyper-parameters.
-    model = createModel(learning_rate, dense, filters1, filters2, filters3, filters4, kernel, maxpool1, maxpool2)
+    model = createModel(learning_rate, dense, filters1, filters2, filters3, filters4, kernel, maxpool1, maxpool2, dropout1, dropout2, dropout3)
     # Dir-name for the TensorBoard log-files.
-    log_dir = log_dir_name(learning_rate, dense, filters1, filters2, filters3, filters4, kernel, maxpool1, maxpool2)
+    log_dir = log_dir_name(learning_rate, dense, filters1, filters2, filters3, filters4, kernel, maxpool1, maxpool2, dropout1, dropout2, dropout3)
     
     # Create a callback-function for Keras which will be
     # run after each epoch has ended during training.
