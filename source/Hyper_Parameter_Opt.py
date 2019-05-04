@@ -134,7 +134,7 @@ path_best_model = 'best_model.keras'
 @use_named_args(dimensions=dimensions)
 def fitness(dropout1, dropout2, dropout3):
     # Print the hyper-parameters.
-    print('learning rate: {0:.1e}'.format(learning_rate))
+    # print('learning rate: {0:.1e}'.format(learning_rate))
     print('dense:', dense)
     print('filters1:', filters1)
     print('filters2:', filters2)
