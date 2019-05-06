@@ -28,7 +28,7 @@ class ExtractAudioFeatures(object):
         self.HOP_LENGTH = int(config['AUDIO_FEATURES']['HOP_LENGTH'])
         self.DURATION = int(config['AUDIO_FEATURES']['DURATION'])
 
-    def librosaAudio(self, file_Path):
+    def getMelspectogram(self, file_Path):
         """
             Calcula el espectograma de una canción y lo transforma a dB
             para una representación gráfica.
@@ -51,7 +51,20 @@ class ExtractAudioFeatures(object):
                 hop_length=self.HOP_LENGTH),
             ref=np.max)
 
-        return S
+        return S/80
+
+    def spectralFeatures(self, file_path):
+        """
+
+        """
+        y, sr = librosa.load(file_path, duration=self.DURATION)
+        
+        mfcc = librosa.feature.mfcc(y=y, sr=sr, hop_length=self.HOP_LENGTH)
+        spectral_center = librosa.feature.spectral_centroid(y=y, sr=sr, hop_length=self.HOP_LENGTH)
+        chroma = librosa.feature.chroma_stft(y=y, sr=sr, hop_length=self.HOP_LENGTH)
+        spectral_contrast = librosa.feature.spectral_contrast(y=y, sr=sr, hop_length=self.HOP_LENGTH)
+        
+        return np.vstack((mfcc, spectral_center, chroma, spectral_contrast))
 
     def prepossessingAudio(self):
         """
@@ -88,7 +101,8 @@ class ExtractAudioFeatures(object):
                         print('Fichero %s (full path: %s)' % (filename, file_Path))
                             
                         try:
-                            S = self.librosaAudio(file_Path) # Obtenemos el Mel-Spectogram
+                            #S = self.getMelspectogram(file_Path) # Obtenemos el Mel-Spectogram
+                            S = self.spectralFeatures(file_Path) # Obtenemos las caracteristicas espectrales
                             group_hdf.create_dataset(
                                 filename, 
                                 data=S, 

@@ -10,6 +10,7 @@ from keras.callbacks import TensorBoard, EarlyStopping
 from Extract_Audio_Features import ExtractAudioFeatures
 from Get_Train_Test_Data import GetTrainTestData
 from CNN_Model import CNNModel
+from LSTM_Model import LSTMModel
 from Aux_Functions import pltResults
 
 parser = argparse.ArgumentParser()
@@ -43,12 +44,12 @@ elif args.trainmodel:
     X_train, X_test, X_val, y_train, y_test, y_val = GetTrainTestData(config).read_dataset()
 
     # Transformamos el shape de los datos
-    X_train = X_train.reshape(
+    """X_train = X_train.reshape(
         X_train.shape[0], X_train.shape[1], X_train.shape[2], 1).astype('float32')
     X_test = X_test.reshape(
         X_test.shape[0], X_train.shape[1], X_train.shape[2], 1).astype('float32')
     X_val = X_val.reshape(
-        X_val.shape[0], X_val.shape[1], X_val.shape[2], 1).astype('float32')
+        X_val.shape[0], X_val.shape[1], X_val.shape[2], 1).astype('float32')"""
 
     # Convertimos las clases a una matriz binaria de clases
     y_train = np_utils.to_categorical(y_train)
@@ -56,7 +57,7 @@ elif args.trainmodel:
     y_val = np_utils.to_categorical(y_val)
 
     # Creamos el modelo
-    model = CNNModel()
+    model = LSTMModel()
 
     # Cargamos el modelo
     if args.kerasmodel:
@@ -78,7 +79,7 @@ elif args.trainmodel:
     ]
 
     # Entrenamos el modelo
-    history = model.trainModel(config, X_train, y_train, X_test, y_test, X_val, y_val, callbacks)
+    history = model.trainModel(config, X_train, y_train, X_test, y_test, X_val, y_val, callbacks = callbacks)
 
     # Grafica Accuracy
     pltResults(

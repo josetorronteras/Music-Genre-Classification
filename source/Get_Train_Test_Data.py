@@ -52,7 +52,7 @@ class GetTrainTestData(object):
             # Introducimos los datos
             # Escalamos los datos entre 0 y 1
             else:
-                read_data.append((dataset_file[genre][items][()]/80))
+                read_data.append((dataset_file[genre][items][()]))
                 limit += 1
 
         # features_arr = np.vstack(aux_list)

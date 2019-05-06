@@ -108,3 +108,5 @@ genres/*
 data/dataset\.hdf5
 
 data/traintest\.hdf5
+
+data/dataset_lstm\.hdf5
