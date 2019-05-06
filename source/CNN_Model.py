@@ -27,7 +27,8 @@ class CNNModel():
         """
             Lee un archivo con la configuración del modelo.
             # Arguments:
-                model_path: Ruta del fichero que contiene la información del modelo.
+                model_path: String
+                    Ruta del fichero que contiene la información del modelo.
         """
         model_file = Path(model_path)
         if not model_file.exists():
@@ -47,7 +48,8 @@ class CNNModel():
         """
             Cargamos los pesos en el modelo.
             # Arguments:
-                weights_path: Ruta del fichero que contiene los pesos del modelo.
+                weights_path: String
+                    Ruta del fichero que contiene los pesos del modelo.
         """
         weights_file = Path(weights_path)
         if not weights_file.exists():
@@ -58,21 +60,30 @@ class CNNModel():
 
     def safeModel(self, log_dir):
         """
-            log_dir: 
+            Guardamos el modelo en un archivo json.
+            # Arguments:
+                log_dir: String
+                    Ruta donde se guarda el modelo.
         """
         model_json = self.model.to_json()
         with open(log_dir, "w") as json_file:
             json_file.write(model_json)
 
     def safeWeights(self, log_dir):
+        """
+            Guardamos los pesos del modelo en un archivo h5py.
+            # Arguments:
+                log_dir: String
+                    Ruta donde se guarda los pesos.
+        """
         self.model.save_weights(log_dir + 'weights.h5')
 
     def buildModel(self, model_path, input_model, nb_classes):
         """
             Creamos un modelo a partir de unos parámetros dados por un archivo json.
             # Arguments:
-                model_path: ruta del archivo json
-                    Fichero con los parámetros de la red
+                model_path: String
+                    Ruta del archivo json
                 input_model: Array
                     Input de la red
                 nb_classes: Entero
@@ -134,32 +145,52 @@ class CNNModel():
         self.model.add(Activation("softmax"))
         
         self.model.compile(loss=losses.categorical_crossentropy,
-                optimizer=optimizers.SGD(lr=0.001, momentum=0, decay=1e-5, nesterov=True),
-                metrics=['accuracy'])
+                        optimizer=optimizers.SGD(lr=0.001, momentum=0, decay=1e-5, nesterov=True),
+                        metrics=['accuracy'])
 
         self.model.summary()
 
-    def trainModel(self, config, X_train, y_train, X_test, y_test, X_val, y_val, callbacks):
-        
+    def trainModel(self, config, *data, callbacks):
+        """
+            Entrenamos el modelo junto con los datos de entrada.
+            # Arguments:
+                config: configparser
+                    Archivo con los parámetros de configuración.
+                data: Arbitrary Argument Lists
+                    data[0] = X_train
+                    data[1] = y_train
+                    data[2] = X_test
+                    data[3] = y_test
+                    data[4] = X_val
+                    data[5] = y_val
+                callbacks: Lista
+                    Lista de Callback de keras
+        """
         history = self.model.fit(
-                        X_train,
-                        y_train,
+                        data[0],
+                        data[1],
                         batch_size=int(config['CNN_CONFIGURATION']['BATCH_SIZE']),
                         epochs=int(config['CNN_CONFIGURATION']['NUMBERS_EPOCH']),
                         verbose=1,
-                        validation_data=(X_val, y_val),
+                        validation_data=(data[4], data[5]),
                         callbacks=callbacks)
         
-        score = self.model.evaluate(X_test, y_test, verbose=0)
+        score = self.model.evaluate(data[2], data[3], verbose=0)
         print('Test score:', score[0])
         print('Test accuracy:', score[1])
 
         return history
 
     def predictModel(self, X_test):
+        """
+            Guardamos los pesos del modelo en un archivo h5py.
+            # Arguments:
+                X_test: Array
+                    Numpy array con los datos ha predecir.
+        """
         Y_pred = self.model.predict(X_test)
         y_pred = np.argmax(Y_pred, axis=1)
-        #y_pred =  np.reshape(Y_pred, (Y_pred.size,))
+
         print("Predecido: ", y_pred)
 
         return y_pred

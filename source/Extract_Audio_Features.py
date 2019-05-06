@@ -1,9 +1,10 @@
+import os
+from pathlib import Path
 import librosa
 import numpy as np
 import h5py
-import os
+
 from tqdm import tqdm
-from pathlib import Path
 
 class ExtractAudioFeatures(object):
     """
@@ -13,27 +14,25 @@ class ExtractAudioFeatures(object):
                 Archivo con las distintas configuraciones.
     """
 
-
     def __init__(self, config):
         # Rutas de los ficheros
-        self.DEST           = config['PATH_CONFIGURATION']['AUDIO_PATH']
-        self.PATH           = config['PATH_CONFIGURATION']['DATASET_PATH']
+        self.DEST = config['PATH_CONFIGURATION']['AUDIO_PATH']
+        self.PATH = config['PATH_CONFIGURATION']['DATASET_PATH']
 
         # Nombre del dataset generado
-        self.DATASET_NAME   = config['DATA_CONFIGURATION']['DATASET_NAME']
+        self.DATASET_NAME = config['DATA_CONFIGURATION']['DATASET_NAME']
 
         # Parámetros Librosa
-        self.N_MELS         = int(config['AUDIO_FEATURES']['N_MELS'])
-        self.N_FFT          = int(config['AUDIO_FEATURES']['N_FFT'])
-        self.HOP_LENGTH     = int(config['AUDIO_FEATURES']['HOP_LENGTH'])
-        self.DURATION       = int(config['AUDIO_FEATURES']['DURATION'])
-    
-    
+        self.N_MELS = int(config['AUDIO_FEATURES']['N_MELS'])
+        self.N_FFT = int(config['AUDIO_FEATURES']['N_FFT'])
+        self.HOP_LENGTH = int(config['AUDIO_FEATURES']['HOP_LENGTH'])
+        self.DURATION = int(config['AUDIO_FEATURES']['DURATION'])
+
     def librosaAudio(self, file_Path):
         """
             Calcula el espectograma de una canción y lo transforma a dB
             para una representación gráfica.
-            # Arguments: 
+            # Arguments:
                 file_Path: string
                     Ruta del fichero de audio.
             # Return:
@@ -41,19 +40,18 @@ class ExtractAudioFeatures(object):
                     Imagen de un Espectograma en dB.
         """
         # Cargamos el audio con librosa
-        y, sr = librosa.load(file_Path, duration = self.DURATION)
+        y, sr = librosa.load(file_Path, duration=self.DURATION)
 
         S = librosa.power_to_db(
-                librosa.feature.melspectrogram(
-                    y,
-                    sr = sr,
-                    n_mels = self.N_MELS,
-                    n_fft = self.N_FFT,
-                    hop_length = self.HOP_LENGTH),
-                    ref = np.max)
-        
-        return S
+            librosa.feature.melspectrogram(
+                y,
+                sr=sr,
+                n_mels=self.N_MELS,
+                n_fft=self.N_FFT,
+                hop_length=self.HOP_LENGTH),
+            ref=np.max)
 
+        return S
 
     def prepossessingAudio(self):
         """
@@ -65,7 +63,8 @@ class ExtractAudioFeatures(object):
                 ```
         """
         # Obtenemos una lista de los directorios
-        directorios = [nombre_directorio for nombre_directorio in os.listdir(self.PATH) if os.path.isdir(os.path.join(self.PATH, nombre_directorio))]
+        directorios = [nombre_directorio for nombre_directorio in os.listdir(self.PATH) \
+                        if os.path.isdir(os.path.join(self.PATH, nombre_directorio))]
         directorios.sort()
         directorios.insert(0, directorios[0])
         
@@ -90,7 +89,10 @@ class ExtractAudioFeatures(object):
                             
                         try:
                             S = self.librosaAudio(file_Path) # Obtenemos el Mel-Spectogram
-                            group_hdf.create_dataset(filename, data = S, compression = 'gzip') # Incluimos el fichero numpy en el dataset.
+                            group_hdf.create_dataset(
+                                filename, 
+                                data=S, 
+                                compression='gzip') # Incluimos el fichero numpy en el dataset.
                         except Exception as e:
                             print("Error accured" + str(e))
                 directorios.pop(0) # Next directorio
