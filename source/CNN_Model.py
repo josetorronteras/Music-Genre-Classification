@@ -1,7 +1,7 @@
 import sys
-import numpy as np
 import json
 from pathlib import Path
+import numpy as np
 
 from keras.models import Sequential
 from keras.models import model_from_json
@@ -39,9 +39,9 @@ class CNNModel():
     
         self.model = model_from_json(config_model)
         self.model.summary()
-        self.model.compile(loss = losses.categorical_crossentropy,
-                            optimizer = optimizers.SGD(lr = 0.001, momentum = 0, decay = 1e-5, nesterov = True),
-                            metrics = ['accuracy'])
+        self.model.compile(loss=losses.categorical_crossentropy,
+                        optimizer=optimizers.SGD(lr=0.001, momentum=0, decay=1e-5, nesterov=True),
+                        metrics=['accuracy'])
 
     def loadWeights(self, weights_path):
         """
@@ -67,7 +67,7 @@ class CNNModel():
     def safeWeights(self, log_dir):
         self.model.save_weights(log_dir + 'weights.h5')
 
-    def buildModel(self, model_path,  input_model, nb_classes):
+    def buildModel(self, model_path, input_model, nb_classes):
         """
             Creamos un modelo a partir de unos parámetros dados por un archivo json.
             # Arguments:
@@ -92,40 +92,36 @@ class CNNModel():
         with open(model_path) as json_data:
             model_json = json.load(json_data)
 
-        self.model.add(
-                    Conv2D(
+        self.model.add(Conv2D(
                         int(model_json['layer1']['filters']),
                         tuple(model_json['layer1']['kernel_size']),
-                        padding = model_json['layer1']['padding'],
-                        input_shape = (input_model.shape[1], input_model.shape[2], input_model.shape[3])))
+                        padding=model_json['layer1']['padding'],
+                        input_shape=(input_model.shape[1], input_model.shape[2], input_model.shape[3])))
         self.model.add(Activation('relu'))
-        self.model.add(MaxPooling2D(pool_size = tuple(model_json['layer1']['pool_size'])))
+        self.model.add(MaxPooling2D(pool_size=tuple(model_json['layer1']['pool_size'])))
         
-        self.model.add(
-                    Conv2D(
+        self.model.add(Conv2D(
                         int(model_json['layer2']['filters']),
                         tuple(model_json['layer2']['kernel_size']),
-                        padding = model_json['layer2']['padding']))
+                        padding=model_json['layer2']['padding']))
         self.model.add(Activation('relu'))
-        self.model.add(MaxPooling2D(pool_size = tuple(model_json['layer2']['pool_size'])))
+        self.model.add(MaxPooling2D(pool_size=tuple(model_json['layer2']['pool_size'])))
         self.model.add(Dropout(float(model_json['layer2']['dropout'])))
 
-        self.model.add(
-                    Conv2D(
+        self.model.add(Conv2D(
                         int(model_json['layer3']['filters']),
                         tuple(model_json['layer3']['kernel_size']),
-                        padding = model_json['layer3']['padding']))
+                        padding=model_json['layer3']['padding']))
         self.model.add(Activation('relu'))
-        self.model.add(MaxPooling2D(pool_size = tuple(model_json['layer3']['pool_size'])))
+        self.model.add(MaxPooling2D(pool_size=tuple(model_json['layer3']['pool_size'])))
         self.model.add(Dropout(float(model_json['layer3']['dropout'])))
         
-        self.model.add(
-                    Conv2D(
+        self.model.add(Conv2D(
                         int(model_json['layer4']['filters']),
                         tuple(model_json['layer4']['kernel_size']),
-                        padding = model_json['layer4']['padding']))
+                        padding=model_json['layer4']['padding']))
         self.model.add(Activation('relu'))
-        self.model.add(MaxPooling2D(pool_size = tuple(model_json['layer4']['pool_size'])))
+        self.model.add(MaxPooling2D(pool_size=tuple(model_json['layer4']['pool_size'])))
         self.model.add(Dropout(float(model_json['layer4']['dropout'])))
              
         self.model.add(Flatten())
@@ -137,9 +133,9 @@ class CNNModel():
         self.model.add(Dense(nb_classes))
         self.model.add(Activation("softmax"))
         
-        self.model.compile(loss = losses.categorical_crossentropy,
-                optimizer = optimizers.SGD(lr = 0.001, momentum = 0, decay = 1e-5, nesterov = True),
-                metrics = ['accuracy'])
+        self.model.compile(loss=losses.categorical_crossentropy,
+                optimizer=optimizers.SGD(lr=0.001, momentum=0, decay=1e-5, nesterov=True),
+                metrics=['accuracy'])
 
         self.model.summary()
 
@@ -148,11 +144,11 @@ class CNNModel():
         history = self.model.fit(
                         X_train,
                         y_train,
-                        batch_size = int(config['CNN_CONFIGURATION']['BATCH_SIZE']),
-                        epochs = int(config['CNN_CONFIGURATION']['NUMBERS_EPOCH']),
-                        verbose = 1,
-                        validation_data = (X_val, y_val),
-                        callbacks = callbacks)
+                        batch_size=int(config['CNN_CONFIGURATION']['BATCH_SIZE']),
+                        epochs=int(config['CNN_CONFIGURATION']['NUMBERS_EPOCH']),
+                        verbose=1,
+                        validation_data=(X_val, y_val),
+                        callbacks=callbacks)
         
         score = self.model.evaluate(X_test, y_test, verbose=0)
         print('Test score:', score[0])
@@ -162,7 +158,7 @@ class CNNModel():
 
     def predictModel(self, X_test):
         Y_pred = self.model.predict(X_test)
-        y_pred = np.argmax(Y_pred, axis = 1)
+        y_pred = np.argmax(Y_pred, axis=1)
         #y_pred =  np.reshape(Y_pred, (Y_pred.size,))
         print("Predecido: ", y_pred)
 

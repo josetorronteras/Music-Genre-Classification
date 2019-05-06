@@ -24,7 +24,7 @@ def pltResults(config, data1, data2, title, labelx, labely):
     plt.xlabel(labelx)
     plt.ylabel(labely)
     plt.legend(['train', 'test'], loc='upper left')
-    plt.savefig(config['CALLBACKS']['TENSORBOARD_LOGDIR'] + '/acc.png')
+    plt.savefig(config['CALLBACKS']['TENSORBOARD_LOGDIR'] + '/' + labely + '.png')
     plt.close()
 
 def confusionMatrix(y_test, y_pred):
