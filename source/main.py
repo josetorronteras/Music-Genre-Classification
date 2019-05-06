@@ -12,7 +12,7 @@ from pathlib import Path
 from Extract_Audio_Features import ExtractAudioFeatures
 from Get_Train_Test_Data import GetTrainTestData
 from CNN_Model import CNNModel
-from Aux_Functions import *
+from Aux_Functions import pltResults
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--preprocess", "-p", help = "Preparar los datos de las canciones", action = "store_true")
