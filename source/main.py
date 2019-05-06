@@ -88,3 +88,4 @@ elif args.trainmodel:
 
     # Guardamos el modelo
     model.safeModel('./logs/model.json')
+    model.safeWeights('./logs/')

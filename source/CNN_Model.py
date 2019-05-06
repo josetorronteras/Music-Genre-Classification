@@ -64,6 +64,9 @@ class CNNModel():
         with open(log_dir, "w") as json_file:
             json_file.write(model_json)
 
+    def safeWeights(self, log_dir):
+        self.model.save_weights(log_dir + 'weights.h5')
+
     def buildModel(self, model_path,  input_model, nb_classes):
         """
             Creamos un modelo a partir de unos parámetros dados por un archivo json.
