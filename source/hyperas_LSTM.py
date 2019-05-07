@@ -12,7 +12,7 @@ os.environ["CUDA_VISIBLE_DEVICES"] = str(args.device);
 import configparser
 
 from keras.callbacks import TensorBoard, EarlyStopping
-from keras.models import Sequentials
+from keras.models import Sequential
 from keras.layers.recurrent import LSTM
 from keras.layers import Dense
 from keras import optimizers
