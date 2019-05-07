@@ -72,7 +72,7 @@ def hyperas_model(X_train, y_train, X_test, y_test, X_val, y_val):
 
     model.summary()
 
-    history = model.fit(
+    result = model.fit(
                     X_train,
                     y_train,
                     batch_size=int(config['CNN_CONFIGURATION']['BATCH_SIZE']),
