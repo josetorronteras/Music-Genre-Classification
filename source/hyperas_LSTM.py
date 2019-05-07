@@ -30,18 +30,6 @@ from LSTM_Model import LSTMModel
 config = configparser.ConfigParser()
 config.read('config/config-gpu.ini')
 
-# Creamos los callbacks para el modelo
-callbacks = [
-            TensorBoard(log_dir=config['CALLBACKS']['TENSORBOARD_LOGDIR'],
-                        write_images=config['CALLBACKS']['TENSORBOARD_WRITEIMAGES'],
-                        write_graph=config['CALLBACKS']['TENSORBOARD_WRITEGRAPH'],
-                        update_freq=config['CALLBACKS']['TENSORBOARD_UPDATEFREQ']
-                        ),
-            EarlyStopping(monitor=config['CALLBACKS']['EARLYSTOPPING_MONITOR'],
-                        mode=config['CALLBACKS']['EARLYSTOPPING_MODE'], 
-                        patience=int(config['CALLBACKS']['EARLYSTOPPING_PATIENCE']),
-                        verbose=1)
-]
 
 def data():
     config = configparser.ConfigParser()
@@ -58,6 +46,19 @@ def hyperas_model(X_train, y_train, X_test, y_test, X_val, y_val):
     
     config = configparser.ConfigParser()
     config.read('config/config-gpu.ini')
+
+    # Creamos los callbacks para el modelo
+    callbacks = [
+                TensorBoard(log_dir=config['CALLBACKS']['TENSORBOARD_LOGDIR'],
+                            write_images=config['CALLBACKS']['TENSORBOARD_WRITEIMAGES'],
+                            write_graph=config['CALLBACKS']['TENSORBOARD_WRITEGRAPH'],
+                            update_freq=config['CALLBACKS']['TENSORBOARD_UPDATEFREQ']
+                            ),
+                EarlyStopping(monitor=config['CALLBACKS']['EARLYSTOPPING_MONITOR'],
+                            mode=config['CALLBACKS']['EARLYSTOPPING_MODE'], 
+                            patience=int(config['CALLBACKS']['EARLYSTOPPING_PATIENCE']),
+                            verbose=1)
+    ]
 
     model = Sequential()
     model.add(LSTM(units={{choice([32, 64, 128, 256, 512])}}, return_sequences=True, input_shape=(X_train.shape[1], X_train.shape[2])))
