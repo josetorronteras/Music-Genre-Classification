@@ -55,7 +55,7 @@ def data(config):
 
     return X_train, X_test, X_val, y_train, y_test, y_val
 
-def hyperas_model(X_train, y_train, X_test, y_test, X_val, y_val, config):
+def hyperas_model(X_train, y_train, X_test, y_test, X_val, y_val):
     
     model = Sequential()
     model.add(LSTM(units={{choice([32, 64, 128, 256, 512])}}, input_shape=(X_train.shape[1], X_train.shape[2])))
