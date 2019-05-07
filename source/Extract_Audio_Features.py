@@ -20,7 +20,8 @@ class ExtractAudioFeatures(object):
         self.PATH = config['PATH_CONFIGURATION']['DATASET_PATH']
 
         # Nombre del dataset generado
-        self.DATASET_NAME = config['DATA_CONFIGURATION']['DATASET_NAME']
+        self.DATASET_NAME_SPECTOGRAM = config['DATA_CONFIGURATION']['DATASET_NAME_SPECTOGRAM']
+        self.DATASET_NAME_MFCC = config['DATA_CONFIGURATION']['DATASET_NAME_MFCC']
 
         # Parámetros Librosa
         self.N_MELS = int(config['AUDIO_FEATURES']['N_MELS'])
@@ -37,7 +38,7 @@ class ExtractAudioFeatures(object):
                     Ruta del fichero de audio.
             # Return:
                 S: np.array
-                    Imagen de un Espectograma en dB.
+                    Imagen de un Espectograma en dB. Dividimos entre 80 para tenerlo escalado.
         """
         # Cargamos el audio con librosa
         y, sr = librosa.load(file_Path, duration=self.DURATION)
@@ -57,19 +58,23 @@ class ExtractAudioFeatures(object):
         """
 
         """
+        # Cargamos el audio con librosa
         y, sr = librosa.load(file_path, duration=self.DURATION)
         
         mfcc = librosa.feature.mfcc(y=y, sr=sr, hop_length=self.HOP_LENGTH)
-        spectral_center = librosa.feature.spectral_centroid(y=y, sr=sr, hop_length=self.HOP_LENGTH)
-        chroma = librosa.feature.chroma_stft(y=y, sr=sr, hop_length=self.HOP_LENGTH)
-        spectral_contrast = librosa.feature.spectral_contrast(y=y, sr=sr, hop_length=self.HOP_LENGTH)
-        
-        return np.vstack((mfcc, spectral_center, chroma, spectral_contrast))
+        #spectral_center = librosa.feature.spectral_centroid(y=y, sr=sr, hop_length=self.HOP_LENGTH)
+        #chroma = librosa.feature.chroma_stft(y=y, sr=sr, hop_length=self.HOP_LENGTH)
+        #spectral_contrast = librosa.feature.spectral_contrast(y=y, sr=sr, hop_length=self.HOP_LENGTH)
+        # np.vstack((mfcc, spectral_center, chroma, spectral_contrast))
+        return mfcc
 
-    def prepossessingAudio(self):
+    def prepossessingAudio(self, spectogram = True):
         """
             Preprocesamiento de GTZAN, para la creacción del Dataset.
             Crea un archivo h5py con todos los datos generados.
+            # Arguments:
+                spectogram: Bool
+                    Genera el dataset del espectograma
             # Example:
                 ```
                     python main.py --preprocess --config=CONFIGFILE.ini
@@ -80,10 +85,12 @@ class ExtractAudioFeatures(object):
                         if os.path.isdir(os.path.join(self.PATH, nombre_directorio))]
         directorios.sort()
         directorios.insert(0, directorios[0])
-        
-        dataset_preprocesado_path = Path(self.DEST + self.DATASET_NAME)
+
+        # Cambiamos el nombre del dataset en función de lo deseado
+        elegirNombreDataset = lambda spectogram: Path(self.DEST + self.DATASET_NAME_SPECTOGRAM) if spectogram \
+                                else Path(self.DEST + self.DATASET_NAME_MFCC)
         # Escribimos el Dataset Preprocesado en formato h5py
-        with h5py.File(dataset_preprocesado_path, 'w') as hdf:
+        with h5py.File(elegirNombreDataset(spectogram), 'w') as hdf:
 
             for root, subdirs, files in os.walk(self.PATH):
                 # Ordenamos las carpetas por orden alfabético
@@ -99,13 +106,18 @@ class ExtractAudioFeatures(object):
                     if filename.endswith('.au'): # Descartamos otros ficheros .DS_store
                         file_Path = Path(root, filename) # Ruta de la cancion
                         print('Fichero %s (full path: %s)' % (filename, file_Path))
-                            
+
                         try:
-                            #S = self.getMelspectogram(file_Path) # Obtenemos el Mel-Spectogram
-                            S = self.spectralFeatures(file_Path) # Obtenemos las caracteristicas espectrales
+                            if spectogram:
+                                # Obtenemos las caracteristicas espectrales
+                                S = self.getMelspectogram(file_Path)
+                            else:
+                                # Obtenemos el Mel-Spectogram
+                                S = self.spectralFeatures(file_Path)
+
                             group_hdf.create_dataset(
-                                filename, 
-                                data=S, 
+                                filename,
+                                data=S,
                                 compression='gzip') # Incluimos el fichero numpy en el dataset.
                         except Exception as e:
                             print("Error accured" + str(e))

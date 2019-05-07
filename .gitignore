@@ -110,3 +110,11 @@ data/dataset\.hdf5
 data/traintest\.hdf5
 
 data/dataset_lstm\.hdf5
+
+data/dataset_mfcc\.hdf5
+
+data/dataset_spectogram\.hdf5
+
+data/traintest_dataset_mfcc\.hdf5
+
+data/traintest_dataset_spectogram\.hdf5

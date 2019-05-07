@@ -56,7 +56,7 @@ class CNNModel():
             print("No se ha encontrado el fichero con los pesos")
             sys.exit(0)
 
-        self.model.load_weights('../results/best-model/weights.hdf5')
+        self.model.load_weights(weights_path)
 
     def safeModel(self, log_dir):
         """
@@ -76,7 +76,7 @@ class CNNModel():
                 log_dir: String
                     Ruta donde se guarda los pesos.
         """
-        self.model.save_weights(log_dir + 'weights.h5')
+        self.model.save_weights(log_dir + 'weights.hdf5')
 
     def buildModel(self, model_path, input_model, nb_classes):
         """

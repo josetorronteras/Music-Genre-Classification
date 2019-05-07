@@ -18,7 +18,8 @@ class GetTrainTestData(object):
         self.DATASET_PATH = config['PATH_CONFIGURATION']['AUDIO_PATH']
 
         # Nombre del dataset generado
-        self.DATASET_NAME = config['DATA_CONFIGURATION']['DATASET_NAME']
+        self.DATASET_NAME_SPECTOGRAM = config['DATA_CONFIGURATION']['DATASET_NAME_SPECTOGRAM']
+        self.DATASET_NAME_MFCC = config['DATA_CONFIGURATION']['DATASET_NAME_MFCC']
 
         # Configuración de los datos
         self.SIZE = int(config['DATA_CONFIGURATION']['DATA_SIZE'])
@@ -58,22 +59,27 @@ class GetTrainTestData(object):
         # features_arr = np.vstack(aux_list)
         return read_data
 
-    def splitDataset(self):
+    def splitDataset(self, spectogram = True):
         """
             Divide el dataset en X_train X_test X_val para el entrenamiento.
             Se guardan en un fichero h5py.
+            # Arguments:
+                spectogram: Bool
+                    Genera el dataset del espectograma
             # Example:
                 ```
                     python main.py --dataset --config=CONFIGFILE.ini
                 ```
         """
-        dataset_file_path = Path(self.DATASET_PATH + self.DATASET_NAME)
-        if not dataset_file_path.exists():
+        # Cambiamos el nombre del dataset en función de lo deseado
+        elegirNombreDataset = lambda spectogram: self.DATASET_NAME_SPECTOGRAM if spectogram \
+                                else self.DATASET_NAME_MFCC
+
+        if not Path(self.DATASET_PATH + elegirNombreDataset(spectogram)).exists():
             print("No se ha encontrado el fichero")
             sys.exit(0)
 
-        dataset_file = h5py.File(dataset_file_path, 'r')
-        
+        dataset_file = h5py.File(Path(self.DATASET_PATH + elegirNombreDataset(spectogram)), 'r')
         # Obtenemos los arrays de cada género
         arr_blues = self.getDataFromDataset('blues', dataset_file)
         arr_classical = self.getDataFromDataset('classical', dataset_file)
@@ -128,7 +134,7 @@ class GetTrainTestData(object):
                                                 stratify=y_test)
 
         # Guardamos los datos generados
-        dataset_output_path = Path(self.DATASET_PATH + 'traintest.hdf5')
+        dataset_output_path = Path(self.DATASET_PATH + 'traintest_' + elegirNombreDataset(spectogram))
         with h5py.File(dataset_output_path, 'w') as hdf:
             hdf.create_dataset('X_train', data=X_train, compression='gzip')
             hdf.create_dataset('y_train', data=y_train, compression='gzip')
@@ -140,19 +146,25 @@ class GetTrainTestData(object):
         print("X_train Tamaño: %s - X_test Tamaño: %s - X_val Tamaño: %s - y_train Tamaño: %s - y_test Tamaño: %s - y_val Tamaño: %s " % \
              (X_train.shape, X_test.shape, X_val.shape, y_train.shape, y_test.shape, y_val.shape))
     
-    def read_dataset(self):
+    def read_dataset(self, spectogram = True):
         """
             Lee el dataset dividido.
+            # Arguments:
+                spectogram: Bool
+                    Lee el dataset del espectograma
             # Return:
                 dataset: np array
                     X_train y_train X_test y_test X_val y_val
         """
-        dataset_file_path = Path(self.DATASET_PATH + 'traintest.hdf5')
-        if not dataset_file_path.exists():
+        # Cambiamos el nombre del dataset en función de lo deseado
+        elegirNombreDataset = lambda spectogram: self.DATASET_NAME_SPECTOGRAM if spectogram \
+                                else self.DATASET_NAME_MFCC
+
+        if not Path(self.DATASET_PATH + elegirNombreDataset(spectogram)).exists():
             print("No se ha encontrado el fichero")
             sys.exit(0)
 
-        dataset = h5py.File(dataset_file_path, 'r')
+        dataset = h5py.File(Path(self.DATASET_PATH + 'traintest_' + elegirNombreDataset(spectogram)), 'r')
         return dataset['X_train'][()], dataset['X_test'][()],\
                 dataset['X_val'][()], dataset['y_train'][()],\
                 dataset['y_test'][()], dataset['y_val'][()]
