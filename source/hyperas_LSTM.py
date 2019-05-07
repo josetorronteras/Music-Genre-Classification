@@ -1,5 +1,12 @@
 import os
-os.environ["CUDA_VISIBLE_DEVICES"]="0";
+import argparse
+
+parser = argparse.ArgumentParser()
+parser.add_argument("--config", "-c", help = "Archivo de Configuracion", required = True)
+parser.add_argument("--device", "-v", type = int, default = 0, help = "Cuda Visible Device")
+args = parser.parse_args()
+
+os.environ["CUDA_VISIBLE_DEVICES"] = str(args.device);
 
 import configparser
 
