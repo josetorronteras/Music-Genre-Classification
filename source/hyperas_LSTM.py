@@ -82,17 +82,16 @@ def hyperas_model(X_train, y_train, X_test, y_test, X_val, y_val):
     print('Best validation acc of epoch:', validation_acc)
     return {'loss': -validation_acc, 'status': STATUS_OK, 'model': model}
 
-if __name__ == '__main__':
 
-    X_train, X_test, X_val, y_train, y_test, y_val = data(config)
+X_train, X_test, X_val, y_train, y_test, y_val = data(config)
 
-    best_run, best_model = optim.minimize(model = hyperas_model,
-                                          data = data,
-                                          algo = tpe.suggest,
-                                          max_evals = 50,
-                                          trials = Trials())
+best_run, best_model = optim.minimize(model = hyperas_model,
+                                        data = data,
+                                        algo = tpe.suggest,
+                                        max_evals = 50,
+                                        trials = Trials())
 
-    print("Evalutation of best performing model:")
-    print(best_model.evaluate(X_val, y_val))
-    print("Best performing model chosen hyper-parameters:")
-    print(best_run)
+print("Evalutation of best performing model:")
+print(best_model.evaluate(X_val, y_val))
+print("Best performing model chosen hyper-parameters:")
+print(best_run)
