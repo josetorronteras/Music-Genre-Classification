@@ -47,7 +47,14 @@ callbacks = [
                         verbose=1)
 ]
 
-def data(config):
+def data():
+    config_path = Path(args.config)
+    if not config_path.exists():
+        print("No se ha encontrado el fichero config")
+        sys.exit(0)
+    config = configparser.ConfigParser()
+    config.read(config_path)
+
     X_train, X_test, X_val, y_train, y_test, y_val = GetTrainTestData(config).read_dataset(spectogram=False)
     y_train = np_utils.to_categorical(y_train)
     y_test = np_utils.to_categorical(y_test)
@@ -57,6 +64,13 @@ def data(config):
 
 def hyperas_model(X_train, y_train, X_test, y_test, X_val, y_val):
     
+    config_path = Path(args.config)
+    if not config_path.exists():
+        print("No se ha encontrado el fichero config")
+        sys.exit(0)
+    config = configparser.ConfigParser()
+    config.read(config_path)
+
     model = Sequential()
     model.add(LSTM(units={{choice([32, 64, 128, 256, 512])}}, input_shape=(X_train.shape[1], X_train.shape[2])))
     if {{choice(['noentro', 'entro'])}} == 'entro':
