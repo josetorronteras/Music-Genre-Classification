@@ -60,9 +60,9 @@ def hyperas_model(X_train, y_train, X_test, y_test, X_val, y_val):
     config.read('config/config-gpu.ini')
 
     model = Sequential()
-    model.add(LSTM(units={{choice([32, 64, 128, 256, 512])}}, input_shape=(X_train.shape[1], X_train.shape[2])))
+    model.add(LSTM(units={{choice([32, 64, 128, 256, 512])}}, return_sequences=True, input_shape=(X_train.shape[1], X_train.shape[2])))
     if {{choice(['noentro', 'entro'])}} == 'entro':
-        model.add(LSTM(units={{choice([32, 64, 128])}}))
+        model.add(LSTM(units={{choice([32, 64, 128])}}, return_sequences=False))
     model.add(Dense(units=10, activation='softmax'))
 
     model.compile(loss=losses.categorical_crossentropy,
