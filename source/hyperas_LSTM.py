@@ -1,6 +1,7 @@
 import os
 import argparse
 import numpy as np
+from pathlib import Path
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--config", "-c", help = "Archivo de Configuracion", required = True)
