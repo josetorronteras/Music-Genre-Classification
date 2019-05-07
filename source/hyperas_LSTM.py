@@ -86,7 +86,7 @@ if __name__ == '__main__':
 
     X_train, X_test, X_val, y_train, y_test, y_val = data(config)
 
-    best_run, best_model = optim.minimize(model = model,
+    best_run, best_model = optim.minimize(model = hyperas_model,
                                           data = data,
                                           algo = tpe.suggest,
                                           max_evals = 50,
