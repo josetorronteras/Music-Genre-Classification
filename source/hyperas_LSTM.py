@@ -27,12 +27,8 @@ from hyperopt import Trials, STATUS_OK, tpe
 from Get_Train_Test_Data import GetTrainTestData
 from LSTM_Model import LSTMModel
 
-config_path = Path(args.config)
-if not config_path.exists():
-    print("No se ha encontrado el fichero config")
-    sys.exit(0)
 config = configparser.ConfigParser()
-config.read(config_path)
+config.read('config/config-gpu.ini')
 
 # Creamos los callbacks para el modelo
 callbacks = [
@@ -48,12 +44,8 @@ callbacks = [
 ]
 
 def data():
-    config_path = Path(args.config)
-    if not config_path.exists():
-        print("No se ha encontrado el fichero config")
-        sys.exit(0)
     config = configparser.ConfigParser()
-    config.read(config_path)
+    config.read('config/config-gpu.ini')
 
     X_train, X_test, X_val, y_train, y_test, y_val = GetTrainTestData(config).read_dataset(spectogram=False)
     y_train = np_utils.to_categorical(y_train)
@@ -64,12 +56,8 @@ def data():
 
 def hyperas_model(X_train, y_train, X_test, y_test, X_val, y_val):
     
-    config_path = Path(args.config)
-    if not config_path.exists():
-        print("No se ha encontrado el fichero config")
-        sys.exit(0)
     config = configparser.ConfigParser()
-    config.read(config_path)
+    config.read('config/config-gpu.ini')
 
     model = Sequential()
     model.add(LSTM(units={{choice([32, 64, 128, 256, 512])}}, input_shape=(X_train.shape[1], X_train.shape[2])))
