@@ -1,5 +1,6 @@
 import os
 from pathlib import Path
+from sklearn import preprocessing
 import librosa
 import numpy as np
 import h5py
@@ -66,7 +67,7 @@ class ExtractAudioFeatures(object):
         #chroma = librosa.feature.chroma_stft(y=y, sr=sr, hop_length=self.HOP_LENGTH)
         #spectral_contrast = librosa.feature.spectral_contrast(y=y, sr=sr, hop_length=self.HOP_LENGTH)
         # np.vstack((mfcc, spectral_center, chroma, spectral_contrast))
-        return mfcc
+        return preprocessing.scale(mfcc)
 
     def prepossessingAudio(self, spectogram = True):
         """
