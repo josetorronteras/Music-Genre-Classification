@@ -85,13 +85,14 @@ def hyperas_model(X_train, y_train, X_test, y_test, X_val, y_val):
     return {'loss': -validation_acc, 'status': STATUS_OK, 'model': model}
 
 
-X_train, X_test, X_val, y_train, y_test, y_val = data()
 
 best_run, best_model = optim.minimize(model = hyperas_model,
                                         data = data,
                                         algo = tpe.suggest,
                                         max_evals = 50,
                                         trials = Trials())
+
+X_train, X_test, X_val, y_train, y_test, y_val = data()
 
 print("Evalutation of best performing model:")
 print(best_model.evaluate(X_val, y_val))
