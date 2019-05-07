@@ -36,7 +36,7 @@ config.read(config_path)
 if args.preprocess:
     # Preprocesamos los datos
     ExtractAudioFeatures(config).prepossessingAudio()
-    ExtractAudioFeatures(config).prepossessingAudio(spectogram=false)
+    ExtractAudioFeatures(config).prepossessingAudio(spectogram=False)
 elif args.dataset:
     # Creamos el dataset
     GetTrainTestData(config).splitDataset()
