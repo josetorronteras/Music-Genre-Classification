@@ -68,7 +68,7 @@ class LSTMModel():
         self.model.add(LSTM(units=64, dropout=0.05, recurrent_dropout=0.35, return_sequences=False))
         self.model.add(Dense(units=10, activation='softmax'))
 
-        self.model.compile(loss=losses.categorical_crossentropy',
+        self.model.compile(loss=losses.categorical_crossentropy,
                         optimizer=optimizers.SGD(lr=0.01),
                         metrics=['accuracy'])
 
