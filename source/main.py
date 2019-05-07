@@ -35,15 +35,16 @@ config.read(config_path)
 
 if args.preprocess:
     # Preprocesamos los datos
-    ExtractAudioFeatures(config).prepossessingAudio()
+    #ExtractAudioFeatures(config).prepossessingAudio()
     ExtractAudioFeatures(config).prepossessingAudio(spectogram=False)
 elif args.dataset:
     # Creamos el dataset
-    GetTrainTestData(config).splitDataset()
+    #GetTrainTestData(config).splitDataset()
     GetTrainTestData(config).splitDataset(spectogram=False)
 elif args.trainmodel:
     # Leemos el dataset
-    X_train, X_test, X_val, y_train, y_test, y_val = GetTrainTestData(config).read_dataset()
+    #X_train, X_test, X_val, y_train, y_test, y_val = GetTrainTestData(config).read_dataset()
+    X_train, X_test, X_val, y_train, y_test, y_val = GetTrainTestData(config).read_dataset(spectogram=False)
 
     # Transformamos el shape de los datos
     """X_train = X_train.reshape(
