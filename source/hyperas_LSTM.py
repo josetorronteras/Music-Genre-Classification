@@ -97,7 +97,7 @@ def hyperas_model(X_train, y_train, X_test, y_test, X_val, y_val):
     return {'loss': -validation_acc, 'status': STATUS_OK, 'model': model}
 
 
-X_train, X_test, X_val, y_train, y_test, y_val = data(config)
+X_train, X_test, X_val, y_train, y_test, y_val = data()
 
 best_run, best_model = optim.minimize(model = hyperas_model,
                                         data = data,
