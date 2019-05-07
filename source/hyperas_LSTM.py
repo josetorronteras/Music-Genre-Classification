@@ -1,5 +1,6 @@
 import os
 import argparse
+import numpy as np
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--config", "-c", help = "Archivo de Configuracion", required = True)
@@ -11,7 +12,7 @@ os.environ["CUDA_VISIBLE_DEVICES"] = str(args.device);
 import configparser
 
 from keras.callbacks import TensorBoard, EarlyStopping
-from keras.models import Sequential
+from keras.models import Sequentials
 from keras.layers.recurrent import LSTM
 from keras.layers import Dense
 from keras import optimizers
@@ -74,7 +75,7 @@ def hyperas_model(X_train, y_train, X_test, y_test, X_val, y_val, config):
                     epochs=int(config['CNN_CONFIGURATION']['NUMBERS_EPOCH']),
                     verbose=1,
                     validation_data=(X_val, y_val),
-                    callbacks=callbacks))
+                    callbacks=callbacks)
                     
     validation_acc = np.amax(result.history['val_acc']) 
     print('Best validation acc of epoch:', validation_acc)
