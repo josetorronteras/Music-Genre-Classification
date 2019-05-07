@@ -14,7 +14,7 @@ from LSTM_Model import LSTMModel
 from Aux_Functions import pltResults
 
 parser = argparse.ArgumentParser()
-parser.add_argument("--preprocess", "-p", help="Preparar los datos de las canciones", action="store_true")
+parser.add_argument("--preprocess", "-p", help="Preprocesar las canciones.", action="store_true")
 parser.add_argument("--dataset", "-d", help="Preparar los datos para el entrenamiento", action="store_true")
 parser.add_argument("--trainmodel", "-t", help="Entrenar el modelo", action="store_true")
 parser.add_argument("--model", "-m ", help="Archivo con los parámetros del modelo")
@@ -36,9 +36,11 @@ config.read(config_path)
 if args.preprocess:
     # Preprocesamos los datos
     ExtractAudioFeatures(config).prepossessingAudio()
+    ExtractAudioFeatures(config).prepossessingAudio(spectogram=false)
 elif args.dataset:
     # Creamos el dataset
     GetTrainTestData(config).splitDataset()
+    GetTrainTestData(config).splitDataset(spectogram=False)
 elif args.trainmodel:
     # Leemos el dataset
     X_train, X_test, X_val, y_train, y_test, y_val = GetTrainTestData(config).read_dataset()
@@ -79,7 +81,7 @@ elif args.trainmodel:
     ]
 
     # Entrenamos el modelo
-    history = model.trainModel(config, X_train, y_train, X_test, y_test, X_val, y_val, callbacks = callbacks)
+    history = model.trainModel(config, X_train, y_train, X_test, y_test, X_val, y_val, callbacks=callbacks)
 
     # Grafica Accuracy
     pltResults(
