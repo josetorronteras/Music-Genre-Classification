@@ -2,6 +2,7 @@ import os
 import argparse
 import numpy as np
 from pathlib import Path
+import json
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--config", "-c", help = "Archivo de Configuracion", required = True)
@@ -49,11 +50,6 @@ def hyperas_model(X_train, y_train, X_test, y_test, X_val, y_val):
 
     # Creamos los callbacks para el modelo
     callbacks = [
-                TensorBoard(log_dir=config['CALLBACKS']['TENSORBOARD_LOGDIR'],
-                            write_images=config['CALLBACKS']['TENSORBOARD_WRITEIMAGES'],
-                            write_graph=config['CALLBACKS']['TENSORBOARD_WRITEGRAPH'],
-                            update_freq=config['CALLBACKS']['TENSORBOARD_UPDATEFREQ']
-                            ),
                 EarlyStopping(monitor=config['CALLBACKS']['EARLYSTOPPING_MONITOR'],
                             mode=config['CALLBACKS']['EARLYSTOPPING_MODE'], 
                             patience=int(config['CALLBACKS']['EARLYSTOPPING_PATIENCE']),
@@ -61,9 +57,11 @@ def hyperas_model(X_train, y_train, X_test, y_test, X_val, y_val):
     ]
 
     model = Sequential()
-    model.add(LSTM(units={{choice([32, 64, 128, 256, 512])}}, return_sequences=True, input_shape=(X_train.shape[1], X_train.shape[2])))
-    if {{choice(['noentro', 'entro'])}} == 'entro':
+    model.add(LSTM(units={{choice([32, 64, 128, 256, 512])}}, return_sequences=False, input_shape=(X_train.shape[1], X_train.shape[2])))
+    model.add(Activation('relu'))
+    if {{choice(['una', 'dos'])}} == 'dos':
         model.add(LSTM(units={{choice([32, 64, 128])}}, return_sequences=False))
+        model.add(Activation('relu'))
     model.add(Dense(units=10, activation='softmax'))
 
     model.compile(loss=losses.categorical_crossentropy,
@@ -99,3 +97,4 @@ print("Evalutation of best performing model:")
 print(best_model.evaluate(X_val, y_val))
 print("Best performing model chosen hyper-parameters:")
 print(best_run)
+json.dump(best_run, open("best_run.txt", 'w'))
