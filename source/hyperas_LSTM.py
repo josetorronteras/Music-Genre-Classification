@@ -17,6 +17,7 @@ from keras.callbacks import TensorBoard, EarlyStopping
 from keras.models import Sequential
 from keras.layers.recurrent import LSTM
 from keras.layers import Dense
+from keras.layers.core import Activation
 from keras import optimizers
 from keras import losses
 from keras.utils import np_utils
