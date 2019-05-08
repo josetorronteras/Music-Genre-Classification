@@ -58,7 +58,7 @@ def hyperas_model(X_train, y_train, X_test, y_test, X_val, y_val):
     ]
 
     model = Sequential()
-    model.add(LSTM(units={{choice([32, 64, 128, 256, 512])}}, return_sequences=False, input_shape=(X_train.shape[1], X_train.shape[2])))
+    model.add(LSTM(units={{choice([32, 64, 128, 256, 512])}}, return_sequences=True, input_shape=(X_train.shape[1], X_train.shape[2])))
     model.add(Activation('relu'))
     if {{choice(['una', 'dos'])}} == 'dos':
         model.add(LSTM(units={{choice([32, 64, 128])}}, return_sequences=False))
