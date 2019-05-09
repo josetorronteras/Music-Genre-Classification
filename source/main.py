@@ -86,7 +86,7 @@ elif args.trainmodel:
 
     # Grafica Accuracy
     pltResults(
-        logdir=config['CALLBACKS']['TENSORBOARD_LOGDIR'] + args.model,
+        config['CALLBACKS']['TENSORBOARD_LOGDIR'] + args.model,
         history.history['acc'], 
         history.history['val_acc'], 
         'Model accuracy', 
@@ -95,7 +95,7 @@ elif args.trainmodel:
 
     # Grafica Loss 
     pltResults(
-        logdir=config['CALLBACKS']['TENSORBOARD_LOGDIR'] + args.model, 
+        config['CALLBACKS']['TENSORBOARD_LOGDIR'] + args.model, 
         history.history['loss'], 
         history.history['val_loss'], 
         'Model loss', 
