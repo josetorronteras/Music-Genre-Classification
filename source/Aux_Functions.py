@@ -9,7 +9,7 @@ def pltResults(logdir, data1, data2, title, labelx, labely):
     plt.xlabel(labelx)
     plt.ylabel(labely)
     plt.legend(['train', 'test'], loc='upper left')
-    plt.savefig(log_dir + '/' + labely + '.png')
+    plt.savefig(logdir + '/' + labely + '.png')
     plt.close()
 
 def confusionMatrix(y_test, y_pred):
