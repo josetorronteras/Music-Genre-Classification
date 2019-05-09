@@ -70,7 +70,7 @@ elif args.trainmodel:
 
     # Creamos los callbacks para el modelo
     callbacks = [
-                TensorBoard(log_dir=config['CALLBACKS']['TENSORBOARD_LOGDIR'],
+                TensorBoard(log_dir=config['CALLBACKS']['TENSORBOARD_LOGDIR'] + args.model,
                             write_images=config['CALLBACKS']['TENSORBOARD_WRITEIMAGES'],
                             write_graph=config['CALLBACKS']['TENSORBOARD_WRITEGRAPH'],
                             update_freq=config['CALLBACKS']['TENSORBOARD_UPDATEFREQ']
@@ -86,7 +86,7 @@ elif args.trainmodel:
 
     # Grafica Accuracy
     pltResults(
-        config, 
+        log_dir=config['CALLBACKS']['TENSORBOARD_LOGDIR'] + args.model,
         history.history['acc'], 
         history.history['val_acc'], 
         'Model accuracy', 
@@ -95,7 +95,7 @@ elif args.trainmodel:
 
     # Grafica Loss 
     pltResults(
-        config, 
+        log_dir=config['CALLBACKS']['TENSORBOARD_LOGDIR'] + args.model, 
         history.history['loss'], 
         history.history['val_loss'], 
         'Model loss', 

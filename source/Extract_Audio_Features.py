@@ -67,13 +67,14 @@ class ExtractAudioFeatures(object):
         #chroma = librosa.feature.chroma_stft(y=y, sr=sr, hop_length=self.HOP_LENGTH)
         #spectral_contrast = librosa.feature.spectral_contrast(y=y, sr=sr, hop_length=self.HOP_LENGTH)
         # np.vstack((mfcc, spectral_center, chroma, spectral_contrast))
-        return preprocessing.scale(mfcc)
+        min_max_scaler = preprocessing.MinMaxScaler()
+        return min_max_scaler.fit_transform(mfcc)
 
     def prepossessingAudio(self, spectogram = True):
         """
             Preprocesamiento de GTZAN, para la creacción del Dataset.
             Crea un archivo h5py con todos los datos generados.
-            # Arguments:
+            # Arguments:
                 spectogram: Bool
                     Genera el dataset del espectograma
             # Example:
@@ -87,7 +88,7 @@ class ExtractAudioFeatures(object):
         directorios.sort()
         directorios.insert(0, directorios[0])
 
-        # Cambiamos el nombre del dataset en función de lo deseado
+        # Cambiamos el nombre del dataset en función de lo deseado
         elegirNombreDataset = lambda spectogram: Path(self.DEST + self.DATASET_NAME_SPECTOGRAM) if spectogram \
                                 else Path(self.DEST + self.DATASET_NAME_MFCC)
         # Escribimos el Dataset Preprocesado en formato h5py

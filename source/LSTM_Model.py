@@ -1,5 +1,6 @@
 import sys
 import json
+from pathlib import Path
 import numpy as np
 
 from keras.models import Sequential
@@ -63,9 +64,20 @@ class LSTMModel():
                 nb_classes: Entero
                     Numero de clases a usar en la red
             # Detalles:
-        """        
-        self.model.add(LSTM(units=512, dropout=0.05, recurrent_dropout=0.35, return_sequences=True, input_shape=(input_model.shape[1], input_model.shape[2])))
-        self.model.add(LSTM(units=64, dropout=0.05, recurrent_dropout=0.35, return_sequences=False))
+        """
+
+        model_path = Path(model_path)
+        if not model_path.exists():
+            print("No se ha encontrado el fichero model")
+            sys.exit(0)
+
+        with open(model_path) as json_data:
+            model_json = json.load(json_data)
+            
+        self.model.add(LSTM(units=int(model_json['layer1']['units']), dropout=0.05, recurrent_dropout=0.35, return_sequences=True, input_shape=(input_model.shape[1], input_model.shape[2])))
+        if bool(model_json['num_layers']):
+            self.model.add(LSTM(units=int(model_json['layer2']['units']), dropout=0.05, recurrent_dropout=0.35, return_sequences=False))
+            
         self.model.add(Dense(units=10, activation='softmax'))
 
         self.model.compile(loss=losses.categorical_crossentropy,

@@ -2,14 +2,14 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from sklearn.metrics import confusion_matrix
 
-def pltResults(config, data1, data2, title, labelx, labely):
+def pltResults(logdir, data1, data2, title, labelx, labely):
     plt.plot(data1)
     plt.plot(data2)
     plt.title(title)
     plt.xlabel(labelx)
     plt.ylabel(labely)
     plt.legend(['train', 'test'], loc='upper left')
-    plt.savefig(config['CALLBACKS']['TENSORBOARD_LOGDIR'] + '/' + labely + '.png')
+    plt.savefig(log_dir + '/' + labely + '.png')
     plt.close()
 
 def confusionMatrix(y_test, y_pred):

@@ -1,0 +1,12 @@
+{
+  "id": "model_5",
+  "num_layers": 1,
+  "layer1": {
+    "dropout": 0,
+    "units": 128
+  },
+  "layer2": {
+    "dropout": 0,
+    "units": 32
+  }
+}
