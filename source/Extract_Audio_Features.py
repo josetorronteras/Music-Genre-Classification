@@ -62,13 +62,13 @@ class ExtractAudioFeatures(object):
         # Cargamos el audio con librosa
         y, sr = librosa.load(file_path, duration=self.DURATION)
         
-        mfcc = librosa.feature.mfcc(y=y, sr=sr, hop_length=self.HOP_LENGTH)
+        mfcc = librosa.feature.mfcc(y=y, sr=sr, hop_length=self.HOP_LENGTH, n_mfcc=13)
         #spectral_center = librosa.feature.spectral_centroid(y=y, sr=sr, hop_length=self.HOP_LENGTH)
         #chroma = librosa.feature.chroma_stft(y=y, sr=sr, hop_length=self.HOP_LENGTH)
         #spectral_contrast = librosa.feature.spectral_contrast(y=y, sr=sr, hop_length=self.HOP_LENGTH)
         # np.vstack((mfcc, spectral_center, chroma, spectral_contrast))
-        min_max_scaler = preprocessing.MinMaxScaler()
-        return min_max_scaler.fit_transform(mfcc)
+        #min_max_scaler = preprocessing.MinMaxScaler()
+        return mfcc.T
 
     def prepossessingAudio(self, spectogram = True):
         """
