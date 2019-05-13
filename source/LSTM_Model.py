@@ -74,14 +74,16 @@ class LSTMModel():
         with open(model_path) as json_data:
             model_json = json.load(json_data)
             
-        self.model.add(LSTM(units=int(model_json['layer1']['units']), dropout=0.05, recurrent_dropout=0.35, return_sequences=True, input_shape=(input_model.shape[1], input_model.shape[2])))
-        if bool(model_json['num_layers']):
-            self.model.add(LSTM(units=int(model_json['layer2']['units']), dropout=0.05, recurrent_dropout=0.35, return_sequences=False))
-            
+        self.model.add(LSTM(units=64, return_sequences=True, input_shape=(X_train.shape[1], X_train.shape[2])))
+        self.model.add(LSTM(units=32, return_sequences=False))
+
+        self.model.add(Dense(512))
+        self.model.add(Activation('relu'))
+        self.model.add(Dropout(0.5))
         self.model.add(Dense(units=10, activation='softmax'))
 
         self.model.compile(loss=losses.categorical_crossentropy,
-                        optimizer=optimizers.SGD(lr=0.01),
+                        optimizer=optimizers.RMSprop(lr=0.001),
                         metrics=['accuracy'])
 
         self.model.summary()
@@ -105,8 +107,8 @@ class LSTMModel():
         history = self.model.fit(
                         data[0],
                         data[1],
-                        batch_size=int(config['CNN_CONFIGURATION']['BATCH_SIZE']),
-                        epochs=int(config['CNN_CONFIGURATION']['NUMBERS_EPOCH']),
+                        batch_size=int(config['LSTM_CONFIGURATION']['BATCH_SIZE']),
+                        epochs=int(config['LSTM_CONFIGURATION']['NUMBERS_EPOCH']),
                         verbose=1,
                         validation_data=(data[4], data[5]),
                         callbacks=callbacks)
