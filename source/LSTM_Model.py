@@ -74,7 +74,7 @@ class LSTMModel():
         with open(model_path) as json_data:
             model_json = json.load(json_data)
             
-        self.model.add(LSTM(units=64, return_sequences=True, input_shape=(X_train.shape[1], X_train.shape[2])))
+        self.model.add(LSTM(units=64, return_sequences=True, input_shape=(input_model.shape[1], input_model.shape[2])))
         self.model.add(LSTM(units=32, return_sequences=False))
 
         self.model.add(Dense(512))
