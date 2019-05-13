@@ -6,6 +6,8 @@ import numpy as np
 from keras.models import Sequential
 from keras.layers.recurrent import LSTM
 from keras.layers import Dense
+from keras.layers import Dropout
+from keras.layers import Activation
 from keras import optimizers
 from keras import losses
 
