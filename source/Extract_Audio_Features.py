@@ -68,7 +68,7 @@ class ExtractAudioFeatures(object):
         #spectral_contrast = librosa.feature.spectral_contrast(y=y, sr=sr, hop_length=self.HOP_LENGTH)
         # np.vstack((mfcc, spectral_center, chroma, spectral_contrast))
         min_max_scaler = preprocessing.MinMaxScaler()
-        return min_max_scaler.fit_transform(mfcc).T
+        return min_max_scaler.fit_transform(mfcc)
 
     def prepossessingAudio(self, spectogram = True):
         """
