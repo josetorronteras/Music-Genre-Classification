@@ -51,7 +51,7 @@ class GetTrainTestData(object):
             if limit == self.SIZE:
                 break
             # Introducimos los datos
-            # Escalamos los datos entre 0 y 1
+            # Escalamos los datos entre 0 y 1
             else:
                 read_data.append((dataset_file[genre][items][()]))
                 limit += 1
@@ -59,11 +59,11 @@ class GetTrainTestData(object):
         # features_arr = np.vstack(aux_list)
         return read_data
 
-    def splitDataset(self, spectogram = True):
+    def splitDataset(self, spectogram=True):
         """
             Divide el dataset en X_train X_test X_val para el entrenamiento.
             Se guardan en un fichero h5py.
-            # Arguments:
+            # Arguments:
                 spectogram: Bool
                     Genera el dataset del espectograma
             # Example:
@@ -71,7 +71,7 @@ class GetTrainTestData(object):
                     python main.py --dataset --config=CONFIGFILE.ini
                 ```
         """
-        # Cambiamos el nombre del dataset en función de lo deseado
+        # Cambiamos el nombre del dataset en función de lo deseado
         elegirNombreDataset = lambda spectogram: self.DATASET_NAME_SPECTOGRAM if spectogram \
                                 else self.DATASET_NAME_MFCC
 
@@ -117,21 +117,23 @@ class GetTrainTestData(object):
                                 np.full(len(arr_rock), 9)))
 
         # Con train_test_split() dividimos los datos.
-        print("test-size = " + str(self.SPLIT_SIZE) + " Cambiar valor en config.py") # Se puede cambiar el tamaño en el archivo config.
-        print("data-size = " + str(self.SIZE) + " Cambiar valor en config.py") # Se puede cambiar el tamaño en el archivo config.
+        # Se puede cambiar el tamaño en el archivo config.
+        print("test-size = " + str(self.SPLIT_SIZE) + " Cambiar valor en config.py")
+        # Se puede cambiar el tamaño en el archivo config.
+        print("data-size = " + str(self.SIZE) + " Cambiar valor en config.py")
 
         # Dividimos los datos, en función a SPLIT_SIZE (config)
         X_train, X_test, y_train, y_test = train_test_split(
-                                                    full_data,
-                                                    labels,
-                                                    test_size=self.SPLIT_SIZE,
-                                                    stratify=labels)
-        
+            full_data,
+            labels,
+            test_size=self.SPLIT_SIZE,
+            stratify=labels)
+
         X_test, X_val, y_test, y_val = train_test_split(
-                                                X_test,
-                                                y_test,
-                                                test_size=0.5,
-                                                stratify=y_test)
+            X_test,
+            y_test,
+            test_size=0.5,
+            stratify=y_test)
 
         # Guardamos los datos generados
         dataset_output_path = Path(self.DATASET_PATH + 'traintest_' + elegirNombreDataset(spectogram))
@@ -143,20 +145,21 @@ class GetTrainTestData(object):
             hdf.create_dataset('X_val', data=X_val, compression='gzip')
             hdf.create_dataset('y_val', data=y_val, compression='gzip')
 
-        print("X_train Tamaño: %s - X_test Tamaño: %s - X_val Tamaño: %s - y_train Tamaño: %s - y_test Tamaño: %s - y_val Tamaño: %s " % \
+        print("X_train Tamaño: %s - X_test Tamaño: %s - X_val Tamaño: %s\
+              - y_train Tamaño: %s - y_test Tamaño: %s - y_val Tamaño: %s " % \
              (X_train.shape, X_test.shape, X_val.shape, y_train.shape, y_test.shape, y_val.shape))
-    
-    def read_dataset(self, spectogram = True):
+
+    def read_dataset(self, spectogram=True):
         """
             Lee el dataset dividido.
-            # Arguments:
+            # Arguments:
                 spectogram: Bool
                     Lee el dataset del espectograma
             # Return:
                 dataset: np array
                     X_train y_train X_test y_test X_val y_val
         """
-        # Cambiamos el nombre del dataset en función de lo deseado
+        # Cambiamos el nombre del dataset en función de lo deseado
         elegirNombreDataset = lambda spectogram: self.DATASET_NAME_SPECTOGRAM if spectogram \
                                 else self.DATASET_NAME_MFCC
 

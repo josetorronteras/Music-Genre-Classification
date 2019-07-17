@@ -14,17 +14,17 @@ from LSTM_Model import LSTMModel
 from Aux_Functions import pltResults
 
 parser = argparse.ArgumentParser()
-parser.add_argument("--preprocess", "-p", help="Preprocesar las canciones.", action="store_true")
-parser.add_argument("--dataset", "-d", help="Preparar los datos para el entrenamiento", action="store_true")
-parser.add_argument("--trainmodel", "-t", help="Entrenar el modelo", action="store_true")
-parser.add_argument("--model", "-m ", help="Archivo con los parámetros del modelo")
+parser.add_argument("--preprocess", "-p", type=str, help="Preprocesar las canciones.")
+parser.add_argument("--dataset", "-d", type=str, help="Preparar los datos para el entrenamiento")
+parser.add_argument("--trainmodel", "-t", type=str, help="Entrenar el modelo")
+parser.add_argument("--model", "-m", help="Archivo con los parámetros del modelo")
 parser.add_argument("--kerasmodel", "-k ", help="Archivo json con el modelo de keras")
 parser.add_argument("--config", "-c", help="Archivo de Configuracion", required=True)
 parser.add_argument("--device", "-v", type=int, default=0, help="Cuda Visible Device")
 args = parser.parse_args()
 
 # Seleccionamos la gpu disponible. Por defecto la 0.
-os.environ["CUDA_VISIBLE_DEVICES"] = str(args.device);
+os.environ["CUDA_VISIBLE_DEVICES"] = str(args.device)
 
 config_path = Path(args.config)
 if not config_path.exists():
@@ -35,40 +35,66 @@ config.read(config_path)
 
 if args.preprocess:
     # Preprocesamos los datos
-    #ExtractAudioFeatures(config).prepossessingAudio()
-    ExtractAudioFeatures(config).prepossessingAudio(spectogram=False)
-elif args.dataset:
-    # Creamos el dataset
-    #GetTrainTestData(config).splitDataset()
-    GetTrainTestData(config).splitDataset(spectogram=False)
-elif args.trainmodel:
-    # Leemos el dataset
-    #X_train, X_test, X_val, y_train, y_test, y_val = GetTrainTestData(config).read_dataset()
-    X_train, X_test, X_val, y_train, y_test, y_val = GetTrainTestData(config).read_dataset(spectogram=False)
+    if args.preprocess == "melspectrogram":
+        ExtractAudioFeatures(config).prepossessingAudio()
+    elif args.preprocess == "mfcc":
+        ExtractAudioFeatures(config).prepossessingAudio(spectogram=False)
+    else:
+        print("No se ha reconocido el parámetro. Por favor seleccione: melspectrogram o mfcc")
+        sys.exit(0)
 
-    # Transformamos el shape de los datos
-    """X_train = X_train.reshape(
-        X_train.shape[0], X_train.shape[1], X_train.shape[2], 1).astype('float32')
-    X_test = X_test.reshape(
-        X_test.shape[0], X_train.shape[1], X_train.shape[2], 1).astype('float32')
-    X_val = X_val.reshape(
-        X_val.shape[0], X_val.shape[1], X_val.shape[2], 1).astype('float32')"""
+elif args.dataset:
+    # Creamos el dataset
+    if args.dataset == "melspectrogram":
+        GetTrainTestData(config).splitDataset()
+    elif args.dataset == "mfcc":
+        GetTrainTestData(config).splitDataset(spectogram=False)
+    else:
+        print("No se ha reconocido el parámetro. Por favor seleccione: melspectrogram o mfcc")
+        sys.exit(0)
+
+elif args.trainmodel:
+
+    # Leemos el dataset
+    if args.trainmodel == "cnn":
+        X_train, X_test,\
+        X_val, y_train,\
+        y_test, y_val = GetTrainTestData(config).read_dataset()
+
+        # Transformamos el shape de los datos
+        X_train = X_train.reshape(
+            X_train.shape[0], X_train.shape[1], X_train.shape[2], 1).astype('float32')
+        X_test = X_test.reshape(
+            X_test.shape[0], X_train.shape[1], X_train.shape[2], 1).astype('float32')
+        X_val = X_val.reshape(
+            X_val.shape[0], X_val.shape[1], X_val.shape[2], 1).astype('float32')
+
+        # Creamos el modelo
+        model = CNNModel()
+
+    elif args.trainmodel == "lstm":
+        X_train, X_test,\
+        X_val, y_train,\
+        y_test, y_val = GetTrainTestData(config).read_dataset(spectogram=False)
+
+        # Creamos el modelo
+        model = LSTMModel()
+    else:
+        print("No se ha reconocido el parámetro. Por favor seleccione: CNN o LSTM")
+        sys.exit(0)
 
     # Convertimos las clases a una matriz binaria de clases
     y_train = np_utils.to_categorical(y_train)
     y_test = np_utils.to_categorical(y_test)
     y_val = np_utils.to_categorical(y_val)
 
-    # Creamos el modelo
-    model = LSTMModel()
-
-    # Cargamos el modelo
+    # Cargamos el modelo
     if args.kerasmodel:
         model.loadModel(args.kerasmodel)
     elif args.model:
         model.buildModel(args.model, X_train, y_test.shape[1])
 
-    # Creamos los callbacks para el modelo
+    # Creamos los callbacks para el modelo
     callbacks = [
                 TensorBoard(log_dir=config['CALLBACKS']['TENSORBOARD_LOGDIR'] + args.model,
                             write_images=config['CALLBACKS']['TENSORBOARD_WRITEIMAGES'],
@@ -76,33 +102,35 @@ elif args.trainmodel:
                             update_freq=config['CALLBACKS']['TENSORBOARD_UPDATEFREQ']
                             ),
                 EarlyStopping(monitor=config['CALLBACKS']['EARLYSTOPPING_MONITOR'],
-                            mode=config['CALLBACKS']['EARLYSTOPPING_MODE'], 
-                            patience=int(config['CALLBACKS']['EARLYSTOPPING_PATIENCE']),
-                            verbose=1)
+                              mode=config['CALLBACKS']['EARLYSTOPPING_MODE'],
+                              patience=int(config['CALLBACKS']['EARLYSTOPPING_PATIENCE']),
+                              verbose=1)
     ]
 
-    # Entrenamos el modelo
-    history = model.trainModel(config, X_train, y_train, X_test, y_test, X_val, y_val, callbacks=callbacks)
+    # Entrenamos el modelo
+    history = model.trainModel(config, X_train,
+                               y_train, X_test,
+                               y_test, X_val,
+                               y_val, callbacks=callbacks)
 
     # Grafica Accuracy
     pltResults(
         config['CALLBACKS']['TENSORBOARD_LOGDIR'] + args.model,
-        history.history['acc'], 
-        history.history['val_acc'], 
-        'Model accuracy', 
-        'epoch', 
+        history.history['acc'],
+        history.history['val_acc'],
+        'Model accuracy',
+        'epoch',
         'accuracy')
 
-    # Grafica Loss 
+    # Grafica Loss
     pltResults(
-        config['CALLBACKS']['TENSORBOARD_LOGDIR'] + args.model, 
-        history.history['loss'], 
-        history.history['val_loss'], 
-        'Model loss', 
-        'epoch', 
+        config['CALLBACKS']['TENSORBOARD_LOGDIR'] + args.model,
+        history.history['loss'],
+        history.history['val_loss'],
+        'Model loss',
+        'epoch',
         'loss')
 
-    # Guardamos el modelo
+    # Guardamos el modelo
     model.safeModel('./logs/model.json')
     model.safeWeights('./logs/')
-    

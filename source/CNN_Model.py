@@ -37,12 +37,12 @@ class CNNModel():
 
         with open(model_file) as f:
             config_model = f.read()
-    
+
         self.model = model_from_json(config_model)
         self.model.summary()
         self.model.compile(loss=losses.categorical_crossentropy,
-                        optimizer=optimizers.SGD(lr=0.001, momentum=0, decay=1e-5, nesterov=True),
-                        metrics=['accuracy'])
+                           optimizer=optimizers.SGD(lr=0.001, momentum=0, decay=1e-5, nesterov=True),
+                           metrics=['accuracy'])
 
     def loadWeights(self, weights_path):
         """
@@ -110,7 +110,7 @@ class CNNModel():
                         input_shape=(input_model.shape[1], input_model.shape[2], input_model.shape[3])))
         self.model.add(Activation('relu'))
         self.model.add(MaxPooling2D(pool_size=tuple(model_json['layer1']['pool_size'])))
-        
+
         self.model.add(Conv2D(
                         int(model_json['layer2']['filters']),
                         tuple(model_json['layer2']['kernel_size']),
@@ -126,7 +126,7 @@ class CNNModel():
         self.model.add(Activation('relu'))
         self.model.add(MaxPooling2D(pool_size=tuple(model_json['layer3']['pool_size'])))
         self.model.add(Dropout(float(model_json['layer3']['dropout'])))
-        
+
         self.model.add(Conv2D(
                         int(model_json['layer4']['filters']),
                         tuple(model_json['layer4']['kernel_size']),
@@ -134,7 +134,7 @@ class CNNModel():
         self.model.add(Activation('relu'))
         self.model.add(MaxPooling2D(pool_size=tuple(model_json['layer4']['pool_size'])))
         self.model.add(Dropout(float(model_json['layer4']['dropout'])))
-             
+
         self.model.add(Flatten())
 
         self.model.add(Dense(512))
@@ -143,10 +143,10 @@ class CNNModel():
 
         self.model.add(Dense(nb_classes))
         self.model.add(Activation("softmax"))
-        
+
         self.model.compile(loss=losses.categorical_crossentropy,
-                        optimizer=optimizers.SGD(lr=0.001, momentum=0, decay=1e-5, nesterov=True),
-                        metrics=['accuracy'])
+                           optimizer=optimizers.SGD(lr=0.001, momentum=0, decay=1e-5, nesterov=True),
+                           metrics=['accuracy'])
 
         self.model.summary()
 
