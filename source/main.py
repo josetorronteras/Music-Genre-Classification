@@ -34,7 +34,7 @@ config = configparser.ConfigParser()
 config.read(config_path)
 
 if args.preprocess:
-    # Preprocesamos los datos
+    # Preprocesamos los datos 
     if args.preprocess == "melspectrogram":
         ExtractAudioFeatures(config).prepossessingAudio()
     elif args.preprocess == "mfcc":

@@ -191,6 +191,6 @@ class CNNModel():
         Y_pred = self.model.predict(X_test)
         y_pred = np.argmax(Y_pred, axis=1)
 
-        print("Predecido: ", y_pred)
+        print("Predicho: ", y_pred)
 
         return y_pred
