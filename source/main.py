@@ -9,8 +9,7 @@ from keras.callbacks import TensorBoard, EarlyStopping
 
 from Extract_Audio_Features import ExtractAudioFeatures
 from Get_Train_Test_Data import GetTrainTestData
-from CNN_Model import CNNModel
-from LSTM_Model import LSTMModel
+from Create_Model import CNNModel, LSTMModel
 from Aux_Functions import pltResults
 
 parser = argparse.ArgumentParser()
@@ -35,32 +34,20 @@ config.read(config_path)
 
 if args.preprocess:
     # Preprocesamos los datos 
-    if args.preprocess == "melspectrogram":
-        ExtractAudioFeatures(config).prepossessingAudio()
-    elif args.preprocess == "mfcc":
-        ExtractAudioFeatures(config).prepossessingAudio(spectogram=False)
-    else:
-        print("No se ha reconocido el parámetro. Por favor seleccione: melspectrogram o mfcc")
-        sys.exit(0)
-
+    ExtractAudioFeatures(config).prepossessingAudio(choice=args.preprocess)
+    
 elif args.dataset:
     # Creamos el dataset
-    if args.dataset == "melspectrogram":
-        GetTrainTestData(config).splitDataset()
-    elif args.dataset == "mfcc":
-        GetTrainTestData(config).splitDataset(spectogram=False)
-    else:
-        print("No se ha reconocido el parámetro. Por favor seleccione: melspectrogram o mfcc")
-        sys.exit(0)
-
+    GetTrainTestData(config).splitDataset(choice=args.dataset)
+    
 elif args.trainmodel:
 
-    # Leemos el dataset
+    X_train, X_test,\
+    X_val, y_train,\
+    y_test, y_val = GetTrainTestData(config).read_dataset(choice=lambda choice: "spec"\
+                            if args.trainmodel == "cnn" else "mfcc")
+    
     if args.trainmodel == "cnn":
-        X_train, X_test,\
-        X_val, y_train,\
-        y_test, y_val = GetTrainTestData(config).read_dataset()
-
         # Transformamos el shape de los datos
         X_train = X_train.reshape(
             X_train.shape[0], X_train.shape[1], X_train.shape[2], 1).astype('float32')
@@ -71,23 +58,20 @@ elif args.trainmodel:
 
         # Creamos el modelo
         model = CNNModel()
-
+        
     elif args.trainmodel == "lstm":
-        X_train, X_test,\
-        X_val, y_train,\
-        y_test, y_val = GetTrainTestData(config).read_dataset(spectogram=False)
-
         # Creamos el modelo
         model = LSTMModel()
+        
     else:
         print("No se ha reconocido el parámetro. Por favor seleccione: CNN o LSTM")
-        sys.exit(0)
-
+        sys.exit(0)        
+    
     # Convertimos las clases a una matriz binaria de clases
     y_train = np_utils.to_categorical(y_train)
     y_test = np_utils.to_categorical(y_test)
     y_val = np_utils.to_categorical(y_val)
-
+    
     # Cargamos el modelo
     if args.kerasmodel:
         model.loadModel(args.kerasmodel)

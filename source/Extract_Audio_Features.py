@@ -111,14 +111,14 @@ class ExtractAudioFeatures(object):
 
         return mfcc.T
 
-    def prepossessingAudio(self, choise="mfcc"):
+    def prepossessingAudio(self, choice="mfcc"):
         '''Preprocesamiento del Dataset GTZAN, para la creacción del Dataset.
 
             Crea un archivo h5py con todos los datos generados.
 
             Parameters
             ----------
-            choise : string
+            choice : string
                 Método de procesamiento elegido
 
             Returns
@@ -128,14 +128,16 @@ class ExtractAudioFeatures(object):
 
             Examples
             --------
-            >>> python main.py --preprocess --config=CONFIGFILE.ini
+            >>> python main.py --preprocess=["spec" or "mfcc"] --config=CONFIGFILE.ini
 
         '''
 
-        check_option = self.options.get(choise)
+        check_option = self.options.get(choice)
         if check_option is not None:
             action = check_option[1]
         else:
+            print("Error. Opción --prepocess No válida.")
+            print("Seleccione spec o mfcc")
             raise SystemExit
 
         # Obtenemos una lista de los directorios
@@ -145,11 +147,11 @@ class ExtractAudioFeatures(object):
         directorios.insert(0, directorios[0])
 
         # Cambiamos el nombre del dataset en función de lo deseado
-        elegirNombreDataset = lambda spectogram: Path(self.DEST + self.DATASET_NAME_SPECTOGRAM) if spectogram \
+        elegirNombreDataset = lambda choice: Path(self.DEST + self.DATASET_NAME_SPECTOGRAM) if choice == "spec" \
                                 else Path(self.DEST + self.DATASET_NAME_MFCC)
 
         # Escribimos el Dataset Preprocesado en formato h5py
-        with h5py.File(elegirNombreDataset(choise), 'w') as hdf:
+        with h5py.File(elegirNombreDataset(choice), 'w') as hdf:
 
             for root, subdirs, files in os.walk(self.PATH):
                 # Ordenamos las carpetas por orden alfabético

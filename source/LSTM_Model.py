@@ -1,7 +1,9 @@
+"""
+Creación del Modelo LSTM
+"""
 import sys
 import json
 from pathlib import Path
-import numpy as np
 
 from keras.models import Sequential
 from keras.models import model_from_json
