@@ -111,7 +111,7 @@ class ExtractAudioFeatures(object):
 
         return mfcc.T
 
-    def prepossessingAudio(self, choice="mfcc"):
+    def prepossessingAudio(self, choice):
         '''Preprocesamiento del Dataset GTZAN, para la creacción del Dataset.
 
             Crea un archivo h5py con todos los datos generados.

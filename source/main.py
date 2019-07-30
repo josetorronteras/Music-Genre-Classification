@@ -42,10 +42,12 @@ elif args.dataset:
     
 elif args.trainmodel:
 
+    # Cambiamos el nombre del dataset en función de lo deseado
+    elegirNombreDataset = lambda choice: "spec" if choice == "cnn" \
+                            else "mfcc"
     X_train, X_test,\
     X_val, y_train,\
-    y_test, y_val = GetTrainTestData(config).read_dataset(choice=lambda choice: "spec"\
-                            if args.trainmodel == "cnn" else "mfcc")
+    y_test, y_val = GetTrainTestData(config).read_dataset(choice=elegirNombreDataset(args.trainmodel))
     
     if args.trainmodel == "cnn":
         # Transformamos el shape de los datos

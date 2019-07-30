@@ -83,7 +83,7 @@ class GetTrainTestData(object):
         # features_arr = np.vstack(aux_list)
         return read_data
 
-    def splitDataset(self, choice="spec"):
+    def splitDataset(self, choice):
         '''Divide el dataset en X_train X_test X_val para el entrenamiento.
             Se crean las etiquetas de los datos.
             Se guardan por separado en un fichero hdf5.
@@ -188,7 +188,7 @@ class GetTrainTestData(object):
               - y_train Tamaño: %s - y_test Tamaño: %s - y_val Tamaño: %s " % \
              (X_train.shape, X_test.shape, X_val.shape, y_train.shape, y_test.shape, y_val.shape))
 
-    def read_dataset(self, choice="spec"):
+    def read_dataset(self, choice):
         '''Lee el dataset seleccionado.
 
             Parameters

@@ -209,52 +209,52 @@ class CNNModel(Model):
         with open(model_path) as json_data:
             model_json = json.load(json_data)
 
-        self.model.add(Conv2D(
+        model.add(Conv2D(
                         int(model_json['layer1']['filters']),
                         tuple(model_json['layer1']['kernel_size']),
                         padding=model_json['layer1']['padding'],
                         input_shape=(input_model.shape[1], input_model.shape[2], input_model.shape[3])))
-        self.model.add(Activation('relu'))
-        self.model.add(MaxPooling2D(pool_size=tuple(model_json['layer1']['pool_size'])))
+        model.add(Activation('relu'))
+        model.add(MaxPooling2D(pool_size=tuple(model_json['layer1']['pool_size'])))
 
-        self.model.add(Conv2D(
+        model.add(Conv2D(
                         int(model_json['layer2']['filters']),
                         tuple(model_json['layer2']['kernel_size']),
                         padding=model_json['layer2']['padding']))
-        self.model.add(Activation('relu'))
-        self.model.add(MaxPooling2D(pool_size=tuple(model_json['layer2']['pool_size'])))
-        self.model.add(Dropout(float(model_json['layer2']['dropout'])))
+        model.add(Activation('relu'))
+        model.add(MaxPooling2D(pool_size=tuple(model_json['layer2']['pool_size'])))
+        model.add(Dropout(float(model_json['layer2']['dropout'])))
 
-        self.model.add(Conv2D(
+        model.add(Conv2D(
                         int(model_json['layer3']['filters']),
                         tuple(model_json['layer3']['kernel_size']),
                         padding=model_json['layer3']['padding']))
-        self.model.add(Activation('relu'))
-        self.model.add(MaxPooling2D(pool_size=tuple(model_json['layer3']['pool_size'])))
-        self.model.add(Dropout(float(model_json['layer3']['dropout'])))
+        model.add(Activation('relu'))
+        model.add(MaxPooling2D(pool_size=tuple(model_json['layer3']['pool_size'])))
+        model.add(Dropout(float(model_json['layer3']['dropout'])))
 
-        self.model.add(Conv2D(
+        model.add(Conv2D(
                         int(model_json['layer4']['filters']),
                         tuple(model_json['layer4']['kernel_size']),
                         padding=model_json['layer4']['padding']))
-        self.model.add(Activation('relu'))
-        self.model.add(MaxPooling2D(pool_size=tuple(model_json['layer4']['pool_size'])))
-        self.model.add(Dropout(float(model_json['layer4']['dropout'])))
+        model.add(Activation('relu'))
+        model.add(MaxPooling2D(pool_size=tuple(model_json['layer4']['pool_size'])))
+        model.add(Dropout(float(model_json['layer4']['dropout'])))
 
-        self.model.add(Flatten())
+        model.add(Flatten())
 
-        self.model.add(Dense(512))
-        self.model.add(Activation('relu'))
-        self.model.add(Dropout(0.5))
+        model.add(Dense(512))
+        model.add(Activation('relu'))
+        model.add(Dropout(0.5))
 
-        self.model.add(Dense(nb_classes))
-        self.model.add(Activation("softmax"))
+        model.add(Dense(nb_classes))
+        model.add(Activation("softmax"))
 
-        self.model.compile(loss=losses.categorical_crossentropy,
+        model.compile(loss=losses.categorical_crossentropy,
                            optimizer=optimizers.SGD(lr=0.001, momentum=0, decay=1e-5, nesterov=True),
                            metrics=['accuracy'])
 
-        self.model.summary()
+        model.summary()
         
         
 class LSTMModel(Model):
