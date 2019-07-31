@@ -19,3 +19,12 @@ $ python source/main.py --trainmodel --config="config/config-gpu.ini" --model="d
 $
 $ tensorboard --logdir="logs/"
 ```
+
+
+python source/main.py --preprocess=spec --config=config/config-gpu.ini
+python source/main.py --preprocess=mfcc --config=config/config-gpu.ini
+
+python source/main.py --dataset=spec --config=config/config-gpu.ini
+python source/main.py --dataset=mfcc --config=config/config-gpu.ini
+
+python source/main.py --trainmodel=cnn --model=/Users/josetorronteras/Code/Music-Genre-Classification/data/models/CNN/model_v3_8.json --config=config/config-gpu.ini

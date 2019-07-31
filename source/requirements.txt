@@ -1,9 +1,0 @@
-librosa
-numpy
-h5py
-keras
-tensorflow
-seaborn
-sklearn
-matplotlib
-json

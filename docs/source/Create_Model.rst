@@ -1,7 +1,7 @@
-hyperas\_LSTM module
+Create\_Model module
 ====================
 
-.. automodule:: hyperas_LSTM
+.. automodule:: Create_Model
    :members:
    :undoc-members:
    :show-inheritance:

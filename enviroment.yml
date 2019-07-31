@@ -1,0 +1,13 @@
+name: tfg
+channels:
+  - conda-forge
+dependencies:
+  - librosa
+  - numpy
+  - h5py
+  - keras
+  - tensorflow
+  - seaborn
+  - scikit-learn
+  - matplotlib
+  - tqdm

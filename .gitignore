@@ -120,3 +120,4 @@ data/traintest_dataset_mfcc\.hdf5
 data/traintest_dataset_spectogram\.hdf5
 
 notebooks/Untitled\.ipynb
+data/genres.tar.gz
