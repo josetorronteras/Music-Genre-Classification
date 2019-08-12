@@ -1,0 +1,5 @@
+name: music_clasification
+channels:
+  - anaconda
+dependencies:
+  - tensorflow-gpu=1.12

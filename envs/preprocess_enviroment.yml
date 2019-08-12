@@ -1,13 +1,11 @@
-name: tfg
+name: music_clasification
 channels:
   - conda-forge
 dependencies:
-  - librosa
-  - numpy
-  - h5py
   - keras
-  - tensorflow
+  - librosa
   - seaborn
   - scikit-learn
   - matplotlib
   - tqdm
+  - dash

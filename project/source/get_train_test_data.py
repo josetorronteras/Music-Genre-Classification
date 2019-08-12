@@ -8,26 +8,27 @@ import numpy as np
 from tqdm import tqdm
 from sklearn.model_selection import train_test_split
 
+
 class GetTrainTestData(object):
-    '''Clase GetTrainTestData.
+    """Clase GetTrainTestData.
 
         Parameters
         ----------
         object: Argumentos para la clase
             Contiene las rutas de los archivos y los parámetros a usar.
 
-    '''
+    """
 
     def __init__(self, config):
-        '''Inicializador.
+        """Inicializador.
 
             Parameters
             ----------
             object: Fichero configparser
                 Contiene las rutas de los archivos de audio y los parámetros a usar.
 
-        '''
-        
+        """
+
         # Rutas de los ficheros
         self.DATASET_PATH = config['PATH_CONFIGURATION']['AUDIO_PATH']
 
@@ -40,12 +41,12 @@ class GetTrainTestData(object):
         self.SPLIT_SIZE = float(config['DATA_CONFIGURATION']['SPLIT_SIZE'])
 
         self.options = {
-                "spec":[ "Dataset Espectograma Mel"], 
-                "mfcc":[ "Dataset Coeficientes Espectrales Mel"]
+            "spec": ["Dataset Espectograma Mel"],
+            "mfcc": ["Dataset Coeficientes Espectrales Mel"]
         }
 
     def getDataFromDataset(self, genre, dataset_file):
-        '''Recoge las características extraidas de todas las canciones de un género establecido.
+        """Recoge las características extraidas de todas las canciones de un género establecido.
 
             Parameters
             ----------
@@ -59,8 +60,8 @@ class GetTrainTestData(object):
             read_data: list(np.array)
                 Lista que contiene todos los arrays del género seleccionado.
 
-        '''        
-        
+        """
+
         # Lista que acumula los datos leidos del conjunto de datos.
         read_data = []
 
@@ -84,7 +85,7 @@ class GetTrainTestData(object):
         return read_data
 
     def splitDataset(self, choice):
-        '''Divide el dataset en X_train X_test X_val para el entrenamiento.
+        """Divide el dataset en X_train X_test X_val para el entrenamiento.
             Se crean las etiquetas de los datos.
             Se guardan por separado en un fichero hdf5.
 
@@ -97,8 +98,8 @@ class GetTrainTestData(object):
             --------
             >>> python main.py --dataset=["spec" or "mfcc"] --config=CONFIGFILE.ini
 
-        '''
-        
+        """
+
         check_option = self.options.get(choice)
         if check_option is None:
             print("Error. Opción --dataset No válida.")
@@ -106,14 +107,14 @@ class GetTrainTestData(object):
             raise SystemExit
 
         # Cambiamos el nombre del dataset en función de lo deseado
-        elegirNombreDataset = lambda choice: self.DATASET_NAME_SPECTOGRAM if choice == "spec" \
-                                else self.DATASET_NAME_MFCC
+        elegir_nombre_dataset = lambda choice: self.DATASET_NAME_SPECTOGRAM if choice == "spec" \
+            else self.DATASET_NAME_MFCC
 
-        if not Path(self.DATASET_PATH + elegirNombreDataset(choice)).exists():
+        if not Path(self.DATASET_PATH + elegir_nombre_dataset(choice)).exists():
             print("No se ha encontrado el fichero")
             sys.exit(0)
 
-        dataset_file = h5py.File(Path(self.DATASET_PATH + elegirNombreDataset(choice)), 'r')
+        dataset_file = h5py.File(Path(self.DATASET_PATH + elegir_nombre_dataset(choice)), 'r')
 
         # Obtenemos los arrays de cada género
         arr_blues = self.getDataFromDataset('blues', dataset_file)
@@ -128,28 +129,28 @@ class GetTrainTestData(object):
         arr_rock = self.getDataFromDataset('rock', dataset_file)
 
         # Los agrupamos
-        full_data = np.vstack((arr_blues,\
-                            arr_classical,\
-                            arr_country,\
-                            arr_disco,\
-                            arr_hiphop,\
-                            arr_jazz,\
-                            arr_metal,\
-                            arr_pop,\
-                            arr_reggae,\
-                            arr_rock))
+        full_data = np.vstack((arr_blues,
+                               arr_classical,
+                               arr_country,
+                               arr_disco,
+                               arr_hiphop,
+                               arr_jazz,
+                               arr_metal,
+                               arr_pop,
+                               arr_reggae,
+                               arr_rock))
 
         # Establecemos las etiquetas que identifican el género musical
-        labels = np.concatenate((np.zeros(len(arr_blues)),\
-                                np.ones(len(arr_classical)),\
-                                np.full(len(arr_country), 2),\
-                                np.full(len(arr_disco), 3),\
-                                np.full(len(arr_hiphop), 4),\
-                                np.full(len(arr_jazz), 5),\
-                                np.full(len(arr_metal), 6),\
-                                np.full(len(arr_pop), 7),\
-                                np.full(len(arr_reggae), 8),\
-                                np.full(len(arr_rock), 9)))
+        labels = np.concatenate((np.zeros(len(arr_blues)),
+                                 np.ones(len(arr_classical)),
+                                 np.full(len(arr_country), 2),
+                                 np.full(len(arr_disco), 3),
+                                 np.full(len(arr_hiphop), 4),
+                                 np.full(len(arr_jazz), 5),
+                                 np.full(len(arr_metal), 6),
+                                 np.full(len(arr_pop), 7),
+                                 np.full(len(arr_reggae), 8),
+                                 np.full(len(arr_rock), 9)))
 
         del arr_blues, arr_classical, arr_country, arr_disco, arr_hiphop, arr_jazz, arr_metal, arr_pop, arr_reggae, arr_rock
 
@@ -175,7 +176,7 @@ class GetTrainTestData(object):
         del full_data, labels
 
         # Guardamos los datos generados
-        dataset_output_path = Path(self.DATASET_PATH + 'traintest_' + elegirNombreDataset(choice))
+        dataset_output_path = Path(self.DATASET_PATH + 'traintest_' + elegir_nombre_dataset(choice))
         with h5py.File(dataset_output_path, 'w') as hdf:
             hdf.create_dataset('X_train', data=X_train, compression='gzip')
             hdf.create_dataset('y_train', data=y_train, compression='gzip')
@@ -186,7 +187,7 @@ class GetTrainTestData(object):
 
         print("X_train Tamaño: %s - X_test Tamaño: %s - X_val Tamaño: %s\
               - y_train Tamaño: %s - y_test Tamaño: %s - y_val Tamaño: %s " % \
-             (X_train.shape, X_test.shape, X_val.shape, y_train.shape, y_test.shape, y_val.shape))
+              (X_train.shape, X_test.shape, X_val.shape, y_train.shape, y_test.shape, y_val.shape))
 
     def read_dataset(self, choice):
         '''Lee el dataset seleccionado.
@@ -205,17 +206,17 @@ class GetTrainTestData(object):
             y_test: np array
             y_val: np array
 
-        '''        
-        
-        # Cambiamos el nombre del dataset en función de lo deseado
-        elegirNombreDataset = lambda choice: self.DATASET_NAME_SPECTOGRAM if choice \
-                                else self.DATASET_NAME_MFCC
+        '''
 
-        if not Path(self.DATASET_PATH + elegirNombreDataset(choice)).exists():
+        # Cambiamos el nombre del dataset en función de lo deseado
+        elegir_nombre_dataset = lambda choice: self.DATASET_NAME_SPECTOGRAM if choice \
+            else self.DATASET_NAME_MFCC
+
+        if not Path(self.DATASET_PATH + elegir_nombre_dataset(choice)).exists():
             print("No se ha encontrado el fichero")
             sys.exit(0)
 
-        dataset = h5py.File(Path(self.DATASET_PATH + 'traintest_' + elegirNombreDataset(choice)), 'r')
-        return dataset['X_train'][()], dataset['X_test'][()],\
-                dataset['X_val'][()], dataset['y_train'][()],\
-                dataset['y_test'][()], dataset['y_val'][()]
+        dataset = h5py.File(Path(self.DATASET_PATH + 'traintest_' + elegir_nombre_dataset(choice)), 'r')
+        return dataset['X_train'][()], dataset['X_test'][()], \
+               dataset['X_val'][()], dataset['y_train'][()], \
+               dataset['y_test'][()], dataset['y_val'][()]

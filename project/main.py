@@ -7,10 +7,10 @@ from pathlib import Path
 from keras.utils import np_utils
 from keras.callbacks import TensorBoard, EarlyStopping
 
-from Extract_Audio_Features import ExtractAudioFeatures
-from Get_Train_Test_Data import GetTrainTestData
-from Create_Model import CNNModel, LSTMModel
-from Aux_Functions import pltResults
+from source.extract_audio_features import ExtractAudioFeatures
+from source.get_train_test_data import GetTrainTestData
+from source.create_model import CNNModel, LSTMModel
+from source.aux_functions import pltResults
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--preprocess", "-p", type=str, help="Preprocesar las canciones.")
@@ -30,12 +30,9 @@ if not config_path.exists():
     print("No se ha encontrado el fichero config")
     sys.exit(0)
 config = configparser.ConfigParser()
-config.read(config_path)
+config.read('config/config-gpu.ini')
 
-if args.preprocess:
-    # Preprocesamos los datos 
-    ExtractAudioFeatures(config).prepossessingAudio(choice=args.preprocess)
-    
+ExtractAudioFeatures(config).prepossessingAudio(choice='spec')
 elif args.dataset:
     # Creamos el dataset
     GetTrainTestData(config).splitDataset(choice=args.dataset)
@@ -43,11 +40,11 @@ elif args.dataset:
 elif args.trainmodel:
 
     # Cambiamos el nombre del dataset en función de lo deseado
-    elegirNombreDataset = lambda choice: "spec" if choice == "cnn" \
+    elegir_nombre_dataset = lambda choice: "spec" if choice == "cnn" \
                             else "mfcc"
     X_train, X_test,\
     X_val, y_train,\
-    y_test, y_val = GetTrainTestData(config).read_dataset(choice=elegirNombreDataset(args.trainmodel))
+    y_test, y_val = GetTrainTestData(config).read_dataset(choice=elegir_nombre_dataset(args.trainmodel))
     
     if args.trainmodel == "cnn":
         # Transformamos el shape de los datos

@@ -105,19 +105,21 @@ venv.bak/
 
 genres/*
 .DS_store
-data/dataset\.hdf5
+project/data/dataset\.hdf5
 
-data/traintest\.hdf5
+project/data/traintest\.hdf5
 
-data/dataset_lstm\.hdf5
+project/data/dataset_lstm\.hdf5
 
-data/dataset_mfcc\.hdf5
+project/data/dataset_mfcc\.hdf5
 
-data/dataset_spectogram\.hdf5
+project/data/dataset_spectogram\.hdf5
 
-data/traintest_dataset_mfcc\.hdf5
+project/data/traintest_dataset_mfcc\.hdf5
 
-data/traintest_dataset_spectogram\.hdf5
+project/data/traintest_dataset_spectogram\.hdf5
 
 notebooks/Untitled\.ipynb
-data/genres.tar.gz
+project/data/genres.tar.gz
+
+project/data/genres/

@@ -2,11 +2,15 @@
 # Instalador del Entorno
 clear
 
-conda env create -f enviroment.yml
+clear
+conda env create -f envs/base_enviroment.yml
+conda deactivate
+conda install ipykernel --name music_clasification
+conda env update -f envs/local_enviroment.yml
 
-GTZAN=data/genres.tar.gz
-if test -f "$GTZAN"; then
-    echo "$GTZAN existe"
+DATASET=data/genres.tar.gz
+if test -f "$DATASET"; then
+    echo "$DATASET existe"
     echo "Descomprimiendo"
     tar -xvzf data/genres.tar.gz -C data/
 else
