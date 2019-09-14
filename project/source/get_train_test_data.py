@@ -45,7 +45,7 @@ class GetTrainTestData(object):
             "mfcc": ["Dataset Coeficientes Espectrales Mel"]
         }
 
-    def getDataFromDataset(self, genre, dataset_file):
+    def get_data_from_dataset(self, genre, dataset_file):
         """Recoge las características extraidas de todas las canciones de un género establecido.
 
             Parameters
@@ -84,7 +84,7 @@ class GetTrainTestData(object):
         # features_arr = np.vstack(aux_list)
         return read_data
 
-    def splitDataset(self, choice):
+    def split_dataset(self, choice):
         """Divide el dataset en X_train X_test X_val para el entrenamiento.
             Se crean las etiquetas de los datos.
             Se guardan por separado en un fichero hdf5.
@@ -117,16 +117,16 @@ class GetTrainTestData(object):
         dataset_file = h5py.File(Path(self.DATASET_PATH + elegir_nombre_dataset(choice)), 'r')
 
         # Obtenemos los arrays de cada género
-        arr_blues = self.getDataFromDataset('blues', dataset_file)
-        arr_classical = self.getDataFromDataset('classical', dataset_file)
-        arr_country = self.getDataFromDataset('country', dataset_file)
-        arr_disco = self.getDataFromDataset('disco', dataset_file)
-        arr_hiphop = self.getDataFromDataset('hiphop', dataset_file)
-        arr_jazz = self.getDataFromDataset('jazz', dataset_file)
-        arr_metal = self.getDataFromDataset('metal', dataset_file)
-        arr_pop = self.getDataFromDataset('pop', dataset_file)
-        arr_reggae = self.getDataFromDataset('reggae', dataset_file)
-        arr_rock = self.getDataFromDataset('rock', dataset_file)
+        arr_blues = self.get_data_from_dataset('blues', dataset_file)
+        arr_classical = self.get_data_from_dataset('classical', dataset_file)
+        arr_country = self.get_data_from_dataset('country', dataset_file)
+        arr_disco = self.get_data_from_dataset('disco', dataset_file)
+        arr_hiphop = self.get_data_from_dataset('hiphop', dataset_file)
+        arr_jazz = self.get_data_from_dataset('jazz', dataset_file)
+        arr_metal = self.get_data_from_dataset('metal', dataset_file)
+        arr_pop = self.get_data_from_dataset('pop', dataset_file)
+        arr_reggae = self.get_data_from_dataset('reggae', dataset_file)
+        arr_rock = self.get_data_from_dataset('rock', dataset_file)
 
         # Los agrupamos
         full_data = np.vstack((arr_blues,

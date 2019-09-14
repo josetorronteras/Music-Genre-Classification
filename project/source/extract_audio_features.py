@@ -48,13 +48,13 @@ class ExtractAudioFeatures(object):
         self.DURATION = int(config['AUDIO_FEATURES']['DURATION'])
 
         self.options = {
-            "spec": ["Generar Espectograma Mel", self.getMelspectogram],
-            "mfcc": ["Generar Coeficientes Espectrales Mel", self.spectralFeatures]
+            "spec": ["Generar Espectograma Mel", self.get_melspectogram],
+            "mfcc": ["Generar Coeficientes Espectrales Mel", self.get_spectral_features]
         }
 
         self.lck = threading.Lock()
 
-    def getMelspectogram(self, file_Path):
+    def get_melspectogram(self, file_Path):
         """Genera el Espectograma Mel de una canción.
 
             Parameters
@@ -88,9 +88,9 @@ class ExtractAudioFeatures(object):
                 hop_length=self.HOP_LENGTH),
             ref=np.max)
 
-        return S
+        return S/80
 
-    def spectralFeatures(self, file_path):
+    def get_spectral_features(self, file_path):
         """Extraer los Mel Frequency Cepstral Coeficientes de una canción.
 
             Son coeﬁcientes para la representación del habla basados en la percepción auditiva humana.
@@ -155,7 +155,7 @@ class ExtractAudioFeatures(object):
             del S, group_hdf_dict
         self.lck.release()
 
-    def prepossessingAudio(self, choice):
+    def prepossessing_audio(self, choice):
         """Preprocesamiento del Dataset GTZAN, para la creacción del Dataset.
 
             Crea un archivo h5py con todos los datos generados.

@@ -17,4 +17,4 @@ if not config_path.exists():
 config = configparser.ConfigParser()
 config.read(config_path)
 
-ExtractAudioFeatures(config).prepossessingAudio(choice=args.preprocess)
+ExtractAudioFeatures(config).prepossessing_audio(choice=args.preprocess)

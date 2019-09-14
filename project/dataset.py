@@ -16,4 +16,4 @@ if not config_path.exists():
 config = configparser.ConfigParser()
 config.read(config_path)
 
-GetTrainTestData(config).splitDataset(choice=args.dataset)
+GetTrainTestData(config).split_dataset(choice=args.dataset)
