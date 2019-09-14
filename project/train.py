@@ -11,7 +11,6 @@ from keras.utils import np_utils
 from keras.callbacks import TensorBoard, EarlyStopping
 
 parser = argparse.ArgumentParser()
-parser.add_argument("--dataset", "-d", type=str, help="Preparar los datos para el entrenamiento")
 parser.add_argument("--config", "-c", help="Archivo de Configuración", required=True)
 args = parser.parse_args()
 
@@ -55,7 +54,7 @@ model = CNNModel()
 model.generate_model((X_train.shape[1], X_train.shape[2], X_train.shape[3]), y_test.shape[1])
 
 # Entrenamos el modelo
-history = model.trainModel(config, callbacks, X_train,
+history = model.train_model(config, callbacks, X_train,
                            y_train, X_test,
                            y_test, X_val,
                            y_val)

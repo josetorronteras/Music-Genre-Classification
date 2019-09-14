@@ -176,7 +176,7 @@ class GetTrainTestData(object):
         del full_data, labels
 
         # Guardamos los datos generados
-        dataset_output_path = Path(self.DATASET_PATH + 'traintest_' + elegir_nombre_dataset(choice))
+        dataset_output_path = Path(self.DATASET_PATH + elegir_nombre_dataset(choice))
         with h5py.File(dataset_output_path, 'w') as hdf:
             hdf.create_dataset('X_train', data=X_train, compression='gzip')
             hdf.create_dataset('y_train', data=y_train, compression='gzip')
@@ -209,14 +209,14 @@ class GetTrainTestData(object):
         '''
 
         # Cambiamos el nombre del dataset en función de lo deseado
-        elegir_nombre_dataset = lambda choice: self.DATASET_NAME_SPECTOGRAM if choice \
+        elegir_nombre_dataset = lambda choice: self.DATASET_NAME_SPECTOGRAM if choice == "spec" \
             else self.DATASET_NAME_MFCC
 
         if not Path(self.DATASET_PATH + elegir_nombre_dataset(choice)).exists():
             print("No se ha encontrado el fichero")
             sys.exit(0)
 
-        dataset = h5py.File(Path(self.DATASET_PATH + 'traintest_' + elegir_nombre_dataset(choice)), 'r')
+        dataset = h5py.File(Path(self.DATASET_PATH + elegir_nombre_dataset(choice)), 'r')
         return dataset['X_train'][()], dataset['X_test'][()], \
                dataset['X_val'][()], dataset['y_train'][()], \
                dataset['y_test'][()], dataset['y_val'][()]
