@@ -28,27 +28,27 @@ class CNNModel:
     def generate_model(self, input_model, number_classes):
 
         # Conv1
-        self.model.add(Conv2D(64, (11, 11), padding="same", input_shape=input_model))
+        self.model.add(Conv2D(32, (11, 11), padding="same", input_shape=input_model))
         self.model.add(Activation('relu'))
         self.model.add(MaxPooling2D(pool_size=(2, 2)))
-        self.model.add(Dropout(0.25))
+        #self.model.add(Dropout(0.25))
 
         # Conv2
         self.model.add(Conv2D(128, (11, 11), padding='same'))
         self.model.add(Activation('relu'))
-        self.model.add(MaxPooling2D(pool_size=(2, 2)))
+        self.model.add(MaxPooling2D(pool_size=(2, 4)))
         self.model.add(Dropout(0.25))
 
         # Conv3
-        self.model.add(Conv2D(256, (11, 11), padding='same'))
+        self.model.add(Conv2D(128, (11, 11), padding='same'))
         self.model.add(Activation('relu'))
-        self.model.add(MaxPooling2D(pool_size=(2, 2)))
+        self.model.add(MaxPooling2D(pool_size=(4, 4)))
         self.model.add(Dropout(0.25))
 
         # Conv4
-        self.model.add(Conv2D(512, (11, 11), padding='same'))
+        self.model.add(Conv2D(127, (11, 11), padding='same'))
         self.model.add(Activation('relu'))
-        self.model.add(MaxPooling2D(pool_size=(2, 2)))
+        self.model.add(MaxPooling2D(pool_size=(4, 4)))
         self.model.add(Dropout(0.25))
 
         # FC
