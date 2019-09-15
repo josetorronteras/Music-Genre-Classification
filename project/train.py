@@ -11,6 +11,7 @@ from keras.utils import np_utils
 from keras.callbacks import TensorBoard, EarlyStopping
 
 parser = argparse.ArgumentParser()
+parser.add_argument("--dataset", "-d", type=str, help="Preparar los datos para el entrenamiento")
 parser.add_argument("--config", "-c", help="Archivo de Configuración", required=True)
 args = parser.parse_args()
 
@@ -78,5 +79,5 @@ pltResults(
     'loss')
 
 # Guardamos el modelo
-model.safeModel('./logs/model.json')
-model.safeWeights('./logs/')
+#model.safeModel('./logs/model.json')
+#model.safeWeights('./logs/')

@@ -1,6 +1,7 @@
 from keras.models import Sequential
 from keras.layers import Dense, Dropout, Activation, Flatten
 from keras.layers import Conv2D, MaxPooling2D
+from keras import optimizers, losses
 
 class CNNModel:
 
@@ -27,62 +28,35 @@ class CNNModel:
     def generate_model(self, input_model, number_classes):
 
         # Conv1
-        self.model.add(Conv2D(64, (3, 3), padding="same", input_shape=input_model))
+        self.model.add(Conv2D(64, (11, 11), padding="same", input_shape=input_model))
         self.model.add(Activation('relu'))
-        #self.model.add(Conv2D(64, (3, 3), padding="same"))
-        #self.model.add(Activation('relu'))
         self.model.add(MaxPooling2D(pool_size=(2, 2)))
         self.model.add(Dropout(0.25))
 
         # Conv2
-        self.model.add(Conv2D(128, (3, 3), padding='same'))
+        self.model.add(Conv2D(128, (11, 11), padding='same'))
         self.model.add(Activation('relu'))
-        #self.model.add(Conv2D(128, (3, 3), padding='same'))
-        #self.model.add(Activation('relu'))
         self.model.add(MaxPooling2D(pool_size=(2, 2)))
         self.model.add(Dropout(0.25))
 
         # Conv3
-        self.model.add(Conv2D(256, (3, 3), padding='same'))
+        self.model.add(Conv2D(256, (11, 11), padding='same'))
         self.model.add(Activation('relu'))
-        self.model.add(Conv2D(256, (3, 3), padding='same'))
-        self.model.add(Activation('relu'))
-        #self.model.add(Conv2D(256, (3, 3), padding='same'))
-        #self.model.add(Activation('relu'))
         self.model.add(MaxPooling2D(pool_size=(2, 2)))
         self.model.add(Dropout(0.25))
 
         # Conv4
-        self.model.add(Conv2D(512, (3, 3), padding='same'))
+        self.model.add(Conv2D(512, (11, 11), padding='same'))
         self.model.add(Activation('relu'))
-        self.model.add(Conv2D(512, (3, 3), padding='same'))
-        self.model.add(Activation('relu'))
-        #self.model.add(Conv2D(512, (3, 3), padding='same'))
-        #self.model.add(Activation('relu'))
-        self.model.add(MaxPooling2D(pool_size=(2, 2)))
-        self.model.add(Dropout(0.25))
-
-        self.model.add(Conv2D(512, (3, 3), padding='same'))
-        self.model.add(Activation('relu'))
-        self.model.add(Conv2D(512, (3, 3), padding='same'))
-        self.model.add(Activation('relu'))
-        #self.model.add(Conv2D(512, (3, 3), padding='same'))
-        #self.model.add(Activation('relu'))
-        self.model.add(MaxPooling2D(pool_size=(2, 2)))
+        self.modeladd(MaxPooling2D(pool_size=(2, 2)))
         self.model.add(Dropout(0.25))
 
         # FC
         self.model.add(Flatten())
-        self.model.add(Dense(4096))
+        self.model.add(Dense(512))
         self.model.add(Activation('relu'))
         self.model.add(Dropout(0.5))
-        self.model.add(Dense(4096))
-        self.model.add(Activation('relu'))
-        self.model.add(Dropout(0.5))
-        self.model.add(Dense(1000))
-        self.model.add(Activation('relu'))
-        self.model.add(Dropout(0.5))
-        self.model.add(Dense(num_classes))
+        self.model.add(Dense(number_classes))
         self.model.add(Activation('softmax'))
 
         self.model.compile(loss=losses.categorical_crossentropy,
