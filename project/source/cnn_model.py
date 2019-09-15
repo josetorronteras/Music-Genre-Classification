@@ -48,7 +48,7 @@ class CNNModel:
         # Conv4
         self.model.add(Conv2D(512, (11, 11), padding='same'))
         self.model.add(Activation('relu'))
-        self.modeladd(MaxPooling2D(pool_size=(2, 2)))
+        self.model.add(MaxPooling2D(pool_size=(2, 2)))
         self.model.add(Dropout(0.25))
 
         # FC
