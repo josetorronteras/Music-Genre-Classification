@@ -24,8 +24,7 @@ config = configparser.ConfigParser()
 config.read(config_path)
 
 now = datetime.now()
-dt_string = now.strftime("%d/%m/%Y %H:%M:%S")
-model_id = 'lstm_' + dt_string + '.json'
+model_id = 'lstm_' + now.isoformat() + '.json'
 
 X_train, X_test, X_val, y_train, y_test, y_val = GetTrainTestData(config).read_dataset(choice="mfcc")
 
