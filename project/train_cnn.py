@@ -61,7 +61,7 @@ history = model.train_model(config, callbacks, X_train, y_train, X_test, y_test,
 
 # Grafica Accuracy
 plot_results_to_img(
-    model_id
+    model_id,
     config['CALLBACKS']['TENSORBOARD_LOGDIR'],
     'Model accuracy',
     (history.history['acc'], history.history['val_acc']),
