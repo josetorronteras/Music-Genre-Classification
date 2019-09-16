@@ -1,6 +1,3 @@
-"""
-Generar el dataset para el posterior entrenamiento de la red
-"""
 import sys
 from pathlib import Path
 import h5py
@@ -10,25 +7,12 @@ from sklearn.model_selection import train_test_split
 
 
 class GetTrainTestData(object):
-    """Clase GetTrainTestData.
-
-        Parameters
-        ----------
-        object: Argumentos para la clase
-            Contiene las rutas de los archivos y los parámetros a usar.
-
-    """
 
     def __init__(self, config):
-        """Inicializador.
-
-            Parameters
-            ----------
-            object: Fichero configparser
-                Contiene las rutas de los archivos de audio y los parámetros a usar.
-
         """
-
+        :type config: ConfigParser
+        :param config: "Contiene las rutas de los archivos de audio y los parámetros a usar"
+        """
         # Rutas de los ficheros
         self.DATASET_PATH = config['PATH_CONFIGURATION']['AUDIO_PATH']
 
@@ -46,60 +30,31 @@ class GetTrainTestData(object):
         }
 
     def get_data_from_dataset(self, genre, dataset_file):
-        """Recoge las características extraidas de todas las canciones de un género establecido.
-
-            Parameters
-            ----------
-            genre : string
-                Nombre del Género del que se desea obtener los arrays.
-            dataset_file: Ruta h5py
-                Dataset File que contiene los datos preprocesados.
-
-            Returns
-            -------
-            read_data: list(np.array)
-                Lista que contiene todos los arrays del género seleccionado.
-
         """
-
-        # Lista que acumula los datos leidos del conjunto de datos.
+        Recoge las características extraidas de todas las canciones de un género establecido
+        :type genre: string
+        :type dataset_file: h5py file
+        :param genre: "Nombre del Género del que se desea obtener los arrays"
+        :param dataset_file: "Archivo h5py con los datos preprocesados"
+        :rtype: np.array
+        :return: read_data: "Lista que contiene los arrays del género seleccionado"
+        """
         read_data = []
-
-        # Establece un límite de lectura
-        limit = 0
-
         print("Obteniendo.." + self.DATASET_PATH + genre)
 
-        # Leemos los datos
         for items in tqdm(dataset_file[genre]):
-            # Comprobamos el límite de lectura
-            if limit == self.SIZE:
-                break
-            # Introducimos los datos
-            # Escalamos los datos entre 0 y 1
-            else:
-                read_data.append((dataset_file[genre][items][()]))
-                limit += 1
+            read_data.append((dataset_file[genre][items][()]))
 
-        # features_arr = np.vstack(aux_list)
         return read_data
 
     def split_dataset(self, choice):
-        """Divide el dataset en X_train X_test X_val para el entrenamiento.
-            Se crean las etiquetas de los datos.
-            Se guardan por separado en un fichero hdf5.
-
-            Parameters
-            ----------
-            choice : string
-                Dataset preprocesado elegido
-
-            Examples
-            --------
-            >>> python main.py --dataset=["spec" or "mfcc"] --config=CONFIGFILE.ini
-
         """
-
+        Divide el dataset para el entrenamiento y crea las etiquetas de los datos
+        Se guarda en un fichero h5py
+        :type choice: string
+        :param choice: "Preprocesamiento elegido"
+        :return:
+        """
         check_option = self.options.get(choice)
         if check_option is None:
             print("Error. Opción --dataset No válida.")
@@ -152,7 +107,8 @@ class GetTrainTestData(object):
                                  np.full(len(arr_reggae), 8),
                                  np.full(len(arr_rock), 9)))
 
-        del arr_blues, arr_classical, arr_country, arr_disco, arr_hiphop, arr_jazz, arr_metal, arr_pop, arr_reggae, arr_rock
+        del arr_blues, arr_classical, arr_country, arr_disco, \
+            arr_hiphop, arr_jazz, arr_metal, arr_pop, arr_reggae, arr_rock
 
         # Con train_test_split() dividimos los datos.
         # Se puede cambiar el tamaño en el archivo config.
@@ -176,7 +132,7 @@ class GetTrainTestData(object):
         del full_data, labels
 
         # Guardamos los datos generados
-        dataset_output_path = Path(self.DATASET_PATH + elegir_nombre_dataset(choice))
+        dataset_output_path = Path(self.DATASET_PATH + 'traintest_' + elegir_nombre_dataset(choice))
         with h5py.File(dataset_output_path, 'w') as hdf:
             hdf.create_dataset('X_train', data=X_train, compression='gzip')
             hdf.create_dataset('y_train', data=y_train, compression='gzip')
@@ -186,37 +142,27 @@ class GetTrainTestData(object):
             hdf.create_dataset('y_val', data=y_val, compression='gzip')
 
         print("X_train Tamaño: %s - X_test Tamaño: %s - X_val Tamaño: %s\
-              - y_train Tamaño: %s - y_test Tamaño: %s - y_val Tamaño: %s " % \
+              - y_train Tamaño: %s - y_test Tamaño: %s - y_val Tamaño: %s " %
               (X_train.shape, X_test.shape, X_val.shape, y_train.shape, y_test.shape, y_val.shape))
 
     def read_dataset(self, choice):
-        '''Lee el dataset seleccionado.
-
-            Parameters
-            ----------
-            choice : string
-                Dataset preprocesado elegido
-
-            Returns
-            --------
-            X_train: np array
-            X_test: np array
-            X_val: np array
-            y_train: np array
-            y_test: np array
-            y_val: np array
-
-        '''
-
+        """
+        Lee el dataset seleccionado.
+        :type choice: string
+        :param choice: "Dataset preprocesado elegido"
+        :rtype: (int, numpy.array(float))
+        :return:
+        """
         # Cambiamos el nombre del dataset en función de lo deseado
         elegir_nombre_dataset = lambda choice: self.DATASET_NAME_SPECTOGRAM if choice == "spec" \
             else self.DATASET_NAME_MFCC
 
-        if not Path(self.DATASET_PATH + elegir_nombre_dataset(choice)).exists():
+        dataset_output_path = Path(self.DATASET_PATH + 'traintest_' + elegir_nombre_dataset(choice))
+        if not dataset_output_path.exists():
             print("No se ha encontrado el fichero")
             sys.exit(0)
 
-        dataset = h5py.File(Path(self.DATASET_PATH + elegir_nombre_dataset(choice)), 'r')
-        return dataset['X_train'][()], dataset['X_test'][()], \
-               dataset['X_val'][()], dataset['y_train'][()], \
+        dataset = h5py.File(dataset_output_path, 'r')
+        return dataset['X_train'][()], dataset['X_test'][()],\
+               dataset['X_val'][()], dataset['y_train'][()],\
                dataset['y_test'][()], dataset['y_val'][()]

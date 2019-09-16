@@ -1,6 +1,3 @@
-"""
-Extracción de las características de cada canción
-"""
 import os
 from pathlib import Path
 import librosa
@@ -12,25 +9,11 @@ from tqdm import tqdm
 
 
 class ExtractAudioFeatures(object):
-    """
-        Clase ExtractAudioFeatures.
-
-        Parameters
-        ----------
-        object: Argumentos para la clase
-            Contiene las rutas de los archivos de audio y los parámetros a usar.
-
-    """
 
     def __init__(self, config):
-        """Inicializador.
-
-            Parameters
-            ----------
-            config: Fichero configparser
-                Contiene las rutas de los archivos de audio y los parámetros a usar.
-                :type config: ConfigParser
-
+        """
+        :type config: ConfigParser
+        :param config: "Contiene las rutas de los archivos de audio y los parámetros a usar."
         """
 
         # Rutas de los ficheros
@@ -54,32 +37,19 @@ class ExtractAudioFeatures(object):
 
         self.lck = threading.Lock()
 
-    def get_melspectogram(self, file_Path):
-        """Genera el Espectograma Mel de una canción.
-
-            Parameters
-            ----------
-            file_Path : string
-            :param file_Path:
-                Ruta de la canción
-
-            Returns
-            -------
-            :return: Mel spectrogram: np.array [shape=(n_mels, t)]
-                Espectograma escalado de una canción generado por librosa.
-
-            See Also
-            --------
-            librosa.feature.melspectrogram : Feature extraction
-                (https://librosa.github.io/librosa/generated/librosa.feature.melspectrogram.html)
-
-
-
+    def get_melspectogram(self, file_path):
         """
-
+        Genera el Espectograma Mel de una canción
+        :type file_path: string
+        :param file_path: "Ruta de una canción"
+        :return: Mel spectrogram: np.array [shape=(n_mels, t)]
+                Espectograma escalado de una canción generado por librosa.
+        :also: librosa.feature.melspectrogram : Feature extraction
+                (https://librosa.github.io/librosa/generated/librosa.feature.melspectrogram.html)
+        """
         # Cargamos el audio con librosa
-        y, sr = librosa.load(file_Path, duration=self.DURATION)
-        S = librosa.power_to_db(
+        y, sr = librosa.load(file_path, duration=self.DURATION)
+        s = librosa.power_to_db(
             librosa.feature.melspectrogram(
                 y,
                 sr=sr,
@@ -88,47 +58,35 @@ class ExtractAudioFeatures(object):
                 hop_length=self.HOP_LENGTH),
             ref=np.max)
 
-        return S/80
+        return s / 80
 
     def get_spectral_features(self, file_path):
-        """Extraer los Mel Frequency Cepstral Coeficientes de una canción.
-
-            Son coeﬁcientes para la representación del habla basados en la percepción auditiva humana.
-
-            Parameters
-            ----------
-            :param file_path: string
-                Ruta de la canción
-
-            Returns
-            -------
-            Secuencia MFCC: np.ndarray [shape=(n_mfcc, t)]
+        """
+        Extrae los Mel Frequency Cepstral Coeficientes de una canción
+        Son coeﬁcientes para la representación del habla basados en la percepción auditiva humana
+        :type file_path: string
+        :param file_path: "Ruta de una canción"
+        :return: Secuencia MFCC: np.ndarray [shape=(n_mfcc, t)]
                 Secuencia transpuesta de MFCC de una canción generado por librosa.
-
-            See Also
-            --------
-            librosa.feature.mfcc : Feature extraction
+        :also: librosa.feature.mfcc : Feature extraction
                 (https://librosa.github.io/librosa/generated/librosa.feature.mfcc.html)
         """
-
         # Cargamos el audio con librosa
         y, sr = librosa.load(file_path, duration=self.DURATION)
-
         mfcc = librosa.feature.mfcc(y=y, sr=sr, hop_length=self.HOP_LENGTH, n_mfcc=13)
 
         return mfcc.T
 
     def runner(self, directorio, elegir_nombre_dataset, action):
-        """Ejecución del Hilo.
-
-            Parameters
-            ----------
-            directorio: String
-                Contiene el nombre del directorio donde se encuentran los audios de un género.
-                :type directorio: String
-            elegir_nombre_dataset: String
-            :param elegir_nombre_dataset: String
-                Contiene el nombre del dataset
+        """
+        Ejecución principal del hilo.
+        :type directorio: string
+        :type elegir_nombre_dataset: string
+        :type action: callable
+        :param directorio: "Contiene el nombre del directorio donde se encuentran los audios de un género."
+        :param elegir_nombre_dataset: "Nombre del dataset"
+        :param action: "Método de preprocesamiento elegido"
+        :return:
         """
         group_hdf_dict = {}
         for root, subdirs, files in os.walk(self.PATH + directorio + '/'):
@@ -136,8 +94,8 @@ class ExtractAudioFeatures(object):
                 if filename.endswith('.au'):  # Descartamos otros ficheros .DS_store
                     file_path = Path(root, filename)  # Ruta de la cancion
                     try:
-                        S = action(file_path)
-                        group_hdf_dict[filename] = S
+                        s = action(file_path)
+                        group_hdf_dict[filename] = s
                     except Exception as e:
                         print("Error accured" + str(e))
 
@@ -151,25 +109,17 @@ class ExtractAudioFeatures(object):
                     compression='gzip')  # Incluimos el fichero numpy en el dataset.
             # Limpiamos memoria
             del directorio, elegir_nombre_dataset
-            del files, root, subdirs
-            del S, group_hdf_dict
+            del group_hdf_dict
         self.lck.release()
 
     def prepossessing_audio(self, choice):
-        """Preprocesamiento del Dataset GTZAN, para la creacción del Dataset.
-
-            Crea un archivo h5py con todos los datos generados.
-
-            Parameters
-            ----------
-            choice : string
-                Método de procesamiento elegido
-
-            Examples
-            --------
-            python main.py --preprocess=["spec" or "mfcc"] --config=CONFIGFILE.ini
         """
-
+        Preprocesamiento del Dataset GTZAN, para la creacción del Dataset
+        Crea un archivo h5py con todos los datos generados
+        :type choice: string
+        :param choice: "Método de preprocesamiento elegido"
+        :return:
+        """
         check_option = self.options.get(choice)
         if check_option is not None:
             action = check_option[1]
@@ -189,6 +139,6 @@ class ExtractAudioFeatures(object):
 
         threads = []
         for i in range(0, 10):
-            t = threading.Thread(target = self.runner, args = (directorios[i], elegir_nombre_dataset(choice), action))
+            t = threading.Thread(target=self.runner, args=(directorios[i], elegir_nombre_dataset(choice), action))
             threads.append(t)
             t.start()

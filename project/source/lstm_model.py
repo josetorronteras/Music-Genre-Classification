@@ -5,13 +5,11 @@ from keras.models import model_from_json
 from keras.layers import Dense
 from keras.layers import Dropout
 from keras.layers import Activation
-from keras.layers import Flatten
-from keras.layers import Conv2D
-from keras.layers import MaxPooling2D
+from keras.layers.recurrent import LSTM
 from keras import optimizers, losses
 
 
-class CNNModel:
+class LSTMModel:
 
     def __init__(self):
         self.model = Sequential()
@@ -39,7 +37,6 @@ class CNNModel:
         score = self.model.evaluate(data[2], data[3], verbose=0)
         print('Test score:', score[0])
         print('Test accuracy:', score[1])
-
         return history
 
     def load_model(self, model_path):
@@ -82,7 +79,7 @@ class CNNModel:
         :return:
         """
         self.model.save_weights(log_dir + 'weights.hdf5')
-        
+
     def generate_model(self, input_model, number_classes):
         """
         :type input_model: tuple
@@ -91,32 +88,9 @@ class CNNModel:
         :param number_classes: int "Número de clases del dataset"
         :return:
         """
+        self.model.add(LSTM(units=64, return_sequences=True, input_shape=input_model))
+        self.model.add(LSTM(units=32, return_sequences=False))
 
-        # Conv1
-        self.model.add(Conv2D(32, (11, 11), padding="same", input_shape=input_model))
-        self.model.add(Activation('relu'))
-        self.model.add(MaxPooling2D(pool_size=(2, 2)))
-
-        # Conv2
-        self.model.add(Conv2D(64, (11, 11), padding='same'))
-        self.model.add(Activation('relu'))
-        self.model.add(MaxPooling2D(pool_size=(2, 4)))
-        self.model.add(Dropout(0.25))
-
-        # Conv3
-        self.model.add(Conv2D(128, (11, 11), padding='same'))
-        self.model.add(Activation('relu'))
-        self.model.add(MaxPooling2D(pool_size=(4, 4)))
-        self.model.add(Dropout(0.25))
-
-        # Conv4
-        self.model.add(Conv2D(256, (11, 11), padding='same'))
-        self.model.add(Activation('relu'))
-        self.model.add(MaxPooling2D(pool_size=(4, 4)))
-        self.model.add(Dropout(0.25))
-
-        # FC
-        self.model.add(Flatten())
         self.model.add(Dense(512))
         self.model.add(Activation('relu'))
         self.model.add(Dropout(0.5))
@@ -124,7 +98,6 @@ class CNNModel:
         self.model.add(Activation('softmax'))
 
         self.model.compile(loss=losses.categorical_crossentropy,
-                           optimizer=optimizers.SGD(lr=0.001, momentum=0, decay=1e-5, nesterov=True),
+                           optimizer=optimizers.RMSprop(lr=0.001),
                            metrics=['accuracy'])
-
         self.model.summary()

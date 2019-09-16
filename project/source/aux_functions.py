@@ -1,69 +1,56 @@
-"""
-Funciones auxiliaries
-"""
-
 import matplotlib.pyplot as plt
 import seaborn as sns
 from sklearn.metrics import confusion_matrix
 
 
-def pltResults(logdir, data1, data2, title, labelx, labely):
-    """Genera las gráficas del entrenamiento.
-
-    Se guardan en formato .png.
-
-    Parameters
-    --------
-    logdir : string
-        Ruta donde guardar los ficheros
-    data1: history.history
-        Valores del history de Keras
-    data2: history.history
-        Valores del history de keras
-    title: string
-        Nombre de la gráfica
-    labelx: string
-        Nombre del Eje x
-    labely: string
-        Nombre del Eje y
-
+def plot_results_to_img(id, log_dir, title, data, labels):
     """
+    Genera las gráficas de los valores obtenidos durante el entrenamiento.
+    Se guardan en formato '.png'
 
-    plt.plot(data1)
-    plt.plot(data2)
+    :type id: string
+    :type log_dir: string
+    :type title: string
+    :type data: tuple
+    :type labels: tuple
+    :param id: "Identificador de la ejecución"
+    :param log_dir: "Ruta donde se guardará la gráfica"
+    :param title: "Título de la gráfica"
+    :param data: "Datos de entrada para la gráfica"
+    :param labels: "Etiquetas de la gráfica"
+    :return:
+    """
     plt.title(title)
-    plt.xlabel(labelx)
-    plt.ylabel(labely)
+    plt.plot(data[0])
+    plt.plot(data[1])
+    plt.xlabel(labels[0])
+    plt.ylabel(labels[1])
     plt.legend(['train', 'test'], loc='upper left')
-    plt.savefig(logdir + '/' + labely + '.png')
+    plt.savefig(log_dir + id + '.png')
     plt.close()
 
 
-def confusionMatrix(y_test, y_pred):
-    """Genera la visualización de una matriz de confusión.
-
-    Se guardan en formato .png.
-
-    Parameters
-    --------
-    y_test : np array
-        Numpy Array con los id de la clase correctos
-    y_pred: np array
-        Numpy Array con los id de la clase predichos
-
+def create_confusion_matrix(y_test, y_pred):
     """
-
+    Genera la visualización de una matriz de confusión
+    Se guarda en formato '.png'
+    :type y_test: numpy.array
+    :type y_pred: numpy.array
+    :param y_test: "Ids de las clases correctas"
+    :param y_pred: "Ids de las clases predichas "
+    :return:
+    """
     matrix = confusion_matrix(y_test, y_pred)
     plt.figure(figsize=(10, 10))
     ax = plt.subplot()
-    sns.heatmap(matrix, annot=True, ax=ax);
+    sns.heatmap(matrix, annot=True, ax=ax)
 
-    ax.set_xlabel('Predicted labels');
-    ax.set_ylabel('True labels');
-    ax.set_title('Matriz de confusión');
-    ax.xaxis.set_ticklabels(['blues', 'classical', 'country', 'disco', \
-                             'hiphop', 'jazz', 'metal', 'pop', 'reggae', 'rock']);
-    ax.yaxis.set_ticklabels(['blues', 'classical', 'country', 'disco', \
-                             'hiphop', 'jazz', 'metal', 'pop', 'reggae', 'rock']);
+    ax.set_xlabel('Predicted labels')
+    ax.set_ylabel('True labels')
+    ax.set_title('Matriz de confusión')
+    ax.xaxis.set_ticklabels(['blues', 'classical', 'country', 'disco',
+                             'hiphop', 'jazz', 'metal', 'pop', 'reggae', 'rock'])
+    ax.yaxis.set_ticklabels(['blues', 'classical', 'country', 'disco',
+                             'hiphop', 'jazz', 'metal', 'pop', 'reggae', 'rock'])
 
     plt.show()
