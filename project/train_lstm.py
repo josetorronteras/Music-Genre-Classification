@@ -48,7 +48,7 @@ callbacks = [
 model = LSTMModel()
 model.generate_model((X_train.shape[1], X_train.shape[2]), y_test.shape[1])
 
-config.set('LSTM_CONFIGURATION', 'ID', str(id+1))
+config.set('LSTM_CONFIGURATION', 'ID', '%(id+1)')
 with open(config_path, 'wb') as configfile:
     config.write(configfile)
 

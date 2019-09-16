@@ -55,7 +55,7 @@ callbacks = [
 model = CNNModel()
 model.generate_model((X_train.shape[1], X_train.shape[2], X_train.shape[3]), y_test.shape[1])
 
-config.set('CNN_CONFIGURATION', 'ID', str(id+1))
+config.set('CNN_CONFIGURATION', 'ID', '%(id+1)')
 with open(config_path, 'wb') as configfile:
     config.write(configfile)
 
