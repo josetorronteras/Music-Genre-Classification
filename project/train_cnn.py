@@ -22,7 +22,7 @@ if not config_path.exists():
 config = configparser.ConfigParser()
 config.read(config_path)
 
-id = config.get('CNN_CONFIGURATION', 'ID')
+id = config.getint('CNN_CONFIGURATION', 'ID')
 model_id = 'cnn_' + id + '.json'
 
 X_train, X_test, X_val, y_train, y_test, y_val = GetTrainTestData(config).read_dataset(choice="spec")
@@ -48,7 +48,7 @@ callbacks = [
                 ),
     EarlyStopping(monitor=config['CALLBACKS']['EARLYSTOPPING_MONITOR'],
                   mode=config['CALLBACKS']['EARLYSTOPPING_MODE'],
-                  patience=int(config['DATA_CONFIGURATION']['EARLYSTOPPING_PATIENCE']),
+                  patience=int(config['CNN_CONFIGURATION']['EARLYSTOPPING_PATIENCE']),
                   verbose=1)
 ]
 

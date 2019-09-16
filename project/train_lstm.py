@@ -22,7 +22,7 @@ if not config_path.exists():
 config = configparser.ConfigParser()
 config.read(config_path)
 
-id = config.get('CNN_CONFIGURATION', 'ID')
+id = config.getint('LSTM_CONFIGURATION', 'ID')
 model_id = 'cnn_' + id + '.json'
 
 X_train, X_test, X_val, y_train, y_test, y_val = GetTrainTestData(config).read_dataset(choice="mfcc")
@@ -48,7 +48,7 @@ callbacks = [
 model = LSTMModel()
 model.generate_model((X_train.shape[1], X_train.shape[2]), y_test.shape[1])
 
-config.set('CNN_CONFIGURATION', 'ID', str(id+1))
+config.set('LSTM_CONFIGURATION', 'ID', str(id+1))
 with open(config_path, 'wb') as configfile:
     config.write(configfile)
 
