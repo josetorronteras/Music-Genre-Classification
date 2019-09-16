@@ -2,6 +2,7 @@ import configparser
 import argparse
 import sys
 from pathlib import Path
+from datetime import datetime
 
 from source.get_train_test_data import GetTrainTestData
 from source.cnn_model import CNNModel
@@ -22,8 +23,9 @@ if not config_path.exists():
 config = configparser.ConfigParser()
 config.read(config_path)
 
-id = config.getint('CNN_CONFIGURATION', 'ID')
-model_id = 'cnn_' + id + '.json'
+now = datetime.now()
+dt_string = now.strftime("%d/%m/%Y %H:%M:%S")
+model_id = 'cnn_' + dt_string+ '.json'
 
 X_train, X_test, X_val, y_train, y_test, y_val = GetTrainTestData(config).read_dataset(choice="spec")
 
@@ -54,10 +56,6 @@ callbacks = [
 
 model = CNNModel()
 model.generate_model((X_train.shape[1], X_train.shape[2], X_train.shape[3]), y_test.shape[1])
-
-config.set('CNN_CONFIGURATION', 'ID', '%(id+1)')
-with open(config_path, 'wb') as configfile:
-    config.write(configfile)
 
 # Entrenamos el modelo
 history = model.train_model(config, callbacks, X_train, y_train, X_test, y_test, X_val, y_val)
