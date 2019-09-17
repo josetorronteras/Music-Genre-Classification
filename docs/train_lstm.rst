@@ -1,7 +1,7 @@
-LSTM\_Model module
+train\_lstm module
 ==================
 
-.. automodule:: LSTM_Model
+.. automodule:: train_lstm
    :members:
    :undoc-members:
    :show-inheritance:

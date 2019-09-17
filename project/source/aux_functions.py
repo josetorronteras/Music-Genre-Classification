@@ -6,7 +6,7 @@ from sklearn.metrics import confusion_matrix
 def plot_results_to_img(id, log_dir, title, data, labels):
     """
     Genera las gráficas de los valores obtenidos durante el entrenamiento.
-    Se guardan en formato '.png'
+    Se guardan en formato '.png'.
 
     :type id: string
     :type log_dir: string
@@ -18,7 +18,6 @@ def plot_results_to_img(id, log_dir, title, data, labels):
     :param title: "Título de la gráfica"
     :param data: "Datos de entrada para la gráfica"
     :param labels: "Etiquetas de la gráfica"
-    :return:
     """
     plt.title(title)
     plt.plot(data[0])
@@ -26,19 +25,19 @@ def plot_results_to_img(id, log_dir, title, data, labels):
     plt.xlabel(labels[0])
     plt.ylabel(labels[1])
     plt.legend(['train', 'test'], loc='upper left')
-    plt.savefig(log_dir + id + '.png')
+    plt.savefig(log_dir + id + '/' + title + '.png')
     plt.close()
 
 
 def create_confusion_matrix(y_test, y_pred):
     """
-    Genera la visualización de una matriz de confusión
-    Se guarda en formato '.png'
+    Genera la visualización de una matriz de confusión.
+    Se guarda en formato '.png'.
+
     :type y_test: numpy.array
     :type y_pred: numpy.array
     :param y_test: "Ids de las clases correctas"
     :param y_pred: "Ids de las clases predichas "
-    :return:
     """
     matrix = confusion_matrix(y_test, y_pred)
     plt.figure(figsize=(10, 10))

@@ -70,4 +70,4 @@ plot_results_to_img(
 
 # Guardamos el modelo
 model.safe_model_to_file('./logs/' + model_id)
-model.safe_weights_to_file('./logs/' + model_id + '_')
+model.safe_weights_to_file('./logs/' + model_id)

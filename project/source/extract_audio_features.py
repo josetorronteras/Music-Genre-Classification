@@ -40,12 +40,12 @@ class ExtractAudioFeatures(object):
     def get_melspectogram(self, file_path):
         """
         Genera el Espectograma Mel de una canción
+
         :type file_path: string
         :param file_path: "Ruta de una canción"
-        :return: Mel spectrogram: np.array [shape=(n_mels, t)]
-                Espectograma escalado de una canción generado por librosa.
+        :rtype: np.array
+        :return: Mel spectrogram [shape=(n_mels, t)]
         :also: librosa.feature.melspectrogram : Feature extraction
-                (https://librosa.github.io/librosa/generated/librosa.feature.melspectrogram.html)
         """
         # Cargamos el audio con librosa
         y, sr = librosa.load(file_path, duration=self.DURATION)
@@ -64,12 +64,13 @@ class ExtractAudioFeatures(object):
         """
         Extrae los Mel Frequency Cepstral Coeficientes de una canción
         Son coeﬁcientes para la representación del habla basados en la percepción auditiva humana
+
         :type file_path: string
         :param file_path: "Ruta de una canción"
-        :return: Secuencia MFCC: np.ndarray [shape=(n_mfcc, t)]
+        :rtype: np.array
+        :return: Secuencia MFCC [shape=(n_mfcc, t)]
                 Secuencia transpuesta de MFCC de una canción generado por librosa.
         :also: librosa.feature.mfcc : Feature extraction
-                (https://librosa.github.io/librosa/generated/librosa.feature.mfcc.html)
         """
         # Cargamos el audio con librosa
         y, sr = librosa.load(file_path, duration=self.DURATION)
@@ -79,14 +80,14 @@ class ExtractAudioFeatures(object):
 
     def runner(self, directorio, elegir_nombre_dataset, action):
         """
-        Ejecución principal del hilo.
-        :type directorio: string
-        :type elegir_nombre_dataset: string
-        :type action: callable
-        :param directorio: "Contiene el nombre del directorio donde se encuentran los audios de un género."
-        :param elegir_nombre_dataset: "Nombre del dataset"
-        :param action: "Método de preprocesamiento elegido"
-        :return:
+          Ejecución principal del hilo.
+
+          :type directorio: string
+          :type elegir_nombre_dataset: string
+          :type action: callable
+          :param directorio: "Contiene el nombre del directorio donde se encuentran los audios de un género."
+          :param elegir_nombre_dataset: "Nombre del dataset"
+          :param action: "Método de preprocesamiento elegido"
         """
         group_hdf_dict = {}
         for root, subdirs, files in os.walk(self.PATH + directorio + '/'):
@@ -116,9 +117,9 @@ class ExtractAudioFeatures(object):
         """
         Preprocesamiento del Dataset GTZAN, para la creacción del Dataset
         Crea un archivo h5py con todos los datos generados
+
         :type choice: string
         :param choice: "Método de preprocesamiento elegido"
-        :return:
         """
         check_option = self.options.get(choice)
         if check_option is not None:

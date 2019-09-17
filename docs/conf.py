@@ -2,7 +2,7 @@
 #
 # This file only contains a selection of the most common options. For a full
 # list see the documentation:
-# http://www.sphinx-doc.org/en/master/config
+# https://www.sphinx-doc.org/en/master/usage/configuration.html
 
 # -- Path setup --------------------------------------------------------------
 
@@ -12,17 +12,14 @@
 #
 import os
 import sys
-sys.path.insert(0, os.path.abspath('../../source'))
-
+sys.path.insert(0, os.path.abspath('../project/'))
+import sphinx_rtd_theme
 
 # -- Project information -----------------------------------------------------
 
-project = 'Clasificación de los géneros musicales usando redes neuronales profundas'
-copyright = '2019, Jose Jesús Torronteras Hernández'
-author = 'Jose Jesús Torronteras Hernández'
-
-# The full version, including alpha/beta/rc tags
-release = '1.0'
+project = 'Music-Genre-Classification'
+copyright = '2019, Jose Jesus Torronteras Hernandez'
+author = 'Jose Jesus Torronteras Hernandez'
 
 
 # -- General configuration ---------------------------------------------------
@@ -30,15 +27,8 @@ release = '1.0'
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
-extensions = ['sphinx.ext.autodoc',
-        'sphinx.ext.intersphinx',
-        'sphinx.ext.todo',
-        'sphinx.ext.mathjax',
-        'sphinx.ext.napoleon',
-        'sphinx.ext.autosummary', # solamente si se la quiere usar
-        'sphinx.ext.viewcode', 'sphinx.ext.coverage']
-
-autosummary_generate = True
+extensions = ['sphinx.ext.autodoc', 'sphinx.ext.coverage', 'sphinx.ext.napoleon', 'sphinx.ext.viewcode'
+,'sphinx.ext.inheritance_diagram', 'sphinx_rtd_theme']
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
@@ -53,7 +43,7 @@ language = 'es'
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
 # This pattern also affects html_static_path and html_extra_path.
-exclude_patterns = []
+exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 
 
 # -- Options for HTML output -------------------------------------------------
@@ -68,5 +58,15 @@ html_theme = 'sphinx_rtd_theme'
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ['_static']
 
-html_sidebars = { '**': ['globaltoc.html', 'relations.html',
-        'sourcelink.html', 'searchbox.html'], }
+latex_elements = {
+# The paper size ('letterpaper' or 'a4paper').
+'papersize': 'a4paper',
+
+# The font size ('10pt', '11pt' or '12pt').
+'pointsize': '12pt',
+
+'maketitle': r'''
+\pagenumbering{arabic}
+''',
+}
+#\usepackage[subpreambles=true]{standalone} IMPORTANTE!!! PORTADA

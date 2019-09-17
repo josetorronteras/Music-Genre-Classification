@@ -32,6 +32,7 @@ class GetTrainTestData(object):
     def get_data_from_dataset(self, genre, dataset_file):
         """
         Recoge las características extraidas de todas las canciones de un género establecido
+
         :type genre: string
         :type dataset_file: h5py file
         :param genre: "Nombre del Género del que se desea obtener los arrays"
@@ -51,9 +52,9 @@ class GetTrainTestData(object):
         """
         Divide el dataset para el entrenamiento y crea las etiquetas de los datos
         Se guarda en un fichero h5py
+
         :type choice: string
         :param choice: "Preprocesamiento elegido"
-        :return:
         """
         check_option = self.options.get(choice)
         if check_option is None:
@@ -148,10 +149,11 @@ class GetTrainTestData(object):
     def read_dataset(self, choice):
         """
         Lee el dataset seleccionado.
+
         :type choice: string
         :param choice: "Dataset preprocesado elegido"
         :rtype: (int, numpy.array(float))
-        :return:
+        :return: Conjunto de datos para el entrenamiento
         """
         # Cambiamos el nombre del dataset en función de lo deseado
         elegir_nombre_dataset = lambda choice: self.DATASET_NAME_SPECTOGRAM if choice == "spec" \

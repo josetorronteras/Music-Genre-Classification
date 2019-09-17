@@ -1,7 +1,7 @@
-main module
-===========
+dataset module
+==============
 
-.. automodule:: main
+.. automodule:: dataset
    :members:
    :undoc-members:
    :show-inheritance:

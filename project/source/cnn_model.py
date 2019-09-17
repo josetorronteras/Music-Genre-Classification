@@ -18,6 +18,8 @@ class CNNModel:
 
     def train_model(self, config, callbacks, *data):
         """
+        Entrena el modelo
+
         :type config: ConfigParser
         :type callbacks: list
         :type data: array
@@ -26,6 +28,8 @@ class CNNModel:
         :param data: array "Dataset a entrenar"
         :rtype: History.history
         :return: "Registro de los valores obtenidos durante el entrenamiento"
+        :also: Keras History
+                (https://keras.io/callbacks/#history)
         """
         history = self.model.fit(
             data[0],
@@ -45,9 +49,9 @@ class CNNModel:
     def load_model(self, model_path):
         """
         Carga un fichero de keras
+
         :type model_path: string
         :param model_path: "Ruta del fichero"
-        :return:
         """
         model_file = Path(model_path)
         if not model_file.exists():
@@ -66,30 +70,31 @@ class CNNModel:
     def safe_model_to_file(self, log_dir):
         """
         Guarda el modelo en un archivo Json
+
         :type log_dir: string
         :param log_dir: "Ruta donde se guarda el modelo"
-        :return:
         """
         model_json = self.model.to_json()
-        with open(log_dir, "w") as json_file:
+        with open(log_dir +'/model.json', "w") as json_file:
             json_file.write(model_json)
 
     def safe_weights_to_file(self, log_dir):
         """
         Guarda los pesos del modelo en un archivo h5py
+
         :type log_dir: string
         :param log_dir: "Ruta donde se guardan los pesos"
-        :return:
         """
-        self.model.save_weights(log_dir + 'weights.hdf5')
-        
+        self.model.save_weights(log_dir + '/weights.hdf5')
+
     def generate_model(self, input_model, number_classes):
         """
+        Genera el modelo convolucional
+
         :type input_model: tuple
         :type number_classes: int
-        :param input_model: tuple "Shape del conjunto de entrada de la red"
-        :param number_classes: int "Número de clases del dataset"
-        :return:
+        :param input_model: "Shape del conjunto de entrada de la red"
+        :param number_classes: "Número de clases del dataset"
         """
 
         # Conv1
