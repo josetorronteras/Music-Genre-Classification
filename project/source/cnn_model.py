@@ -24,10 +24,12 @@ class CNNModel:
         :type callbacks: list
         :type data: array
         :param config: "Fichero con los parámetros de configuración"
-        :param callbacks: "Conjunto de funciones que se ejecutarán durante el entrenamiento"
+        :param callbacks: "Conjunto de funciones que se ejecutarán
+        durante el entrenamiento"
         :param data: array "Dataset a entrenar"
         :rtype: History.history
-        :return: "Registro de los valores obtenidos durante el entrenamiento"
+        :return: "Registro de los valores obtenidos durante el
+        entrenamiento"
         :also: Keras History
                 (https://keras.io/callbacks/#history)
         """
@@ -63,8 +65,12 @@ class CNNModel:
 
         self.model = model_from_json(config_model)
         self.model.summary()
+
         self.model.compile(loss=losses.categorical_crossentropy,
-                           optimizer=optimizers.SGD(lr=0.001, momentum=0, decay=1e-5, nesterov=True),
+                           optimizer=optimizers.SGD(lr=0.001,
+                                                    momentum=0,
+                                                    decay=1e-5,
+                                                    nesterov=True),
                            metrics=['accuracy'])
 
     def safe_model_to_file(self, log_dir):
@@ -93,7 +99,8 @@ class CNNModel:
 
         :type input_model: tuple
         :type number_classes: int
-        :param input_model: "Shape del conjunto de entrada de la red"
+        :param input_model: "Shape del conjunto de entrada de
+        la red"
         :param number_classes: "Número de clases del dataset"
         """
 
@@ -129,7 +136,10 @@ class CNNModel:
         self.model.add(Activation('softmax'))
 
         self.model.compile(loss=losses.categorical_crossentropy,
-                           optimizer=optimizers.SGD(lr=0.001, momentum=0, decay=1e-5, nesterov=True),
+                           optimizer=optimizers.SGD(lr=0.001,
+                                                    momentum=0,
+                                                    decay=1e-5,
+                                                    nesterov=True),
                            metrics=['accuracy'])
 
         self.model.summary()

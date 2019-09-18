@@ -22,7 +22,8 @@ class LSTMModel:
         :type callbacks: list
         :type data: array
         :param config: "Fichero con los parámetros de configuración"
-        :param callbacks: "Conjunto de funciones que se ejecutarán durante el entrenamiento"
+        :param callbacks: "Conjunto de funciones que se ejecutarán
+        durante el entrenamiento"
         :param data: array "Dataset a entrenar"
         :rtype: History.history
         :return: "Registro de los valores obtenidos durante el entrenamiento"
@@ -88,14 +89,15 @@ class LSTMModel:
 
         :type input_model: tuple
         :type number_classes: int
-        :param input_model: tuple "Shape del conjunto de entrada de la red"
+        :param input_model: tuple "Shape del conjunto de entrada
+        de la red"
         :param number_classes: int "Número de clases del dataset"
         """
-        self.model.add(LSTM(units=64, return_sequences=True, input_shape=input_model))
-        self.model.add(LSTM(units=32, return_sequences=False))
-
-        self.model.add(Dense(512))
-        self.model.add(Activation('relu'))
+        self.model.add(LSTM(units=64,
+                            return_sequences=True,
+                            input_shape=input_model))
+        self.model.add(LSTM(units=32,
+                            return_sequences=False))
         self.model.add(Dropout(0.5))
         self.model.add(Dense(number_classes))
         self.model.add(Activation('softmax'))

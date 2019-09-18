@@ -6,6 +6,7 @@ import h5py
 import threading
 
 from tqdm import tqdm
+from source.aux_functions import get_name_dataset
 
 
 class ExtractAudioFeatures(object):
@@ -13,16 +14,19 @@ class ExtractAudioFeatures(object):
     def __init__(self, config):
         """
         :type config: ConfigParser
-        :param config: "Contiene las rutas de los archivos de audio y los parámetros a usar."
+        :param config: "Contiene las rutas de los archivos de
+        audio y los parámetros a usar."
         """
+
+        self.CONFIG = config
 
         # Rutas de los ficheros
         self.DEST = config['PATH_CONFIGURATION']['AUDIO_PATH']
         self.PATH = config['PATH_CONFIGURATION']['DATASET_PATH']
 
         # Nombre del dataset generado
-        self.DATASET_NAME_SPECTOGRAM = config['DATA_CONFIGURATION']['DATASET_NAME_SPECTOGRAM']
-        self.DATASET_NAME_MFCC = config['DATA_CONFIGURATION']['DATASET_NAME_MFCC']
+        self.DATASET_NAME_SPECTOGRAM = config['DATA_CONFIGURATION']['DATASET_PREPROCESSED_SPECTOGRAM']
+        self.DATASET_NAME_MFCC = config['DATA_CONFIGURATION']['DATASET_PREPROCESSED_MFCC']
 
         # Parámetros Librosa
         self.N_MELS = int(config['AUDIO_FEATURES']['N_MELS'])
@@ -31,8 +35,12 @@ class ExtractAudioFeatures(object):
         self.DURATION = int(config['AUDIO_FEATURES']['DURATION'])
 
         self.options = {
-            "spec": ["Generar Espectograma Mel", self.get_melspectogram],
-            "mfcc": ["Generar Coeficientes Espectrales Mel", self.get_spectral_features]
+            "spec": [
+                "Generar Espectograma Mel", self.get_melspectogram
+            ],
+            "mfcc": [
+                "Generar Coeficientes Espectrales Mel", self.get_spectral_features
+            ]
         }
 
         self.lck = threading.Lock()
@@ -62,38 +70,46 @@ class ExtractAudioFeatures(object):
 
     def get_spectral_features(self, file_path):
         """
-        Extrae los Mel Frequency Cepstral Coeficientes de una canción
-        Son coeﬁcientes para la representación del habla basados en la percepción auditiva humana
+        Extrae los Mel Frequency Cepstral Coeficientes de una
+        canción
+        Son coeﬁcientes para la representación del habla basados en
+        la percepción auditiva humana
 
         :type file_path: string
         :param file_path: "Ruta de una canción"
         :rtype: np.array
         :return: Secuencia MFCC [shape=(n_mfcc, t)]
-                Secuencia transpuesta de MFCC de una canción generado por librosa.
+                Secuencia transpuesta de MFCC de una canción
+                generado por librosa.
         :also: librosa.feature.mfcc : Feature extraction
         """
         # Cargamos el audio con librosa
         y, sr = librosa.load(file_path, duration=self.DURATION)
-        mfcc = librosa.feature.mfcc(y=y, sr=sr, hop_length=self.HOP_LENGTH, n_mfcc=13)
+        mfcc = librosa.feature.mfcc(y=y,
+                                    sr=sr,
+                                    hop_length=self.HOP_LENGTH,
+                                    n_mfcc=13)
 
         return mfcc.T
 
-    def runner(self, directorio, elegir_nombre_dataset, action):
+    def runner(self, directorio, dataset_name, action):
         """
           Ejecución principal del hilo.
 
           :type directorio: string
-          :type elegir_nombre_dataset: string
+          :type dataset_name: string
           :type action: callable
-          :param directorio: "Contiene el nombre del directorio donde se encuentran los audios de un género."
-          :param elegir_nombre_dataset: "Nombre del dataset"
+          :param directorio: "Contiene el nombre del directorio
+          donde se encuentran los audios de un género."
+          :param dataset_name: "Nombre del dataset"
           :param action: "Método de preprocesamiento elegido"
         """
         group_hdf_dict = {}
         for root, subdirs, files in os.walk(self.PATH + directorio + '/'):
             for filename in tqdm(files):
-                if filename.endswith('.au'):  # Descartamos otros ficheros .DS_store
-                    file_path = Path(root, filename)  # Ruta de la cancion
+                # Descartamos ficheros .DS_store
+                if filename.endswith('.au'):
+                    file_path = Path(root, filename)
                     try:
                         s = action(file_path)
                         group_hdf_dict[filename] = s
@@ -101,15 +117,14 @@ class ExtractAudioFeatures(object):
                         print("Error accured" + str(e))
 
         self.lck.acquire()
-        with h5py.File(elegir_nombre_dataset, 'a') as hdf:
+        with h5py.File(dataset_name, 'a') as hdf:
             group_hdf = hdf.create_group(str(directorio))
             for key, value in group_hdf_dict.items():
-                group_hdf.create_dataset(
-                    key,
-                    data=value,
-                    compression='gzip')  # Incluimos el fichero numpy en el dataset.
+                group_hdf.create_dataset(key,
+                                         data=value,
+                                         compression='gzip')
             # Limpiamos memoria
-            del directorio, elegir_nombre_dataset
+            del directorio, dataset_name
             del group_hdf_dict
         self.lck.release()
 
@@ -130,16 +145,18 @@ class ExtractAudioFeatures(object):
             raise SystemExit
 
         # Obtenemos una lista de los directorios
-        directorios = [nombre_directorio for nombre_directorio in os.listdir(self.PATH)
+        directorios = [nombre_directorio
+                       for nombre_directorio
+                       in os.listdir(self.PATH)
                        if os.path.isdir(os.path.join(self.PATH, nombre_directorio))]
         directorios.sort()
 
-        # Cambiamos el nombre del dataset en función de lo deseado
-        elegir_nombre_dataset = lambda nombre: Path(self.DEST + self.DATASET_NAME_SPECTOGRAM) if choice == "spec" \
-            else Path(self.DEST + self.DATASET_NAME_MFCC)
+        # Obtenemos el nombre del dataset
+        dataset_name = get_name_dataset(self.CONFIG, choice)
 
         threads = []
         for i in range(0, 10):
-            t = threading.Thread(target=self.runner, args=(directorios[i], elegir_nombre_dataset(choice), action))
+            t = threading.Thread(target=self.runner,
+                                 args=(directorios[i], self.DEST + dataset_name, action))
             threads.append(t)
             t.start()

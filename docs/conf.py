@@ -64,7 +64,10 @@ latex_elements = {
 
 # The font size ('10pt', '11pt' or '12pt').
 'pointsize': '12pt',
-
+'preamble': r'''
+\usepackage{subfiles}
+\usepackage{tikz}
+''',
 'maketitle': r'''
 \pagenumbering{arabic}
 ''',

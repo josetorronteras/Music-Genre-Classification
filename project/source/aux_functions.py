@@ -3,17 +3,18 @@ import seaborn as sns
 from sklearn.metrics import confusion_matrix
 
 
-def plot_results_to_img(id, log_dir, title, data, labels):
+def plot_results_to_img(model_id, log_dir, title, data, labels):
     """
-    Genera las gráficas de los valores obtenidos durante el entrenamiento.
+    Genera las gráficas de los valores obtenidos durante el
+    entrenamiento.
     Se guardan en formato '.png'.
 
-    :type id: string
+    :type model_id: string
     :type log_dir: string
     :type title: string
-    :type data: tuple
-    :type labels: tuple
-    :param id: "Identificador de la ejecución"
+    :type data: (np.array, np.array)
+    :type labels: (string, string)
+    :param model_id: "Identificador de la ejecución"
     :param log_dir: "Ruta donde se guardará la gráfica"
     :param title: "Título de la gráfica"
     :param data: "Datos de entrada para la gráfica"
@@ -25,7 +26,7 @@ def plot_results_to_img(id, log_dir, title, data, labels):
     plt.xlabel(labels[0])
     plt.ylabel(labels[1])
     plt.legend(['train', 'test'], loc='upper left')
-    plt.savefig(log_dir + id + '/' + title + '.png')
+    plt.savefig(log_dir + model_id + '/' + title + '.png')
     plt.close()
 
 
@@ -47,9 +48,31 @@ def create_confusion_matrix(y_test, y_pred):
     ax.set_xlabel('Predicted labels')
     ax.set_ylabel('True labels')
     ax.set_title('Matriz de confusión')
-    ax.xaxis.set_ticklabels(['blues', 'classical', 'country', 'disco',
-                             'hiphop', 'jazz', 'metal', 'pop', 'reggae', 'rock'])
-    ax.yaxis.set_ticklabels(['blues', 'classical', 'country', 'disco',
-                             'hiphop', 'jazz', 'metal', 'pop', 'reggae', 'rock'])
+    ax.xaxis.set_ticklabels(['blues', 'classical',
+                             'country', 'disco',
+                             'hiphop', 'jazz', 'metal',
+                             'pop', 'reggae', 'rock'])
+    ax.yaxis.set_ticklabels(['blues', 'classical',
+                             'country', 'disco',
+                             'hiphop', 'jazz',
+                             'metal', 'pop',
+                             'reggae', 'rock'])
 
     plt.show()
+
+
+def get_name_dataset(config, choice):
+    """
+    Devuelve el nombre del dataset en función de los parámetros introducidos
+
+    :type config: ConfigParser
+    :type choice: string
+    :param config: "Archivo con las configuraciones"
+    :param choice: "Opción elegida"
+    :rtype string
+    :return Nombre del dataset
+    """
+    if choice == "spec":
+        return config.get('DATA_CONFIGURATION', 'DATASET_PREPROCESSED_SPECTOGRAM')
+    elif choice == "mfcc":
+        return config.get('DATA_CONFIGURATION', 'DATASET_PREPROCESSED_MFCC')
