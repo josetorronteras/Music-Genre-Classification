@@ -1,4 +1,5 @@
 import sys
+import numpy as np
 from pathlib import Path
 from keras.models import Sequential
 from keras.models import model_from_json
@@ -67,11 +68,24 @@ class CNNModel:
         self.model.summary()
 
         self.model.compile(loss=losses.categorical_crossentropy,
-                           optimizer=optimizers.SGD(lr=0.001,
-                                                    momentum=0,
+                            optimizer=optimizers.SGD(lr=0.005,
+                                                    momentum=0.9,
                                                     decay=1e-5,
                                                     nesterov=True),
                            metrics=['accuracy'])
+
+    def load_weights(self, weights_path):
+        """
+        Cargamos los pesos en el modelo.
+        
+        :type weights_path: string
+        :param weights_path: "Ruta del fichero que contiene los pesos del modelo."
+        """
+        weights_file = Path(weights_path)
+        if not weights_file.exists():
+            print("No se ha encontrado el fichero con los pesos")
+            sys.exit(0)
+        self.model.load_weights(weights_path)
 
     def safe_model_to_file(self, log_dir):
         """
@@ -105,41 +119,50 @@ class CNNModel:
         """
 
         # Conv1
-        self.model.add(Conv2D(32, (11, 11), padding="same", input_shape=input_model))
-        self.model.add(Activation('relu'))
-        self.model.add(MaxPooling2D(pool_size=(2, 2)))
+        self.model.add(Conv2D(32, (3, 3), strides=(1, 1), activation='relu', input_shape=input_model))
+        self.model.add(MaxPooling2D(pool_size=(4, 4), strides=(2, 2)))
 
         # Conv2
-        self.model.add(Conv2D(64, (11, 11), padding='same'))
-        self.model.add(Activation('relu'))
-        self.model.add(MaxPooling2D(pool_size=(2, 4)))
+        self.model.add(Conv2D(64, (3, 3), strides=(1, 1), activation='relu'))
+        self.model.add(MaxPooling2D(pool_size=(4, 4), strides=(2, 2)))
         self.model.add(Dropout(0.25))
 
         # Conv3
-        self.model.add(Conv2D(128, (11, 11), padding='same'))
-        self.model.add(Activation('relu'))
-        self.model.add(MaxPooling2D(pool_size=(4, 4)))
-        self.model.add(Dropout(0.25))
+        #self.model.add(Conv2D(128, (3, 3), padding='same'))
+        #self.model.add(Activation('relu'))
+        #self.model.add(MaxPooling2D(pool_size=(4, 4)))
+        #self.model.add(Dropout(0.25))
 
         # Conv4
-        self.model.add(Conv2D(256, (11, 11), padding='same'))
-        self.model.add(Activation('relu'))
-        self.model.add(MaxPooling2D(pool_size=(4, 4)))
-        self.model.add(Dropout(0.25))
+        #self.model.add(Conv2D(256, (3, 3), padding='same'))
+        #self.model.add(Activation('relu'))
+        #self.model.add(MaxPooling2D(pool_size=(4, 4)))
+        #self.model.add(Dropout(0.25))
 
         # FC
         self.model.add(Flatten())
-        self.model.add(Dense(512))
-        self.model.add(Activation('relu'))
+        self.model.add(Dense(512, activation='relu'))
         self.model.add(Dropout(0.5))
         self.model.add(Dense(number_classes))
         self.model.add(Activation('softmax'))
 
         self.model.compile(loss=losses.categorical_crossentropy,
-                           optimizer=optimizers.SGD(lr=0.001,
-                                                    momentum=0,
+                            optimizer=optimizers.SGD(lr=0.005,
+                                                    momentum=0.9,
                                                     decay=1e-5,
                                                     nesterov=True),
                            metrics=['accuracy'])
 
         self.model.summary()
+
+    def predict_model(self, X_test):
+        """
+        Guardamos los pesos del modelo en un archivo h5py.
+        :type  X_test: Array
+        :param X_test: "Numpy array con los datos ha predecir."
+        """
+        Y_pred = self.model.predict(X_test)
+        y_pred = np.argmax(Y_pred, axis=1)
+
+        print("Predecido: ", y_pred)
+        return y_pred

@@ -11,11 +11,13 @@ from source.aux_functions import plot_results_to_img
 from keras.utils import np_utils
 from keras.callbacks import TensorBoard, EarlyStopping
 
+# Línea de argumentos
 parser = argparse.ArgumentParser()
 parser.add_argument("--config", "-c", help="Archivo de Configuración", required=True)
 parser.add_argument("--device", "-v", type=int, default=0, help="Cuda Visible Device")
 args = parser.parse_args()
 
+# Fichero de configuración
 config_path = Path(args.config)
 if not config_path.exists():
     print("No se ha encontrado el fichero config")
@@ -23,17 +25,12 @@ if not config_path.exists():
 config = configparser.ConfigParser()
 config.read(config_path)
 
+# Identificación del modelo
 now = datetime.now()
 model_id = 'cnn_' + now.isoformat() + '.json'
 
+# Lectura del dataset
 X_train, X_test, X_val, y_train, y_test, y_val = GetTrainTestData(config).read_dataset(choice="spec")
-
-X_train = X_train.reshape(
-    X_train.shape[0], X_train.shape[1], X_train.shape[2], 1).astype('float32')
-X_test = X_test.reshape(
-    X_test.shape[0], X_train.shape[1], X_train.shape[2], 1).astype('float32')
-X_val = X_val.reshape(
-    X_val.shape[0], X_val.shape[1], X_val.shape[2], 1).astype('float32')
 
 # Convertimos las clases a un array binario de clases
 y_train = np_utils.to_categorical(y_train)
@@ -44,8 +41,7 @@ y_val = np_utils.to_categorical(y_val)
 callbacks = [
     TensorBoard(log_dir=config['CALLBACKS']['TENSORBOARD_LOGDIR'] + model_id,
                 write_images=config['CALLBACKS']['TENSORBOARD_WRITEIMAGES'],
-                write_graph=config['CALLBACKS']['TENSORBOARD_WRITEGRAPH'],
-                update_freq=config['CALLBACKS']['TENSORBOARD_UPDATEFREQ']
+                write_graph=config['CALLBACKS']['TENSORBOARD_WRITEGRAPH']
                 ),
     EarlyStopping(monitor=config['CALLBACKS']['EARLYSTOPPING_MONITOR'],
                   mode=config['CALLBACKS']['EARLYSTOPPING_MODE'],
@@ -53,6 +49,7 @@ callbacks = [
                   verbose=1)
 ]
 
+# Generamos el modelo
 model = CNNModel()
 model.generate_model((X_train.shape[1], X_train.shape[2], X_train.shape[3]), y_test.shape[1])
 

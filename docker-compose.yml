@@ -1,0 +1,19 @@
+version: '3.4'
+
+services:
+    anaconda:
+        build: ./docker/Anaconda
+        volumes:
+            - ./notebooks:/opt/notebooks
+            - ./project:/opt/notebooks/project
+            - ./data:/opt/notebooks/data
+        ports:
+            - 8888:8888
+    floydhub:
+        image: joseew/music-genre-classification_floydhub
+        #floyd login -k 48ee8d9e5498495f096c83dd759d9f20
+        stdin_open: true
+        tty: true
+        volumes:
+            - ./project:/code/project
+            - ./data:/code/data

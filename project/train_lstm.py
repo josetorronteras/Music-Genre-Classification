@@ -37,8 +37,7 @@ y_val = np_utils.to_categorical(y_val)
 callbacks = [
     TensorBoard(log_dir=config['CALLBACKS']['TENSORBOARD_LOGDIR'] + model_id,
                 write_images=config['CALLBACKS']['TENSORBOARD_WRITEIMAGES'],
-                write_graph=config['CALLBACKS']['TENSORBOARD_WRITEGRAPH'],
-                update_freq=config['CALLBACKS']['TENSORBOARD_UPDATEFREQ']
+                write_graph=config['CALLBACKS']['TENSORBOARD_WRITEGRAPH']
                 ),
     EarlyStopping(monitor=config['CALLBACKS']['EARLYSTOPPING_MONITOR'],
                   mode=config['CALLBACKS']['EARLYSTOPPING_MODE'],

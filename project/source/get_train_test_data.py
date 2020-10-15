@@ -2,8 +2,9 @@ import sys
 from pathlib import Path
 import h5py
 import numpy as np
-from tqdm import tqdm
+from tqdm.auto import tqdm
 from sklearn.model_selection import train_test_split
+import os
 from source.aux_functions import get_name_dataset
 
 class GetTrainTestData(object):
@@ -73,7 +74,7 @@ class GetTrainTestData(object):
         dataset_name = get_name_dataset(self.CONFIG, choice)
 
         if not Path(self.DATASET_PATH + dataset_name).exists():
-            print("No se ha encontrado el fichero")
+            print("No se ha encontrado el fichero" + self.DATASET_PATH + dataset_name)
             sys.exit(0)
 
         dataset_file = h5py.File(Path(self.DATASET_PATH + dataset_name), 'r')
@@ -140,7 +141,7 @@ class GetTrainTestData(object):
         del full_data, labels
 
         # Guardamos los datos generados
-        dataset_output_path = Path(self.DATASET_PATH + 'traintest_' + dataset_name)
+        dataset_output_path = Path(self.DATASET_PATH + choice + '/' + 'traintest_' + dataset_name)
         with h5py.File(dataset_output_path, 'w') as hdf:
             hdf.create_dataset('X_train',
                                data=X_train,
@@ -176,9 +177,9 @@ class GetTrainTestData(object):
         """
         # Obtenemos el nombre del dataset
         dataset_name = get_name_dataset(self.CONFIG, choice)
-
-        dataset_output_path = Path(self.DATASET_PATH + 'traintest_' + dataset_name)
+        dataset_output_path = Path(self.DATASET_PATH + choice + '/' + 'traintest_' + dataset_name)
         if not dataset_output_path.exists():
+            print(dataset_output_path)
             print("No se ha encontrado el fichero")
             sys.exit(0)
 

@@ -4,8 +4,9 @@ import librosa
 import numpy as np
 import h5py
 import threading
+from tqdm.auto import tqdm
+from sklearn.preprocessing import MinMaxScaler
 
-from tqdm import tqdm
 from source.aux_functions import get_name_dataset
 
 
@@ -65,8 +66,10 @@ class ExtractAudioFeatures(object):
                 n_fft=self.N_FFT,
                 hop_length=self.HOP_LENGTH),
             ref=np.max)
-
-        return s / 80
+        # Transforms features by scaling each feature to a given range.
+        s = MinMaxScaler().fit_transform(s.reshape(-1, s.shape[1])).reshape(s.shape[0], s.shape[1])
+        s = s.reshape(s.shape[0], s.shape[1], 1).astype('float32')
+        return s
 
     def get_spectral_features(self, file_path):
         """
@@ -108,7 +111,7 @@ class ExtractAudioFeatures(object):
         for root, subdirs, files in os.walk(self.PATH + directorio + '/'):
             for filename in tqdm(files):
                 # Descartamos ficheros .DS_store
-                if filename.endswith('.au'):
+                if filename.endswith('.wav'):
                     file_path = Path(root, filename)
                     try:
                         s = action(file_path)
