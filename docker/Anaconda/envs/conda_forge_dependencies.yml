@@ -1,0 +1,11 @@
+name: music_clasification
+channels:
+  - conda-forge
+dependencies:
+  - keras=2.2.4
+  - librosa=0.7.0
+  - seaborn
+  - scikit-learn
+  - matplotlib
+  - tqdm
+  - dash

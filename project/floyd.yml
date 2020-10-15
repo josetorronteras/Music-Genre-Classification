@@ -1,0 +1,14 @@
+# see: https://docs.floydhub.com/floyd_config
+# https://github.com/floydhub/floyd-cli/blob/master/floyd/cli/default_floyd.yml
+
+max_runtime: 3600
+env: tensorflow-1.13
+
+task:
+  cnn:
+    machine: gpu
+    description: Convolutional Neural Network
+    command: python train_cnn.py --config="config/config-floyd.ini"
+    input:
+      - source: joseew/datasets/spec-dataset/5
+        destination: input

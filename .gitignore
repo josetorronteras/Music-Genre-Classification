@@ -103,20 +103,12 @@ venv.bak/
 # mypy
 .mypy_cache/
 
-genres/*
+# MacOS DS Store
 .DS_store
-data/dataset\.hdf5
 
-data/traintest\.hdf5
-
-data/dataset_lstm\.hdf5
-
-data/dataset_mfcc\.hdf5
-
-data/dataset_spectogram\.hdf5
-
-data/traintest_dataset_mfcc\.hdf5
-
-data/traintest_dataset_spectogram\.hdf5
-
+# Jupyter Notebook
 notebooks/Untitled\.ipynb
+
+# Music Dataset
+data/genres/
+data/genres.tar.gz
