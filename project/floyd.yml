@@ -7,8 +7,15 @@ env: tensorflow-1.13
 task:
   cnn:
     machine: gpu
-    description: Convolutional Neural Network
+    description: Convolutional Neural Network Test-2 0 - epochs 40, batch 32, lr 0.005
     command: python train_cnn.py --config="config/config-floyd.ini"
     input:
-      - source: joseew/datasets/spec-dataset/5
+      - source: joseew/datasets/music-genre-classification-spec-dataset/1
+        destination: input
+  lstm:
+    machine: gpu
+    description: Recurrent Network Test2 12
+    command: python train_lstm.py --config="config/config-floyd.ini"
+    input:
+      - source: joseew/datasets/music-genre-classification-mfcc-dataset/2
         destination: input

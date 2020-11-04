@@ -15,18 +15,14 @@ class GetTrainTestData(object):
         :param config: "Contiene las rutas de los archivos de audio
         y los parámetros a usar"
         """
-        self.CONFIG = config
+        self.config = config
 
         # Rutas de los ficheros
-        self.DATASET_PATH = config['PATH_CONFIGURATION']['AUDIO_PATH']
-
-        # Nombre del dataset generado
-        self.DATASET_NAME_SPECTOGRAM = config['DATA_CONFIGURATION']['DATASET_PREPROCESSED_SPECTOGRAM']
-        self.DATASET_NAME_MFCC = config['DATA_CONFIGURATION']['DATASET_PREPROCESSED_MFCC']
+        self.dataset_path = config['PATH_CONFIGURATION']['AUDIO_PATH']
 
         # Configuración de los datos
-        self.SIZE = int(config['DATA_CONFIGURATION']['DATA_SIZE'])
-        self.SPLIT_SIZE = float(config['DATA_CONFIGURATION']['SPLIT_SIZE'])
+        self.size = int(config['DATA_CONFIGURATION']['DATA_SIZE'])
+        self.splite_size = float(config['DATA_CONFIGURATION']['SPLIT_SIZE'])
 
         self.options = {
             "spec": ["Dataset Espectograma Mel"],
@@ -48,11 +44,10 @@ class GetTrainTestData(object):
         :return: read_data: "Lista que contiene los arrays del género seleccionado"
         """
         read_data = []
-        print("Obteniendo.." + self.DATASET_PATH + genre)
+        print("Obteniendo.." + self.dataset_path + genre)
 
         for items in tqdm(dataset_file[genre]):
             read_data.append((dataset_file[genre][items][()]))
-
         return read_data
 
     def split_dataset(self, choice):
@@ -71,13 +66,13 @@ class GetTrainTestData(object):
             raise SystemExit
 
         # Obtenemos el nombre del dataset
-        dataset_name = get_name_dataset(self.CONFIG, choice)
+        dataset_name = get_name_dataset(self.config, choice)
 
-        if not Path(self.DATASET_PATH + dataset_name).exists():
-            print("No se ha encontrado el fichero" + self.DATASET_PATH + dataset_name)
+        if not Path(self.dataset_path + dataset_name).exists():
+            print("No se ha encontrado el fichero" + self.dataset_path + dataset_name)
             sys.exit(0)
 
-        dataset_file = h5py.File(Path(self.DATASET_PATH + dataset_name), 'r')
+        dataset_file = h5py.File(Path(self.dataset_path + dataset_name), 'r')
 
         # Obtenemos los arrays de cada género
         arr_blues = self.get_data_from_dataset('blues', dataset_file)
@@ -121,15 +116,15 @@ class GetTrainTestData(object):
 
         # Con train_test_split() dividimos los datos.
         # Se puede cambiar el tamaño en el archivo config.
-        print("test-size = " + str(self.SPLIT_SIZE) + " Cambiar valor en config.py")
+        print("test-size = " + str(self.splite_size))
         # Se puede cambiar el tamaño en el archivo config.
-        print("data-size = " + str(self.SIZE) + " Cambiar valor en config.py")
+        print("data-size = " + str(self.size))
 
         # Dividimos los datos, en función a SPLIT_SIZE (config)
         X_train, X_test, y_train, y_test = train_test_split(
             full_data,
             labels,
-            test_size=self.SPLIT_SIZE,
+            test_size=self.splite_size,
             stratify=labels)
 
         X_test, X_val, y_test, y_val = train_test_split(
@@ -141,7 +136,7 @@ class GetTrainTestData(object):
         del full_data, labels
 
         # Guardamos los datos generados
-        dataset_output_path = Path(self.DATASET_PATH + choice + '/' + 'traintest_' + dataset_name)
+        dataset_output_path = Path(self.dataset_path + choice + '/' + 'traintest_' + dataset_name)
         with h5py.File(dataset_output_path, 'w') as hdf:
             hdf.create_dataset('X_train',
                                data=X_train,
@@ -176,8 +171,8 @@ class GetTrainTestData(object):
         :return: Conjunto de datos para el entrenamiento
         """
         # Obtenemos el nombre del dataset
-        dataset_name = get_name_dataset(self.CONFIG, choice)
-        dataset_output_path = Path(self.DATASET_PATH + choice + '/' + 'traintest_' + dataset_name)
+        dataset_name = get_name_dataset(self.config, choice)
+        dataset_output_path = Path(self.dataset_path + choice + '/' + 'traintest_' + dataset_name)
         if not dataset_output_path.exists():
             print(dataset_output_path)
             print("No se ha encontrado el fichero")

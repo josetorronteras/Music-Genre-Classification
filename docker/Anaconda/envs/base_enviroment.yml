@@ -4,5 +4,5 @@ channels:
   - conda-forge
 dependencies:
   - tensorflow=1.13
-  - jupyter
-  - ipykernel
+  - jupyter=1.0.0
+  - ipykernel=5.3.4

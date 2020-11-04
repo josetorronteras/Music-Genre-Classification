@@ -45,11 +45,11 @@ callbacks = [
                   verbose=1)
 ]
 
-model = LSTMModel()
+model = LSTMModel(config)
 model.generate_model((X_train.shape[1], X_train.shape[2]), y_test.shape[1])
 
 # Entrenamos el modelo
-history = model.train_model(config, callbacks, X_train, y_train, X_test, y_test, X_val, y_val)
+history = model.train_model(callbacks, X_train, y_train, X_test, y_test, X_val, y_val)
 
 # Grafica Accuracy
 plot_results_to_img(

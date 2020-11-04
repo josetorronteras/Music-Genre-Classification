@@ -9,7 +9,6 @@ from sklearn.preprocessing import MinMaxScaler
 
 from source.aux_functions import get_name_dataset
 
-
 class ExtractAudioFeatures(object):
 
     def __init__(self, config):
@@ -19,21 +18,18 @@ class ExtractAudioFeatures(object):
         audio y los parámetros a usar."
         """
 
-        self.CONFIG = config
+        self.config = config
 
         # Rutas de los ficheros
-        self.DEST = config['PATH_CONFIGURATION']['AUDIO_PATH']
-        self.PATH = config['PATH_CONFIGURATION']['DATASET_PATH']
-
-        # Nombre del dataset generado
-        self.DATASET_NAME_SPECTOGRAM = config['DATA_CONFIGURATION']['DATASET_PREPROCESSED_SPECTOGRAM']
-        self.DATASET_NAME_MFCC = config['DATA_CONFIGURATION']['DATASET_PREPROCESSED_MFCC']
+        self.dest = config['PATH_CONFIGURATION']['AUDIO_PATH']
+        self.path = config['PATH_CONFIGURATION']['DATASET_PATH']
 
         # Parámetros Librosa
-        self.N_MELS = int(config['AUDIO_FEATURES']['N_MELS'])
-        self.N_FFT = int(config['AUDIO_FEATURES']['N_FFT'])
-        self.HOP_LENGTH = int(config['AUDIO_FEATURES']['HOP_LENGTH'])
-        self.DURATION = int(config['AUDIO_FEATURES']['DURATION'])
+        self.n_mels = int(config['AUDIO_FEATURES']['N_MELS'])
+        self.n_fft = int(config['AUDIO_FEATURES']['N_FFT'])
+        self.n_mfcc = int(config['AUDIO_FEATURES']['N_MFCC'])
+        self.hop_length = int(config['AUDIO_FEATURES']['HOP_LENGTH'])
+        self.duration = int(config['AUDIO_FEATURES']['DURATION'])
 
         self.options = {
             "spec": [
@@ -57,14 +53,14 @@ class ExtractAudioFeatures(object):
         :also: librosa.feature.melspectrogram : Feature extraction
         """
         # Cargamos el audio con librosa
-        y, sr = librosa.load(file_path, duration=self.DURATION)
+        y, sr = librosa.load(file_path, duration=self.duration)
         s = librosa.power_to_db(
             librosa.feature.melspectrogram(
                 y,
                 sr=sr,
-                n_mels=self.N_MELS,
-                n_fft=self.N_FFT,
-                hop_length=self.HOP_LENGTH),
+                n_mels=self.n_mels,
+                n_fft=self.n_fft,
+                hop_length=self.hop_length),
             ref=np.max)
         # Transforms features by scaling each feature to a given range.
         s = MinMaxScaler().fit_transform(s.reshape(-1, s.shape[1])).reshape(s.shape[0], s.shape[1])
@@ -87,12 +83,11 @@ class ExtractAudioFeatures(object):
         :also: librosa.feature.mfcc : Feature extraction
         """
         # Cargamos el audio con librosa
-        y, sr = librosa.load(file_path, duration=self.DURATION)
+        y, sr = librosa.load(file_path, duration=self.duration)
         mfcc = librosa.feature.mfcc(y=y,
                                     sr=sr,
-                                    hop_length=self.HOP_LENGTH,
-                                    n_mfcc=13)
-
+                                    hop_length=self.hop_length,
+                                    n_mfcc=self.n_mfcc)
         return mfcc.T
 
     def runner(self, directorio, dataset_name, action):
@@ -108,7 +103,7 @@ class ExtractAudioFeatures(object):
           :param action: "Método de preprocesamiento elegido"
         """
         group_hdf_dict = {}
-        for root, subdirs, files in os.walk(self.PATH + directorio + '/'):
+        for root, subdirs, files in os.walk(self.path + directorio + '/'):
             for filename in tqdm(files):
                 # Descartamos ficheros .DS_store
                 if filename.endswith('.wav'):
@@ -150,16 +145,16 @@ class ExtractAudioFeatures(object):
         # Obtenemos una lista de los directorios
         directorios = [nombre_directorio
                        for nombre_directorio
-                       in os.listdir(self.PATH)
-                       if os.path.isdir(os.path.join(self.PATH, nombre_directorio))]
+                       in os.listdir(self.path)
+                       if os.path.isdir(os.path.join(self.path, nombre_directorio))]
         directorios.sort()
 
         # Obtenemos el nombre del dataset
-        dataset_name = get_name_dataset(self.CONFIG, choice)
+        dataset_name = get_name_dataset(self.config, choice)
 
         threads = []
         for i in range(0, 10):
             t = threading.Thread(target=self.runner,
-                                 args=(directorios[i], self.DEST + dataset_name, action))
+                                 args=(directorios[i], self.dest + dataset_name, action))
             threads.append(t)
             t.start()
