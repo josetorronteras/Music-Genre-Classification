@@ -1,1 +1,1 @@
-{"namespace": "joseew", "data_endpoint": null, "tarball_path": null, "resource_id": null, "data_id": null, "data_name": "joseew/datasets/mfcc-dataset/4", "family_id": "BcCCQpfoYh8N8tWDkWtNk6", "name": "mfcc-dataset"}
+{"data_name": "joseew/datasets/music-genre-classification-mfcc-dataset/2", "name": "music-genre-classification-mfcc-dataset", "namespace": "joseew", "tarball_path": null, "family_id": "L7nguXSGfcAckVKV9um2TA", "data_endpoint": null, "resource_id": null, "data_id": null}

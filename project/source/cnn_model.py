@@ -14,17 +14,26 @@ from keras import optimizers, losses
 
 class CNNModel:
 
-    def __init__(self):
-        self.model = Sequential()
+    def __init__(self, config):
+        """
+        Inicializador de la clase 
 
-    def train_model(self, config, callbacks, *data):
+        :type config: ConfigParser
+        :param config: "Contiene las rutas de los archivos de
+        audio y los parámetros a usar."
+        """
+        self.model = Sequential()
+        self.batch_size = int(config['CNN_CONFIGURATION']['BATCH_SIZE'])
+        self.epochs = int(config['CNN_CONFIGURATION']['NUMBERS_EPOCH'])
+        self.learning_rate = float(config['CNN_CONFIGURATION']['LEARNING_RATE'])
+        self.third_layer = bool(config['CNN_CONFIGURATION']['THIRD_LAYER'])
+
+    def train_model(self, callbacks, *data):
         """
         Entrena el modelo
 
-        :type config: ConfigParser
         :type callbacks: list
         :type data: array
-        :param config: "Fichero con los parámetros de configuración"
         :param callbacks: "Conjunto de funciones que se ejecutarán
         durante el entrenamiento"
         :param data: array "Dataset a entrenar"
@@ -37,8 +46,8 @@ class CNNModel:
         history = self.model.fit(
             data[0],
             data[1],
-            batch_size=int(config['CNN_CONFIGURATION']['BATCH_SIZE']),
-            epochs=int(config['CNN_CONFIGURATION']['NUMBERS_EPOCH']),
+            batch_size=self.batch_size,
+            epochs=self.epochs,
             verbose=1,
             validation_data=(data[4], data[5]),
             callbacks=callbacks)
@@ -46,7 +55,6 @@ class CNNModel:
         score = self.model.evaluate(data[2], data[3], verbose=0)
         print('Test score:', score[0])
         print('Test accuracy:', score[1])
-
         return history
 
     def load_model(self, model_path):
@@ -68,11 +76,11 @@ class CNNModel:
         self.model.summary()
 
         self.model.compile(loss=losses.categorical_crossentropy,
-                            optimizer=optimizers.SGD(lr=0.005,
+                            optimizer=optimizers.SGD(lr=self.learning_rate,
                                                     momentum=0.9,
                                                     decay=1e-5,
                                                     nesterov=True),
-                           metrics=['accuracy'])
+                            metrics=['accuracy'])
 
     def load_weights(self, weights_path):
         """
@@ -128,16 +136,11 @@ class CNNModel:
         self.model.add(Dropout(0.25))
 
         # Conv3
-        #self.model.add(Conv2D(128, (3, 3), padding='same'))
-        #self.model.add(Activation('relu'))
-        #self.model.add(MaxPooling2D(pool_size=(4, 4)))
-        #self.model.add(Dropout(0.25))
-
-        # Conv4
-        #self.model.add(Conv2D(256, (3, 3), padding='same'))
-        #self.model.add(Activation('relu'))
-        #self.model.add(MaxPooling2D(pool_size=(4, 4)))
-        #self.model.add(Dropout(0.25))
+        if self.third_layer:
+            self.model.add(Conv2D(128, (3, 3), padding='same'))
+            self.model.add(Activation('relu'))
+            self.model.add(MaxPooling2D(pool_size=(4, 4)))
+            self.model.add(Dropout(0.25))
 
         # FC
         self.model.add(Flatten())
@@ -147,7 +150,7 @@ class CNNModel:
         self.model.add(Activation('softmax'))
 
         self.model.compile(loss=losses.categorical_crossentropy,
-                            optimizer=optimizers.SGD(lr=0.005,
+                            optimizer=optimizers.SGD(lr=self.learning_rate,
                                                     momentum=0.9,
                                                     decay=1e-5,
                                                     nesterov=True),
@@ -157,12 +160,12 @@ class CNNModel:
 
     def predict_model(self, X_test):
         """
-        Guardamos los pesos del modelo en un archivo h5py.
+        Realiza la predicción sobre los valores introducidos.
         :type  X_test: Array
-        :param X_test: "Numpy array con los datos ha predecir."
+        :param X_test: "Numpy array con los datos a predecir."
         """
         Y_pred = self.model.predict(X_test)
         y_pred = np.argmax(Y_pred, axis=1)
 
-        print("Predecido: ", y_pred)
+        print("Predicho: ", y_pred)
         return y_pred

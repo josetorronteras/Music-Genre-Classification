@@ -1,4 +1,5 @@
 import sys
+import numpy as np
 from pathlib import Path
 from keras.models import Sequential
 from keras.models import model_from_json
@@ -11,17 +12,25 @@ from keras import optimizers, losses
 
 class LSTMModel:
 
-    def __init__(self):
-        self.model = Sequential()
+    def __init__(self, config):
+        """
+        Inicializador de la clase 
 
-    def train_model(self, config, callbacks, *data):
+        :type config: ConfigParser
+        :param config: "Contiene las rutas de los archivos de
+        audio y los parámetros a usar."
+        """
+        self.model = Sequential()
+        self.batch_size = int(config['LSTM_CONFIGURATION']['BATCH_SIZE'])
+        self.epochs = int(config['LSTM_CONFIGURATION']['NUMBERS_EPOCH'])
+        self.learning_rate = float(config['LSTM_CONFIGURATION']['LEARNING_RATE'])
+
+    def train_model(self, callbacks, *data):
         """
         Entrena el modelo
 
-        :type config: ConfigParser
         :type callbacks: list
         :type data: array
-        :param config: "Fichero con los parámetros de configuración"
         :param callbacks: "Conjunto de funciones que se ejecutarán
         durante el entrenamiento"
         :param data: array "Dataset a entrenar"
@@ -31,8 +40,8 @@ class LSTMModel:
         history = self.model.fit(
             data[0],
             data[1],
-            batch_size=int(config['CNN_CONFIGURATION']['BATCH_SIZE']),
-            epochs=int(config['CNN_CONFIGURATION']['NUMBERS_EPOCH']),
+            batch_size=self.batch_size,
+            epochs=self.epochs,
             verbose=1,
             validation_data=(data[4], data[5]),
             callbacks=callbacks)
@@ -40,6 +49,7 @@ class LSTMModel:
         score = self.model.evaluate(data[2], data[3], verbose=0)
         print('Test score:', score[0])
         print('Test accuracy:', score[1])
+        
         return history
 
     def load_model(self, model_path):
@@ -60,8 +70,21 @@ class LSTMModel:
         self.model = model_from_json(config_model)
         self.model.summary()
         self.model.compile(loss=losses.categorical_crossentropy,
-                           optimizer=optimizers.RMSprop(lr=0.001),
+                           optimizer=optimizers.RMSprop(lr=self.learning_rate),
                            metrics=['accuracy'])
+
+    def load_weights(self, weights_path):
+        """
+        Cargamos los pesos en el modelo.
+        
+        :type weights_path: string
+        :param weights_path: "Ruta del fichero que contiene los pesos del modelo."
+        """
+        weights_file = Path(weights_path)
+        if not weights_file.exists():
+            print("No se ha encontrado el fichero con los pesos")
+            sys.exit(0)
+        self.model.load_weights(weights_path)
 
     def safe_model_to_file(self, log_dir):
         """
@@ -103,6 +126,18 @@ class LSTMModel:
         self.model.add(Activation('softmax'))
 
         self.model.compile(loss=losses.categorical_crossentropy,
-                           optimizer=optimizers.RMSprop(lr=0.001),
+                           optimizer=optimizers.RMSprop(lr=self.learning_rate),
                            metrics=['accuracy'])
         self.model.summary()
+
+    def predict_model(self, X_test):
+        """
+        Realiza la predicción sobre los valores introducidos.
+        :type  X_test: Array
+        :param X_test: "Numpy array con los datos a predecir."
+        """
+        Y_pred = self.model.predict(X_test)
+        y_pred = np.argmax(Y_pred, axis=1)
+
+        print("Predicho: ", y_pred)
+        return y_pred
