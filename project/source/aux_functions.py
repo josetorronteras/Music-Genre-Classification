@@ -25,7 +25,7 @@ def plot_results_to_img(model_id, log_dir, title, data, labels):
     plt.plot(data[1])
     plt.xlabel(labels[0])
     plt.ylabel(labels[1])
-    plt.legend(['train', 'test'], loc='upper left')
+    plt.legend(['train', 'val'], loc='upper left')
     plt.savefig(log_dir + model_id + '/' + title + '.png')
     plt.close()
 

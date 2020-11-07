@@ -9,7 +9,7 @@ from source.aux_functions import create_confusion_matrix
 parser = argparse.ArgumentParser()
 parser.add_argument("--dataset", "-d", type=str, help="Dataset a usar")
 parser.add_argument("--logs", "-l", type=str, help="Directorio con los archivos del modelo entrenado")
-parser.add_argument("--config", "-c", help="Archivo de Configuración", required=True)
+parser.add_argument("--config", "-c", type=str, help="Archivo de Configuración", required=True)
 args = parser.parse_args()
 
 config_path = Path(args.config)
