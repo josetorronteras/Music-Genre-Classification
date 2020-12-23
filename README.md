@@ -1,6 +1,8 @@
 <br>
 <h1 align="center">Music Genre Classification </h2>
 
+[![CodeFactor](https://www.codefactor.io/repository/github/xexuew/music-genre-classification/badge)](https://www.codefactor.io/repository/github/xexuew/music-genre-classification)
+
 https://projector.tensorflow.org/?config=https://raw.githubusercontent.com/xexuew/Music-Genre-Classification/master/results/embedding-projector/project_config.json
 
 <h2> Setup </h2>
