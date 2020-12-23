@@ -15,4 +15,4 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Build the Docker image
-      run: docker build ./docker/Anaconda --file Dockerfile --tag my-image-name:$(date +%s)
+      run: docker build . --file /docker/Anaconda/Dockerfile --tag my-image-name:$(date +%s)
