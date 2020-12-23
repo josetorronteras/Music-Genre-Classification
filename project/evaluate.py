@@ -1,4 +1,7 @@
 import numpy as np
+import argparse
+from pathlib import Path
+import sys
 import configparser
 
 from source.get_train_test_data import GetTrainTestData
@@ -27,7 +30,7 @@ if args.dataset == "mfcc":
     model.load_weights(args.logs + 'weights.hdf5')
     y_pred = model.predict_model(X_test)
     create_confusion_matrix(y_test, y_pred)
-elif argparse.dataset == "spec":
+elif args.dataset == "spec":
     model = CNNModel(config)
     model.load_model(args.logs + 'model.json')
     model.load_weights(args.logs + 'weights.hdf5')
